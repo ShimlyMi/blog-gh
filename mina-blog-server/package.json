@@ -1,0 +1,33 @@
+{
+  "name": "mina-blog-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./src/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "jsonwebtoken": "^9.0.2",
+    "koa": "^2.15.3",
+    "koa-body": "^6.0.1",
+    "koa-parameter": "^3.0.1",
+    "koa-router": "^12.0.1",
+    "koa-static": "^5.0.0",
+    "mint-filter": "^4.0.3",
+    "moment": "^2.30.1",
+    "mysql2": "^3.11.0",
+    "request": "^2.88.2",
+    "sequelize": "^6.37.3",
+    "ws": "^8.18.0",
+    "xz-ipnet": "^1.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
