@@ -32,7 +32,7 @@ const {
 const { createCategoryOrReturn, createArticleTagByArticleId } = require("./common.controller");
 const { result, ERRORCODE, throwError } = require("../constant/err.type");
 const errorCode = ERRORCODE.ARTICLE;
-// const { UPLOADTYPE } = require("../config/config.default");
+// const { UPLOADTYPE } = require("../utils/utils.default");
 const { deleteOnlineImgs } = require("../controller/utils.controller");
 
 class ArticleController {

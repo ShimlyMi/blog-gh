@@ -1,13 +1,13 @@
+<script setup>
+  import Header from './header/index.vue'
+</script>
 <template>
   <v-app>
-    <v-main>
-      <router-view />
-    </v-main>
-
-    <AppFooter />
+    <Header />
+    <router-view />
   </v-app>
 </template>
 
-<script lang="ts" setup>
-  //
-</script>
+<style scoped>
+
+</style>

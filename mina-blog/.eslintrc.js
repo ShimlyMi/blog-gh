@@ -11,7 +11,7 @@ module.exports = {
   },
   extends: [
     'vuetify',
-    '@vue/eslint-config-typescript',
+    '@vue/eslint-utils-typescript',
     './.eslintrc-auto-import.json',
   ],
   rules: {

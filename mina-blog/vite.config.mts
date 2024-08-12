@@ -70,5 +70,13 @@ export default defineConfig({
   },
   server: {
     port: 3182,
+    proxy: {
+      "/api": {
+        // 要访问的域名
+        target: "http://localhost:8888",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      }
+    }
   },
 })

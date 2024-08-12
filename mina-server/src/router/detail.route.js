@@ -8,7 +8,7 @@ const Router = require('koa-router');
 const { getDetail, updateDetail } = require("../controller/utils.controller")
 const {auth, needAdminPermission} = require("../middleware/auth.middleware")
 
-const router = new Router({ prefix: '/config' });
+const router = new Router({ prefix: '/utils' });
 
 
 /** 更新设置 */
