@@ -9,7 +9,7 @@
 
 <template>
   <div class="info-bg">
-    <v-img :cover="true" height="100%" :src="configDetail.avatar_bg" width="100%">
+    <v-img :cover="true" height="100%" :lazy-src="[configDetail.avatar_bg]" :src="configDetail.avatar_bg" width="100%">
       <template #error>
         <div class="image-slot">
           <v-icon>mdi-image-off</v-icon>

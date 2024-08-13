@@ -7,12 +7,15 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AppFooter: typeof import('./components/AppFooter.vue')['default']
-    HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     RightSideItem: typeof import('./components/Sider/components/TopSider/right-side-item.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Sider: typeof import('./components/Sider/sider.vue')['default']
+    SideSkeleton: typeof import('./components/Sider/components/skeleton/side-skeleton-item.vue')['default']
+    SideSkeletonItem: typeof import('./components/Sider/components/skeleton/side-skeleton-item.vue')['default']
+    SkeletonItem: typeof import('./components/SkeletonItem/skeleton-item.vue')['default']
+    SkeletonTem: typeof import('./components/SkeletonItem/skeleton-tem.vue')['default']
+    TopSide: typeof import('./components/Sider/components/skeleton/top-side.vue')['default']
     TopSider: typeof import('./components/Sider/components/TopSider/top-sider.vue')['default']
   }
 }

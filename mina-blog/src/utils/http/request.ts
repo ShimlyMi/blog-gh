@@ -1,120 +1,65 @@
-import axios, {
-  AxiosInstance,
-  AxiosRequestConfig,
-  CustomParamsSerializer,
-} from 'axios'
-import { stringify } from 'qs'
-import { h } from 'vue'
-import * as process from 'process'
-import {httpRequestConfig, httpResponse, RequestMethods} from "@/utils/http/types";
+import axios from "axios";
+import VFNotification from "@/utils/VFNotiftcation";
+import { showMessage } from "@/utils/http/status";
 
-const defaultConfig: AxiosRequestConfig = {
+const http = axios.create({
   timeout: 10000,
+  withCredentials: true,
   headers: {
     // 设置后端需要的传参类型
-    'Content-Type': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest',
+    "Content-Type": "application/json",
+    "X-Requested-With": "XMLHttpRequest",
   },
-  baseUrl: process.env.VITE_APP_BASE_URL,
-  // 数组格式参数序列化（https://github.com/axios/axios/issues/5142）
-  paramsSerializer: {
-    serialize: stringify as unknown as CustomParamsSerializer,
-  },
-}
-
-class MinaHttp  {
-  constructor() {
-    this.httpInterceptorsRequest();
-  }
-  /** 初始化配置对象 */
-  private static initConfig: httpRequestConfig = {};
-  private static axiosInstance: AxiosInstance = axios.create(defaultConfig);
-
-/** 请求拦截 */
-  private httpInterceptorsRequest(): void {
-    MinaHttp.axiosInstance.interceptors.request.use(
-      async (config: httpRequestConfig): Promise<any> => {
-        if (typeof config.beforeRequestCallback === 'function') {
-          config.beforeRequestCallback(config);
-          return config;
-        }
-        if (MinaHttp.initConfig.beforeRequestCallback) {
-          MinaHttp.initConfig.beforeRequestCallback(config);
-          return config;
-        }
-      },
-      (error: any) => {
-        return Promise.reject(error);
-      }
-    );
-}
-
-/** 响应拦截 */
-private httpInterceptorsResponse(): void {
-  const instance = MinaHttp.axiosInstance;
-  instance.interceptors.response.use(
-    (response: httpResponse) => {
-      const $config = response.config;
-
-      // 优先判断post/get等方法是否传入回调，否则执行初始化设置等回调
-      if (typeof $config.beforeResponseCallback === "function") {
-        $config.beforeResponseCallback(response);
-        return response.data;
-      }
-      if (MinaHttp.initConfig.beforeResponseCallback) {
-        MinaHttp.initConfig.beforeResponseCallback(response);
-        return response.data;
-      }
-      return response.data;
+  baseURL: import.meta.env.VITE_APP_BASE_URL
+});
+/** 请求拦截器 */
+http.interceptors.request.use(
+    (config: any) => {
+      // 在发送请求之前做什么
+      return config;
+    },
+    (error: any) => {
+      // 对请求错误做些什么
+      console.log(error);
+      return Promise.reject(error);
     }
-  )
-}
+);
 
-  /** 通用请求工具函数 */
-
-  public request<T>(
-    method: RequestMethods,
-    url: string,
-    param?: AxiosRequestConfig,
-    axiosConfig?: httpRequestConfig
-  ): Promise<T> {
-    const config = {
-      method,
-      url,
-      ...param,
-      ...axiosConfig
-  } as httpRequestConfig;
-    // 单独处理自定义请求/响应回调
-    return new Promise((resolve,reject) => {
-      http.axiosInstance
-        .request(config)
-        .then((response: undefined) => {
-          resolve(response)
+/** 响应拦截器 */
+http.interceptors.response.use(
+    (response: any) => {
+      /** 对响应数据做些什么 */
+      const dataAxios = response.data;
+      const { code, message } = dataAxios;
+      switch (code + "") {
+          // 给用户一点提示
+        case '200':
+          VFNotification({
+            offset: 60,
+            title: "温馨提示",
+            message:  message
+          });
+          break;
+      }
+      return dataAxios;
+    },
+    (error: any) => {
+      // 超出 2xx 范围的状态码都会触发该函数。
+      // 对响应错误做点什么
+      console.log("error.response", error.response)
+      if (error.response) {
+        let { status } = error.response;
+        VFNotification({
+          message: showMessage(status),
+          type: 'error',
+          showClose: true, // 开启支持点击关闭
+          position: 'top right',
+          positionStyle: 'top: 60px', // 定位样式
         })
-        .catch(error => {
-          reject(error)
-        })
-    })
-}
 
-  /** 单独抽离 post 工具函数 */
-  public post<T, P>(
-    url: string,
-    params?: AxiosRequestConfig<T>,
-    config?: httpRequestConfig
-  ): Promise<P> {
-    return this.request<P>("post", url, params, config);
-  }
+      }
+      return Promise.reject(error);
+    }
+);
 
-  /** 单独抽离 get 工具函数 */
-  public get<T, P>(
-    url: string,
-    params?: AxiosRequestConfig<T>,
-    config?: httpRequestConfig
-  ): Promise<P> {
-    return this.request<P>("get, url, params, config);
-  }
-
-}
-
-export const http = new MinaHttp()
+export default http;
