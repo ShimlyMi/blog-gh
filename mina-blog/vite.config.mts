@@ -71,6 +71,13 @@ export default defineConfig(
             '.vue',
           ],
         },
+        css: {
+          preprocessorOptions: {
+            scss: {
+              additionalData: `@import "./src/styles/variable.scss";`
+            }
+          }
+        },
         server: {
           port: 3182,
           proxy: {

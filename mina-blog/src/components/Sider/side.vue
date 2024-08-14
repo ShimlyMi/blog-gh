@@ -88,7 +88,7 @@
 <style scoped>
 .right-side-space {
   width: 100%;
-
+}
   .info-card {
     height: 26rem;
   }

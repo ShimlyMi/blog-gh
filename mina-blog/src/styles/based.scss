@@ -1,0 +1,201 @@
+@import "variable";
+
+/** body */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  min-height: 100vh;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0;
+  color: var(--color-text);
+  /*overflow: hidden;*/
+  background: var(--color-background);
+  font-family:
+          cursive,
+          Helvetica Neue,
+          Helvetica,
+          PingFang SC,
+          Hiragino Sans GB,
+          Microsoft YaHei,
+          Arial,
+          sans-serif;
+  font-size: 16px !important;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+#app {
+  height: 100vh;
+}
+a {
+  text-decoration: none;
+  color: #f9f9f9;
+}
+a:focus,a:active {
+  outline: none;
+  color: var(--primary)
+}
+a:focus,a:hover {
+  cursor: pointer;
+  color: var(--primary);
+}
+ul {
+  list-style-type: none;
+}
+div:focus {
+  outline: none;
+}
+.clearfix {
+  &:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+  }
+}
+.to_pointer {
+  transition: 0.3s ease-in-out;
+  &:hover {
+    color: var(--primary);
+    cursor: pointer;
+    &::before {
+      color: var(--primary);
+    }
+  }
+}
+
+.mouse_pointer {
+  transition: 0.3s ease-in-out;
+  &:hover {
+    cursor: pointer;
+  }
+}
+/** flex 布局 */
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.flex_r_start {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.flex_r_between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.flex_r_around {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.flex_c_center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.flex_c_between {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.flex_c_around {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.flex_c_start {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.flex_1 {
+  flex: 1;
+}
+.flex_wrap {
+  flex-wrap: wrap;
+}
+.flex_right {
+  display: flex;
+  justify-content: right;
+}
+/** 行内块 */
+.inline_block {
+  display: inline-block;
+}
+/** 鼠标点击样式 */
+.to_printer {
+  transition: 0.3s ease-in-out;
+  &:hover {
+    color: var(--primary);
+    cursor: pointer;
+  }
+  &:before {
+    color: var(--primary);
+  }
+}
+/** 文字 overflow */
+.text_overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/** transition */
+.scale {
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+/** 内边距 */
+.pad_5 {
+  padding: 5px;
+}
+/** iconfont */
+.iconfont {
+  cursor: pointer;
+}
+
+svg {
+  cursor: pointer;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.h-100 {
+  height: 100%;
+}
+.w-70 {
+  width: 70%;
+}
+.mt-15 {
+  margin-top: 15px;
+}
+.overflow-hidden {
+  overflow: hidden;
+}
+.max-w-\[300px\] {
+  max-width: 300px;
+}
+
+.right-side-space {
+  padding: 7.5px 1.875px !important;
+}
+
+.dm.move {
+  min-width: 50px!important;
+}

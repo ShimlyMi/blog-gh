@@ -7,10 +7,11 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    MessageBox: typeof import('./components/MessageBox/MessageBox.vue')['default']
     RightSideItem: typeof import('./components/Sider/components/TopSider/right-side-item.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    Sider: typeof import('./components/Sider/sider.vue')['default']
+    Side: typeof import('./components/Sider/side.vue')['default']
     SideSkeleton: typeof import('./components/Sider/components/skeleton/side-skeleton-item.vue')['default']
     SideSkeletonItem: typeof import('./components/Sider/components/skeleton/side-skeleton-item.vue')['default']
     SkeletonItem: typeof import('./components/SkeletonItem/skeleton-item.vue')['default']
