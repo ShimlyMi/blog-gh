@@ -38,9 +38,11 @@ a {
 }
 a:focus,a:active {
   outline: none;
+  background: transparent;
   color: var(--primary)
 }
 a:focus,a:hover {
+  background: transparent;
   cursor: pointer;
   color: var(--primary);
 }

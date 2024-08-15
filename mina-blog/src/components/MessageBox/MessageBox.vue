@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-// type location = "top" | "top-right" | "top-left" | "";
+type location = "top" | "right top" | "left top" | "center center";
 type messageTypes = "info" | "success" | "warning" | "error";
 type variant = 'text' | 'flat' | 'elevated' | 'tonal' | 'outlined' | 'plain';
 interface MessageParams {
@@ -36,13 +36,16 @@ defineExpose({
 </script>
 
 <template>
-  <v-snackbar :timeout="3000" :color="type" :variant="variant" v-model="snackbar">
-    <template #actions>
-      <v-btn variant="text" @click="snackbar = false">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-    </template>
-</v-snackbar>
+  <v-expand-transition mode="in-out">
+    <v-snackbar :timeout="3000" :color="type" :variant="variant" v-model="snackbar" :location="location">
+      <template #actions>
+        <v-btn variant="text" @click="snackbar = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </v-expand-transition>
+
 </template>
 
 <style scoped>

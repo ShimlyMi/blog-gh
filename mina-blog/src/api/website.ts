@@ -7,5 +7,8 @@ export type SiteResult = {
 };
 
 export const getConfig = () => {
-    return http.request<SiteResult>("get", "/api/config/detail", {});
+    return http.request<SiteResult>({
+        url: "/api/utils/detail",
+        method: "get",
+    });
 };

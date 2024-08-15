@@ -1,0 +1,9 @@
+.v-btn .v-btn:hover  {
+  background-color: transparent !important;
+}
+//.v-btn--variant-text .v-btn__overlay {
+//  background-color: transparent !important;
+//}
+.v-btn:hover > .v-btn__overlay {
+  opacity: 0!important;
+}
