@@ -1,4 +1,5 @@
 <script setup name="Header">
+  import { ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { storeToRefs } from "pinia";
   import { useUserStore } from "@/stores/user";
@@ -6,6 +7,7 @@
   const userStore = useUserStore();
   const { getBlogAvatar } = storeToRefs(userStore);
   const router = useRouter()
+  const isRotated = ref(false)
   const user = {
     initials: 'JD',
     fullName: 'John Doe',
@@ -13,6 +15,13 @@
   }
   const goto = () => {
     router.push({ path: '/article', query: { id: 1 } })
+  }
+  const rotate = () => {
+    isRotated.value = true;
+  }
+
+  const reset = () => {
+    isRotated.value = false;
   }
 </script>
 <template>
@@ -55,7 +64,11 @@
       <v-menu>
         <template #activator="{ props  }">
           <v-btn icon v-bind="props" :active="false">
-            <v-avatar>
+            <v-avatar
+                :style="{ transform: isRotated ? 'rotate(360deg)' : 'rotate(0deg)', transition: 'transform 1s' }"
+                @mouseover="rotate"
+                @mouseleave="reset"
+            >
               <v-img alt="网站头像" :src="getBlogAvatar"></v-img>
             </v-avatar>
           </v-btn>

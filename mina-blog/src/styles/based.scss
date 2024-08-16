@@ -85,6 +85,10 @@ div:focus {
   justify-content: center;
   align-items: center;
 }
+.flex_c {
+  display: flex;
+  flex-direction: column;
+}
 .flex_r_start {
   display: flex;
   justify-content: flex-start;

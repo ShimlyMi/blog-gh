@@ -6,7 +6,6 @@ const Router = require("koa-router");
 const router = new Router({ prefix: "/article" });
 const {
     createArticle,
-    getArticleCoverById,
     updateArticle,
     updateTop,
     deleteArticle,
@@ -59,23 +58,22 @@ router.post("/getArticleList", auth, getArticleList);
 
 /** 前台 start */
 // 分页获取文章 按照置顶和发布时间倒序排序
-router.get("/blogHomeGetArticleList/:current/:size", blogHomeGetArticleList);
+router.post("/blogHomeGetArticleList/:current/:size", blogHomeGetArticleList);
 // 分页获取文章归档
-router.get("/blogTimeLineGetArticleList/:current/:size", blogTimeLineGetArticleList);
-router.get("/blogGetArticleListByMonth/:current/:size", blogGetArticleListByMonth);
-// router.post("/blogGetArticleListByMonth/", blogGetArticleListByMonth);
+router.post("/blogTimeLineGetArticleList/:current/:size", blogTimeLineGetArticleList);
+router.post("/blogGetArticleListByMonth/:current/:size", blogGetArticleListByMonth);
 // 分页获取该 分类 下的文章简略信息
 router.post("/getArticleListByCategoryId", getArticleListByCategoryId);
 // 分页获取该 标签 下的文章简略信息
 router.post("/getArticleListByTagId", getArticleListByTagId);
 // 分页获取上下一篇文章 和 推荐文章
-router.get("/getRecommendArticleById/:id", getRecommendArticleById);
+router.post("/getRecommendArticleById/:id", getRecommendArticleById);
 // 全局搜索
-router.get("/getArticleListByContent/:content", getArticleListByContent);
+router.post("/getArticleListByContent/:content", getArticleListByContent);
 // 获取热门文章
 router.get("/getHotArticle", getHotArticle);
 // 文章点赞
-router.get("/like/:id", articleLike);
+router.post("/like/:id", articleLike);
 // 取消文章点赞
 router.put("/cancelLike/:id", cancelArticleLike);
 // 增加文章阅读时长
@@ -84,7 +82,7 @@ router.put("/addReadingDuration/:id/:duration", addReadingDuration);
 
 /** 公共 start */
 // 根据id获取文章详情
-router.get("/getArticleById/:id", getArticleById);
+router.post("/getArticleById/:id", getArticleById);
 /** 公共 end */
 
 module.exports = router;

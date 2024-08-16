@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 
 import Side from "@/components/Sider/side.vue";
 import $messageBox from "@/components/MessageBox/index";
@@ -12,13 +12,13 @@ const configDetail = ref({});
 
 /** 获取个人信息 */
 const getConfigDetail = async () => {
-  let res = await getConfig();
-  // console.log(res.result)
+  let res: any = await getConfig();
+  // console.log(res)
   if (res.code === 0) {
     configDetail.value = res.result;
     // console.log(res.result.avatar_bg)
     // console.log(res.result.blog_avatar)
-    console.log(configDetail.value)
+    // console.log(configDetail.value)
     userStore.SET_BLOG_AVATAR(res.result.blog_avatar)
   } else {
     $messageBox({
@@ -36,7 +36,7 @@ onMounted(() => {
 <template>
   <v-container class="mi-home">
     <v-row>
-      <v-col cols="4">
+      <v-col md="3">
         <Side :config-detail="configDetail" />
       </v-col>
       <v-col md="16">222</v-col>

@@ -1,9 +1,11 @@
 import Request from "@/utils/http/request";
 
-export const getConfig = () => {
+export const getTags = () => {
     return new Promise((resolve) => {
-        Request.get("/api/utils/detail", {}).then((res) => {
+        Request.get("/api/utils/getTagDictionary", {}).then((res: any) => {
             resolve(res);
         })
     })
 };
+
+

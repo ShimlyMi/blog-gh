@@ -1,6 +1,6 @@
 <template>
-  <div class="card-title">
-    <i :class="['iconfont', props.icon]" :style="{ fontSize: props.size, color: props.color }" />
+  <div class="card-title mouse_pointer">
+    <v-icon :class="['iconfont',props.icon]" :style="{ fontSize: props.size, color: props.color }">{{ props.icon }}</v-icon>
     <span> {{ props.title }}</span>
   </div>
   <slot />
@@ -32,6 +32,7 @@
   font-weight: bold;
   .iconfont {
     font-weight: 900;
+    margin-bottom: 4px;
   }
   span {
     margin-left: 0.3rem;
