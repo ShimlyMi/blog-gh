@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { AxiosResponse, AxiosRequestConfig, AxiosInstance } from "axios";
-import $messageBox from "@/components/MessageBox";
 import { Result } from "@/utils/http/types";
+import { messageError } from "@/utils/messgeBox";
 
 // 导出Request，可以用来自定义传递配置来创建实例
 export class Request {
@@ -48,32 +48,16 @@ export class Request {
                 let { status, data } = error.response;
                 switch (status) {
                     case 403:
-                        $messageBox.show({
-                            type: 'error',
-                            message: data.message || '无权访问',
-                            location: "top"
-                        })
-                        break;
+                      messageError(data.message || '无权访问');
+                      break;
                     case 404:
-                        $messageBox.show({
-                            type: 'error',
-                            message: data.message || '请求地址不存在',
-                            location: "top"
-                        })
+                      messageError(data.message || '请求地址不存在');
                         break;
                     case 500:
-                        $messageBox.show({
-                            type: 'error',
-                            message: data.message || '服务器请求错误',
-                            location: "top"
-                        })
+                      messageError(data.message || '服务器请求错误')
                         break;
                     default:
-                        $messageBox.show({
-                            type: 'error',
-                            message: `连接出错(${status})`,
-                            location: "top"
-                        })
+                      messageError(`连接出错(${status})`)
                         break;
                 }
                 // 所有的响应异常 区分来源为取消请求/非取消请求
@@ -100,7 +84,7 @@ export class Request {
     public get<T = any>(
         url: string,
         config?: AxiosRequestConfig
-    ): Promise<AxiosRequestConfig<Result<T>>> {
+    ): Promise<AxiosResponse<Result<T>>> {
         return this.instance.get(url, config);
     }
 
@@ -108,7 +92,7 @@ export class Request {
         url: string,
         data?: any,
         config?: AxiosRequestConfig
-    ): Promise<AxiosRequestConfig<Result<T>>> {
+    ): Promise<AxiosResponse<Result<T>>> {
         return this.instance.post(url, data, config);
     }
 
@@ -116,14 +100,14 @@ export class Request {
         url: string,
         data?: any,
         config?: AxiosRequestConfig
-    ): Promise<AxiosRequestConfig<Result<T>>> {
+    ): Promise<AxiosResponse<Result<T>>> {
         return this.instance.put(url, data, config);
     }
 
     public delete<T = any>(
         url: string,
         config?: AxiosRequestConfig
-    ): Promise<AxiosRequestConfig<Result<T>>> {
+    ): Promise<AxiosResponse<Result<T>>> {
         return this.instance.delete(url, config);
     }
 }

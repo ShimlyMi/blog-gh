@@ -31,6 +31,7 @@
   --button-linear-gradient-h: linear-gradient(300deg, #dfbeed 0%, #f096ce 100%);
   --button-linear-gradient: linear-gradient(300deg, #dfbeed 0%, #f096ce 100%)
 }
+
 /** layout 布局 */
 @include b(layout) {
   background:linear-gradient(90deg, #ffffff 1%,#f0fff0 10.2%,  #fffafa 19.6%, #f8f8ff 36.8%, #fff0f5 62.2%,#ffe4e1 88.9%, #ffffff 100%) !important;

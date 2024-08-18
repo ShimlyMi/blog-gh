@@ -8,16 +8,15 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     HomeArticle: typeof import('./components/HomeArticle/index.vue')['default']
+    Indexx: typeof import('./components/Tooltip/indexx.vue')['default']
     MessageBox: typeof import('./components/MessageBox/MessageBox.vue')['default']
     RightSideItem: typeof import('./components/Sider/components/TopSider/right-side-item.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Side: typeof import('./components/Sider/side.vue')['default']
-    SideSkeleton: typeof import('./components/Sider/components/skeleton/side-skeleton-item.vue')['default']
-    SideSkeletonItem: typeof import('./components/Sider/components/skeleton/side-skeleton-item.vue')['default']
     SkeletonItem: typeof import('./components/SkeletonItem/skeleton-item.vue')['default']
-    SkeletonTem: typeof import('./components/SkeletonItem/skeleton-tem.vue')['default']
-    TopSide: typeof import('./components/Sider/components/skeleton/top-side.vue')['default']
+    Timeline: typeof import('./components/Timeline/index.vue')['default']
+    Tooltip: typeof import('./components/Tooltip/index.vue')['default']
     TopSider: typeof import('./components/Sider/components/TopSider/top-sider.vue')['default']
   }
 }

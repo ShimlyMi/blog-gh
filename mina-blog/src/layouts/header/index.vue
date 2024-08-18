@@ -35,7 +35,7 @@
       <v-btn prepend-icon="mdi-home" to="/" :active="false">
         主页
       </v-btn>
-      <v-btn prepend-icon="mdi-book-open" :active="false" @click="goto">
+      <v-btn prepend-icon="mdi-book-open"  to="/article" :active="false">
         文章
       </v-btn>
       <v-btn prepend-icon="mdi-clock" :active="false">
