@@ -17,6 +17,10 @@ const param = reactive({
   size: 10,
   loading: false,
 });
+const configParam = reactive({
+  current: 1,
+  size: 10,
+})
 const articleList = ref([]);
 const articleTotal = ref();
 let tags = ref([]);
@@ -29,45 +33,45 @@ let data = reactive({
 
 /** 获取个人信息 */
 const getConfigDetail = async () => {
-  let res: any = await getConfig();
-  // console.log(res)
+  let res: any = await getConfig(configParam);
+  console.log(res)
   if (res.code === 0) {
     configDetail.value = res.result;
     // console.log(res.result.avatar_bg)
     // console.log(res.result.blog_avatar)
     // console.log(configDetail.value)
-    userStore.SET_BLOG_AVATAR(res.result.blog_avatar)
+    // userStore.SET_BLOG_AVATAR(res.result.blog_avatar)
   } else {
     messageError(res.message)
   }
 }
 
 /** 获取 分类、文章、标签 总数 */
-const getHomeStatistic = async () => {
-  let res = await getStatistic();
-  if (res.code === 0) {
-    Object.assign(configDetail.value, res.result);
-  }
-}
+// const getHomeStatistic = async () => {
+//   let res = await getStatistic();
+//   if (res.code === 0) {
+//     Object.assign(configDetail.value, res.result);
+//   }
+// }
 
 
 
 /** 获取首页文章 */
-const getArticleList = async () => {
-  // type === 'init' ? "" : (param.loading = true);
-  let res: any = await homeGetArticleList(param.current, param.size);
-  console.log(res)
-  if (res.code === 0) {
-    const { list, count } = res.result;
-    articleList.value = list;
-    articleTotal.value = count
-  }
-}
+// const getArticleList = async () => {
+//   // type === 'init' ? "" : (param.loading = true);
+//   let res: any = await homeGetArticleList(param.current, param.size);
+//   console.log(res)
+//   if (res.code === 0) {
+//     const { list, count } = res.result;
+//     articleList.value = list;
+//     articleTotal.value = count
+//   }
+// }
 
 const init = async () => {
-  await getArticleList();
+  // await getArticleList();
   await getConfigDetail();
-  await getHomeStatistic();
+  // await getHomeStatistic();
 
 }
 
@@ -83,10 +87,10 @@ onMounted(() => {
         <Side :config-detail="configDetail" />
       </v-col>
       <v-col md="16">
-        <HomeArticle
-          :param="param"
-          :article-list="articleList"
-          :article-total="articleTotal" />
+<!--        <HomeArticle-->
+<!--          :param="param"-->
+<!--          :article-list="articleList"-->
+<!--          :article-total="articleTotal" />-->
       </v-col>
     </v-row>
   </v-container>

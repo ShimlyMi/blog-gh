@@ -1,9 +1,9 @@
 import Request from "@/utils/http/request";
 
-export const getConfig = () => {
+export const getConfig = (data?: object) => {
     return new Promise((resolve) => {
-        Request.get("/api/utils/detail", {}).then((res) => {
-            resolve(res);
+        Request.post("/api/website", {params: data}).then((res) => {
+            resolve(res.data);
         })
     })
 };

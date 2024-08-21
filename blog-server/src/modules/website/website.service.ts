@@ -19,16 +19,20 @@ export class WebsiteService {
     data.blogNotice = createWebsiteConfigDto.blogNotice;
     data.personalSignature = createWebsiteConfigDto.personalSignature;
     data.viewTimes = createWebsiteConfigDto.viewTimes;
+
+    return this.website.save(data);
   }
 
   async findAll(@Query() query: { current: number; size: number }) {
-    const data = await this.website.find({
+    const data = await this.website.findAndCount({
       order: { id: 'DESC' },
       skip: (query.current - 1) * query.size,
       take: query.size,
     });
+
     return {
       data,
+      // total
     };
   }
 }
