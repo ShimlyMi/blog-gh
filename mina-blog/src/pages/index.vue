@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref, onMounted } from "vue";
+import {  ref, onMounted } from "vue";
 
 import Side from "@/components/Sider/side.vue";
 import HomeArticle from "@/components/HomeArticle/index.vue";
@@ -12,12 +12,12 @@ import { getStatistic } from "@/api/statistic";
 
 const userStore = useUserStore();
 const configDetail = ref({});
-const param = reactive({
+const param = ref({
   current: 1,
   size: 10,
   loading: false,
 });
-const configParam = reactive({
+const configParam = ref({
   current: 1,
   size: 10,
 })
@@ -25,7 +25,7 @@ const articleList = ref([]);
 const articleTotal = ref();
 let tags = ref([]);
 let categories = ref([]);
-let data = reactive({
+let data = ref({
   category_id: 0,
   current: 1,
   size: 5
@@ -35,6 +35,8 @@ let data = reactive({
 const getConfigDetail = async () => {
   let res: any = await getConfig();
   console.log(res)
+  configDetail.value = res;
+
 }
 
 /** 获取 分类、文章、标签 总数 */
