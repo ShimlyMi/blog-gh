@@ -1,7 +1,8 @@
-import {Injectable, Query} from '@nestjs/common';
+import { Injectable, Query } from '@nestjs/common';
 import { User } from '../../entitis/user/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UserService {
@@ -10,6 +11,17 @@ export class UserService {
     private readonly user: Repository<User>,
   ) {}
 
-  async create(@Query(params?: Object) query: {})
+  createUser(createUserDto: CreateUserDto) {
+    const data = new User();
+    data.username = createUserDto.username;
+    data.password = createUserDto.password;
+    data.nickname = createUserDto.nickname;
+    data.avatar = createUserDto.avatar;
 
+    if (data.username === 'admin') {
+      data.role = 1;
+    }
+
+    return this.user.save(data);
+  }
 }

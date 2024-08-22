@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { Website } from '../../entitis/website/website.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateWebsiteConfigDto } from './dto/create-website-config.dto';
+import {UpdateWebsiteConfigDto} from "./dto/update-website-config.dto";
 
 @Injectable()
 export class WebsiteService {
@@ -23,16 +24,24 @@ export class WebsiteService {
     return this.website.save(data);
   }
 
-  async findAll(@Query() query: { current: number; size: number }) {
-    const data = await this.website.findAndCount({
-      order: { id: 'DESC' },
-      skip: (query.current - 1) * query.size,
-      take: query.size,
+  async findAll() {
+    const data = await this.website.find({
+      select: [
+        'blogName',
+        'blogAvatar',
+        'avatarBg',
+        'personalSignature',
+        'blogNotice',
+        'viewTimes',
+      ],
     });
 
     return {
       data,
-      // total
     };
+  }
+
+  async update(updateWebsiteConfigDto: UpdateWebsiteConfigDto) {
+
   }
 }

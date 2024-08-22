@@ -27,13 +27,14 @@ export class User extends BaseColumn {
   @Column({
     type: 'tinyint',
     comment: '用户角色 1 管理员 2 普通用户',
-    default: 1,
+    default: 2,
   })
-  role: string;
+  role: number;
 
   @Column({
     type: 'varchar',
     comment: '用户头像',
+    default: 'http://127.0.0.1:8888/665d7417ccaa2b7287f6da700.jpg',
   })
   avatar: string;
 }
