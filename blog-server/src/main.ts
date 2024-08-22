@@ -1,11 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-// import { ConfigService } from '@nestjs/config';
+import * as process from 'process';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  const APP_PORT = +process.env.APP_PORT;
   const config = new DocumentBuilder()
     .setTitle('MINA WebAPI')
     .setDescription('米娜的API')
@@ -14,6 +14,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(8888);
+  await app.listen(`${APP_PORT}`);
 }
 bootstrap();

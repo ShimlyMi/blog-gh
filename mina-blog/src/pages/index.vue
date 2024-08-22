@@ -33,17 +33,8 @@ let data = reactive({
 
 /** 获取个人信息 */
 const getConfigDetail = async () => {
-  let res: any = await getConfig(configParam);
+  let res: any = await getConfig();
   console.log(res)
-  if (res.code === 0) {
-    configDetail.value = res.result;
-    // console.log(res.result.avatar_bg)
-    // console.log(res.result.blog_avatar)
-    // console.log(configDetail.value)
-    // userStore.SET_BLOG_AVATAR(res.result.blog_avatar)
-  } else {
-    messageError(res.message)
-  }
 }
 
 /** 获取 分类、文章、标签 总数 */

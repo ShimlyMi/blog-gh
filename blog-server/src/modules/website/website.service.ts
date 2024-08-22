@@ -3,7 +3,6 @@ import { Repository } from 'typeorm';
 import { Website } from '../../entitis/website/website.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateWebsiteConfigDto } from './dto/create-website-config.dto';
-import {UpdateWebsiteConfigDto} from "./dto/update-website-config.dto";
 
 @Injectable()
 export class WebsiteService {
@@ -12,17 +11,17 @@ export class WebsiteService {
     private readonly website: Repository<Website>,
   ) {}
 
-  create(createWebsiteConfigDto: CreateWebsiteConfigDto) {
-    const data = new Website();
-    data.blogName = createWebsiteConfigDto.blogName;
-    data.blogAvatar = createWebsiteConfigDto.blogAvatar;
-    data.avatarBg = createWebsiteConfigDto.avatarBg;
-    data.blogNotice = createWebsiteConfigDto.blogNotice;
-    data.personalSignature = createWebsiteConfigDto.personalSignature;
-    data.viewTimes = createWebsiteConfigDto.viewTimes;
-
-    return this.website.save(data);
-  }
+  // create(createWebsiteConfigDto: CreateWebsiteConfigDto) {
+  //   const data = new Website();
+  //   data.blogName = createWebsiteConfigDto.blogName;
+  //   data.blogAvatar = createWebsiteConfigDto.blogAvatar;
+  //   data.avatarBg = createWebsiteConfigDto.avatarBg;
+  //   data.blogNotice = createWebsiteConfigDto.blogNotice;
+  //   data.personalSignature = createWebsiteConfigDto.personalSignature;
+  //   data.viewTimes = createWebsiteConfigDto.viewTimes;
+  //
+  //   return this.website.save(data);
+  // }
 
   async findAll() {
     const data = await this.website.find({
@@ -30,8 +29,8 @@ export class WebsiteService {
         'blogName',
         'blogAvatar',
         'avatarBg',
-        'personalSignature',
         'blogNotice',
+        'personalSignature',
         'viewTimes',
       ],
     });
@@ -39,9 +38,5 @@ export class WebsiteService {
     return {
       data,
     };
-  }
-
-  async update(updateWebsiteConfigDto: UpdateWebsiteConfigDto) {
-
   }
 }
