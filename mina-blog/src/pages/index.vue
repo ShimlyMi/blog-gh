@@ -3,20 +3,22 @@ import {  ref, onMounted } from "vue";
 
 import Side from "@/components/Sider/side.vue";
 
-import { getConfig } from "@/api/website/website";
+import { getConfig } from "@/api/website";
+import { WebsiteResponse } from "@/api/website/types";
 
-const configDetail = ref({});
+const configDetail = ref();
 
 
 /** 获取个人信息 */
 const getConfigDetail = async () => {
-  let res: any = await getConfig();
-  console.log(res)
+  const res: WebsiteResponse = await getConfig();
+  // console.log(res)
+  configDetail.value = res;
 }
 
 
-const init = async () => {
-  await getConfigDetail();
+const init = () => {
+  getConfigDetail();
 
 }
 
@@ -29,7 +31,7 @@ onMounted(() => {
   <v-container class="mi-home">
     <v-row>
       <v-col md="3">
-        <Side :config-detail="configDetail" />
+        <Side :website-config="configDetail" />
       </v-col>
       <v-col md="16">
 <!--        <HomeArticle-->

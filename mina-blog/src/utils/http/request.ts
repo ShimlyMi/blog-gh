@@ -30,11 +30,15 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
     const status: number = response.status
+    // console.log("response.data", response.data)
     if (status === 200) {
       const result: ApiResponse<any> = response.data;
-      if (result.code === 0) {
-        return result.data
-      }
+      // console.log("result",result)
+      return result.data
+      // console.log("result.data", result.data)
+      // if (result.code === 0) {
+      //   return result.data
+      // }
     }
   },
   (error: AxiosError) => {

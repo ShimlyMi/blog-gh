@@ -34,7 +34,7 @@ const Category = seq.define('mi_category', {
 )
 
 // 强制同步数据库 表创建完之后 要注释掉
-// Category.sync({ force: true })
+// CategoryEntity.sync({ force: true })
 // console.log("User模型同步成功");
 
 module.exports = Category;

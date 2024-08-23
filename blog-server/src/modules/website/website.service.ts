@@ -24,7 +24,7 @@ export class WebsiteService {
   // }
 
   async findAll() {
-    const res = await this.website.find({
+    const data = await this.website.find({
       select: [
         'blogName',
         'blogAvatar',
@@ -35,6 +35,12 @@ export class WebsiteService {
       ],
     });
 
-    return res.length ? res[0] : false
+    return {
+      code: 200,
+      message: 'Success',
+      data: data.length ? data[0] : false,
+    };
+    // return data.length ? data[0] : data;
+    // return res.length ? res[0] : false;
   }
 }

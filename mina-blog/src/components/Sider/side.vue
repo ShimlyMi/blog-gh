@@ -5,22 +5,9 @@
 
   const isRotated =ref(false);
   const props = defineProps({
-    configDetail: {
-      type: Object,
-      default: () => {},
-    },
-    runtime: {
-      type: [String, Number],
-      default: '半年不到',
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    articleCount: {
-      type: Number,
-      default: 0,
-    },
+    websiteConfig: {
+      type: Object
+    }
   })
 
   const router = useRouter()
@@ -49,85 +36,85 @@
 
 <template>
   <div class="mi-left">
-    <div class="right-side-space right-side-space1">
-      <v-card class="info-card">
-        <v-sheet class="d-flex align-start flex-column">
-          <v-sheet class="info-bg">
-            <v-img :src="configDetail.avatar_bg" :cover="true">
-              <template #error>
-                <v-icon>mdi-image-off</v-icon>
-              </template>
-            </v-img>
-          </v-sheet>
-          <v-sheet class="info-avatar">
-            <v-avatar
-                :size="70"
-                class="blog-avatar"
-                :style="{ transform: isRotated ? 'rotate(360deg)' : 'rotate(0deg)', transition: 'transform 1s' }"
-                @mouseover="rotate"
-                @mouseleave="reset"
-            >
-              <img :src="configDetail.blog_avatar" width="100%" />
-            </v-avatar>
-            <span class="blog-name ma-2 mouse_pointer">{{ configDetail.blog_name }}</span>
-          </v-sheet>
-          <v-sheet class="personality-signature mouse_pointer clearfix">
-            {{ configDetail.personality_signature }}
-          </v-sheet>
-        </v-sheet>
-        <v-divider></v-divider>
-        <div class="flex_r_around">
-            <span class="common-menu flex_c">
-              <span class="common-menu__label to_printer">文章</span>
-              <span class="common-menu__value to_pointer">
-                {{ configDetail.articleCount || 0 }}
-              </span>
-            </span>
-          <span class="common-menu flex_c">
-              <span class="common-menu__label to_printer">分类</span>
-              <span class="common-menu__value to_pointer">
-                {{ configDetail.categoryCount || 0 }}
-              </span>
-            </span>
-          <span class="common-menu flex_c">
-              <span class="common-menu__label to_printer">标签</span>
-              <span class="common-menu__value to_pointer">
-                {{ configDetail.tagCount || 0 }}
-              </span>
-            </span>
-        </div>
-        <div class="git-ee flex_r_around">
-          <span
-              class="git-ee__item button-animated"
-          >
-            <v-icon color="#fff" class="icon-wechat">mdi-wechat</v-icon>
-          <span class="git-ee__item-text">朋友圈</span>
-        </span>
-        </div>
-      </v-card>
-    </div>
-    <div class="right-side-space right-side-space2">
-      <v-card class="right-card">
-        <v-skeleton-loader>
-          <template #default>
-            <RightSideItem icon="mdi-bullhorn-variant-outline" color="#ec6b94" title="碎碎念">
-              <div class="notice-text mouse_pointer">{{ configDetail.blog_notice }}</div>
-            </RightSideItem>
-          </template>
-        </v-skeleton-loader>
-      </v-card>
-    </div>
-    <div class="right-side-space right-side-space3">
-      <v-card class="right-card">
-        <v-skeleton-loader>
-          <template #default>
-            <RightSideItem icon="mdi-book-open-variant" color="#ec6b94" title="推荐文章">
-              <div class="notice-text">{{ configDetail.recommended }}</div>
-            </RightSideItem>
-          </template>
-        </v-skeleton-loader>
-      </v-card>
-    </div>
+<!--    <div class="right-side-space right-side-space1">-->
+<!--      <v-card class="info-card">-->
+<!--        <v-sheet class="d-flex align-start flex-column">-->
+<!--          <v-sheet class="info-bg">-->
+<!--            <v-img :src="configDetail.avatar_bg" :cover="true">-->
+<!--              <template #error>-->
+<!--                <v-icon>mdi-image-off</v-icon>-->
+<!--              </template>-->
+<!--            </v-img>-->
+<!--          </v-sheet>-->
+<!--          <v-sheet class="info-avatar">-->
+<!--            <v-avatar-->
+<!--                :size="70"-->
+<!--                class="blog-avatar"-->
+<!--                :style="{ transform: isRotated ? 'rotate(360deg)' : 'rotate(0deg)', transition: 'transform 1s' }"-->
+<!--                @mouseover="rotate"-->
+<!--                @mouseleave="reset"-->
+<!--            >-->
+<!--              <img :src="configDetail.blog_avatar" width="100%" />-->
+<!--            </v-avatar>-->
+<!--            <span class="blog-name ma-2 mouse_pointer">{{ configDetail.blog_name }}</span>-->
+<!--          </v-sheet>-->
+<!--          <v-sheet class="personality-signature mouse_pointer clearfix">-->
+<!--            {{ configDetail.personality_signature }}-->
+<!--          </v-sheet>-->
+<!--        </v-sheet>-->
+<!--        <v-divider></v-divider>-->
+<!--        <div class="flex_r_around">-->
+<!--            <span class="common-menu flex_c">-->
+<!--              <span class="common-menu__label to_printer">文章</span>-->
+<!--              <span class="common-menu__value to_pointer">-->
+<!--                {{ configDetail.articleCount || 0 }}-->
+<!--              </span>-->
+<!--            </span>-->
+<!--          <span class="common-menu flex_c">-->
+<!--              <span class="common-menu__label to_printer">分类</span>-->
+<!--              <span class="common-menu__value to_pointer">-->
+<!--                {{ configDetail.categoryCount || 0 }}-->
+<!--              </span>-->
+<!--            </span>-->
+<!--          <span class="common-menu flex_c">-->
+<!--              <span class="common-menu__label to_printer">标签</span>-->
+<!--              <span class="common-menu__value to_pointer">-->
+<!--                {{ configDetail.tagCount || 0 }}-->
+<!--              </span>-->
+<!--            </span>-->
+<!--        </div>-->
+<!--        <div class="git-ee flex_r_around">-->
+<!--          <span-->
+<!--              class="git-ee__item button-animated"-->
+<!--          >-->
+<!--            <v-icon color="#fff" class="icon-wechat">mdi-wechat</v-icon>-->
+<!--          <span class="git-ee__item-text">朋友圈</span>-->
+<!--        </span>-->
+<!--        </div>-->
+<!--      </v-card>-->
+<!--    </div>-->
+<!--    <div class="right-side-space right-side-space2">-->
+<!--      <v-card class="right-card">-->
+<!--        <v-skeleton-loader>-->
+<!--          <template #default>-->
+<!--            <RightSideItem icon="mdi-bullhorn-variant-outline" color="#ec6b94" title="碎碎念">-->
+<!--              <div class="notice-text mouse_pointer">{{ configDetail.blog_notice }}</div>-->
+<!--            </RightSideItem>-->
+<!--          </template>-->
+<!--        </v-skeleton-loader>-->
+<!--      </v-card>-->
+<!--    </div>-->
+<!--    <div class="right-side-space right-side-space3">-->
+<!--      <v-card class="right-card">-->
+<!--        <v-skeleton-loader>-->
+<!--          <template #default>-->
+<!--            <RightSideItem icon="mdi-book-open-variant" color="#ec6b94" title="推荐文章">-->
+<!--              <div class="notice-text">{{ configDetail.recommended }}</div>-->
+<!--            </RightSideItem>-->
+<!--          </template>-->
+<!--        </v-skeleton-loader>-->
+<!--      </v-card>-->
+<!--    </div>-->
   </div>
 </template>
 
