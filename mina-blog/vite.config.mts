@@ -83,7 +83,8 @@ export default defineConfig(
        server: {
          port: 3182,
          proxy: {
-           //匹配规则
+           // target: 'http://localhost:8888',
+           // changeOrigin: true,
            "/api": {
              //要访问的跨域的域名
              target: "http://localhost:8888",

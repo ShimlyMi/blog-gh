@@ -1,8 +1,8 @@
-import { Injectable, Query } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Website } from '../../entitis/website/website.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateWebsiteConfigDto } from './dto/create-website-config.dto';
+// import { CreateWebsiteConfigDto } from './dto/create-website-config.dto';
 
 @Injectable()
 export class WebsiteService {
@@ -24,7 +24,7 @@ export class WebsiteService {
   // }
 
   async findAll() {
-    const data = await this.website.find({
+    const res = await this.website.find({
       select: [
         'blogName',
         'blogAvatar',
@@ -35,8 +35,6 @@ export class WebsiteService {
       ],
     });
 
-    return {
-      data,
-    };
+    return res.length ? res[0] : false
   }
 }

@@ -10,6 +10,7 @@ import { AppService } from './app.service';
 // import {validate} from "./env.validation";
 import { WebsiteModule } from './modules/website/website.module';
 import { UserModule } from './modules/user/user.module';
+import { DatabaseModule } from './modules/database/database.module';
 import * as process from 'process';
 
 @Module({
@@ -30,6 +31,7 @@ import * as process from 'process';
 
     WebsiteModule,
     UserModule,
+    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

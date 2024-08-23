@@ -4,7 +4,7 @@
   import RightSideItem from '@/components/Sider/components/TopSider/right-side-item.vue'
 
   const isRotated =ref(false);
-  defineProps({
+  const props = defineProps({
     configDetail: {
       type: Object,
       default: () => {},
@@ -40,7 +40,7 @@
         list.push('.right-side-space' + i)
       }
     }
-    // console.log("side",props.configDetail)
+    console.log("side",props.configDetail)
     // nextTick(() => {
     //   gsapTransY(list, 50, 0.6, 'none')
     // })

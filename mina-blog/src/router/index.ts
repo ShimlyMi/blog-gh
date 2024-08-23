@@ -1,5 +1,5 @@
 /**
- * router/request.ts
+ * router/article.ts
  *
  * Automatic routes for `./src/pages/*.vue`
  */

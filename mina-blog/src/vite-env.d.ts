@@ -1,4 +1,4 @@
-/// <reference types="vite/client" />
+/// <reference interfaces="vite/client" />
 
 declare module '*.vue' {
   import type { DefineComponent } from 'vue'
