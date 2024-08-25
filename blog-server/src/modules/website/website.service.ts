@@ -1,7 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseInterceptors } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Website } from '../../entitis/website/website.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ResponseInterceptor } from '../../common/interceptors/response.interceptor';
+import { ResultData } from '../../common/utils/result';
+import { ErrorCode } from '../../common/constants/constants';
+
 // import { CreateWebsiteConfigDto } from './dto/create-website-config.dto';
 
 @Injectable()
@@ -23,24 +27,27 @@ export class WebsiteService {
   //   return this.website.save(data);
   // }
 
+  @UseInterceptors(ResponseInterceptor)
   async findAll() {
-    const data = await this.website.find({
-      select: [
-        'blogName',
-        'blogAvatar',
-        'avatarBg',
-        'blogNotice',
-        'personalSignature',
-        'viewTimes',
-      ],
-    });
+    try {
+      const data = await this.website.find({
+        select: [
+          'blogName',
+          'blogAvatar',
+          'avatarBg',
+          'blogNotice',
+          'personalSignature',
+          'viewTimes',
+        ],
+      });
 
-    return {
-      code: 200,
-      message: 'Success',
-      data: data.length ? data[0] : false,
-    };
-    // return data.length ? data[0] : data;
-    // return res.length ? res[0] : false;
+      return ResultData.messageSuccess(
+        data.length ? data[0] : false,
+        '查询成功',
+      );
+    } catch (error) {
+      console.error(error);
+      return ResultData.messageFail(ErrorCode.CONFIG, '查询失败', '');
+    }
   }
 }

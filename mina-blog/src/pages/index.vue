@@ -5,15 +5,18 @@ import Side from "@/components/Sider/side.vue";
 
 import { getConfig } from "@/api/website";
 import { WebsiteResponse } from "@/api/website/types";
+import { useWebsiteStore } from "@/stores/website";
 
-const configDetail = ref();
+const configDetail = ref({});
+const useWebsite = useWebsiteStore();
 
 
 /** 获取个人信息 */
 const getConfigDetail = async () => {
-  const res: WebsiteResponse = await getConfig();
-  // console.log(res)
-  configDetail.value = res;
+  const res = await useWebsite.sendWebsiteConfig()
+  console.log(res)
+  configDetail.value = res
+  useWebsite.setWebsiteConfig(configDetail.value)
 }
 
 
@@ -31,7 +34,7 @@ onMounted(() => {
   <v-container class="mi-home">
     <v-row>
       <v-col md="3">
-        <Side :website-config="configDetail" />
+        <Side  />
       </v-col>
       <v-col md="16">
 <!--        <HomeArticle-->

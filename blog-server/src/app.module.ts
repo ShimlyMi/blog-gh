@@ -7,10 +7,11 @@ import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-// import {validate} from "./env.validation";
 import { WebsiteModule } from './modules/website/website.module';
 import { UserModule } from './modules/user/user.module';
 import * as process from 'process';
+import { CategoryModule } from './modules/category/category.module';
+import { TagModule } from './modules/tag/tag.module';
 
 @Module({
   imports: [
@@ -26,10 +27,12 @@ import * as process from 'process';
       database: process.env.MYSQL_DB,
       synchronize: true,
       autoLoadEntities: true,
+      logging: true,
     }),
-
     WebsiteModule,
     UserModule,
+    CategoryModule,
+    TagModule,
   ],
   controllers: [AppController],
   providers: [AppService],
