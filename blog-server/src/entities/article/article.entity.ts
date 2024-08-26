@@ -93,6 +93,8 @@ export class ArticleEntity extends BaseColumn {
   @JoinColumn()
   categoryId: Category;
 
+
+
   @OneToMany(() => Tag, (tag) => tag.id)
   @JoinColumn()
   tagId: Tag[];

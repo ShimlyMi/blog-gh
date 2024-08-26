@@ -1,4 +1,7 @@
-import { Controller } from '@nestjs/common';
+import {Controller, Post} from '@nestjs/common';
 
 @Controller('utils')
-export class UtilsController {}
+export class UtilsController {
+    @Post('upload')
+
+}

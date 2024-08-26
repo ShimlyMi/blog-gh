@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
-import { Category } from '../../entitis/category/category.entity';
+import { Category } from '../../entities/category/category.entity';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ResultData } from '../../common/utils/result';
@@ -9,7 +9,7 @@ import { ErrorCode } from '../../common/constants/constants';
 import { remove, update, create } from '../../common/utils/transaction';
 import { transformToNumber } from '../../common/utils/transform';
 import { Pagination } from '../../interfaces/pagination';
-import { Tag } from '../../entitis/tag/tag.entity';
+import { Tag } from '../../entities/tag/tag.entity';
 
 @Injectable()
 export class CategoryService {

@@ -1,6 +1,6 @@
 import { Injectable, UseInterceptors } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { Website } from '../../entitis/website/website.entity';
+import { Website } from '../../entities/website/website.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ResponseInterceptor } from '../../common/interceptors/response.interceptor';
 import { ResultData } from '../../common/utils/result';

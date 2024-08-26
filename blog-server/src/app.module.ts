@@ -15,12 +15,16 @@ import { TagModule } from './modules/tag/tag.module';
 import { UploadModule } from './controllers/upload/upload.module';
 import { UploadController } from './controllers/upload/upload.controller';
 import { UploadModule } from './modules/upload/upload.module';
+import Joi from "joi";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env.development'],
+      validationSchema: Joi.object({
+        UPLOAD_FILES_DESTINATION: Joi.string().required()
+      })
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',

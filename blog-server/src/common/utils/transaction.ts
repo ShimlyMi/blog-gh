@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { PartialType } from '@nestjs/mapped-types';
 import { ResultData } from './result';
-import { BaseColumn } from '../../entitis/baseColumnAbstract/base';
+import { BaseColumn } from '../../entities/baseColumnAbstract/base';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 export const create = async (

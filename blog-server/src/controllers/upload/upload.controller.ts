@@ -9,12 +9,15 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import UploadService from "../../modules/upload/upload.service";
 
 const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
 const MAX_FILE_SIZE = 1024 * 1024 * 2; // 2MB
 
 @Controller('upload')
-export class UploadController {
+export default class UploadController {
+  constructor(private readonly uploadService: UploadService) {}
+
   @Post()
   @UseInterceptors(
     FilesInterceptor('files', 20, {
