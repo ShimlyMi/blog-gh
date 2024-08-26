@@ -12,6 +12,9 @@ import { UserModule } from './modules/user/user.module';
 import * as process from 'process';
 import { CategoryModule } from './modules/category/category.module';
 import { TagModule } from './modules/tag/tag.module';
+import { UploadModule } from './controllers/upload/upload.module';
+import { UploadController } from './controllers/upload/upload.controller';
+import { UploadModule } from './modules/upload/upload.module';
 
 @Module({
   imports: [
@@ -33,8 +36,9 @@ import { TagModule } from './modules/tag/tag.module';
     UserModule,
     CategoryModule,
     TagModule,
+    UploadModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, UploadController],
   providers: [AppService],
 })
 export class AppModule {}
