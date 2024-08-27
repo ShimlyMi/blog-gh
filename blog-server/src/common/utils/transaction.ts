@@ -5,9 +5,8 @@ import {
   Repository,
   UpdateResult,
 } from 'typeorm';
-import { PartialType } from '@nestjs/mapped-types';
 import { ResultData } from './result';
-import { BaseColumn } from '../../entities/baseColumnAbstract/base';
+import { BaseColumn } from '../../business/baseColumnAbstract/base';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 export const create = async (
@@ -83,4 +82,3 @@ export const update = async (
 
   return ResultData.messageFail(500, '修改失败', '');
 };
-
