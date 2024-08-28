@@ -79,18 +79,11 @@ export class UserService {
       // });
 
       const res = await this.userRepository
-        .createQueryBuilder('user')
-        .select()
-        .where(`user.username like :username`, { username: `%${username}%` })
-        .getRawOne();
+        .createQueryBuilder('u')
+        .where('u.username like :username', { username: `%${username}%` })
+        .getOne();
       console.log(res);
-      const data: object = {
-        username: res.username,
-        nickname: res.nickname,
-        role: res.role,
-        avatar: res.avatar,
-      };
-      return ResultData.messageSuccess(data, `查询用户${username}成功`);
+      return ResultData.messageSuccess(res, `查询用户成功`);
     } catch (err) {
       console.error(err);
       return ResultData.messageFail(ErrorCode.CATEGORY, '查询用户失败', '');

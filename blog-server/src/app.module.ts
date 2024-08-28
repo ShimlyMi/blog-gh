@@ -11,7 +11,7 @@ import { WebsiteModule } from './business/website/website.module';
 import { CategoryModule } from './business/category/category.module';
 import { TagModule } from './business/tag/tag.module';
 import { ArticleModule } from './business/article/article.module';
-// import { UploadModule } from './business/upload/upload.module';
+import { UploadModule } from './business/upload/upload.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './business/user/user.module';
 
@@ -40,7 +40,7 @@ import { UserModule } from './business/user/user.module';
     ArticleModule,
     AuthModule,
     UserModule,
-    // UploadModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
