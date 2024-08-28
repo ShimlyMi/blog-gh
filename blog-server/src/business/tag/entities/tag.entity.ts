@@ -1,5 +1,5 @@
 import { Column, Entity } from 'typeorm';
-import { BaseColumn } from '../../baseColumnAbstract/base';
+import { BaseColumn } from '../../baseColumnAbstract/baseColumn';
 
 @Entity()
 export class Tag extends BaseColumn {
