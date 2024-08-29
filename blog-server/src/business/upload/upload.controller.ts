@@ -13,9 +13,11 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
+import { UploadService } from './upload.service';
 
 @Controller('upload')
 export class UploadController {
+  constructor(private uploadService: UploadService) {}
   @Post('/one')
   @UseInterceptors(FileInterceptor('file'))
   oneUploadFile(@UploadedFile() file: Express.Multer.File) {
@@ -37,5 +39,16 @@ export class UploadController {
   )
   uploadFile(files: Express.Multer.File) {
     console.log(files);
+  }
+
+  @Post('/test')
+  @UseInterceptors(
+    FilesInterceptor('files', 20, this.uploadService.getMulterConfig()),
+  )
+  localFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
+    res.status(200).json({
+      message: 'File uploaded successfully',
+      filePath: files.path,
+    });
   }
 }

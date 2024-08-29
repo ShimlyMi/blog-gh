@@ -1,26 +1,14 @@
-import dayjs from 'dayjs';
-import { validateFileMimeType, checkAndCreate } from '../utils/validateUpload';
-import { UnsupportedMediaTypeException } from '@nestjs/common';
+import { validateFileMimeType } from '../utils/validateUpload';
+import { ResultData } from '../utils/result';
 
-export const UploadFilesFilter = (mines: string | string[]) => {
-  return (
-    req: any,
-    file: Express.Multer.File,
-    callback: (
-      error: Error | null,
-      acceptFile: boolean,
-      filePath?: string,
-    ) => void,
-  ) => {
-    mines = file.originalname.split('.').pop().toLowerCase();
-    const temp = 'images';
-    if (validateFileMimeType(mines)) {
-      callback(null, true);
-    } else {
-      callback(new UnsupportedMediaTypeException('文件类型错误'), false);
-    }
-    const filePath = `uploadedFiles/${temp}/${dayjs().format('YYYY-MM')}`;
-    checkAndCreate(filePath);
-    callback(null, true, `./${filePath}`);
-  };
+export const UploadFilesFilter = (
+  req?: any,
+  file: Express.Multer.File,
+  callback?: (error: Error | null, acceptFile: boolean) => void,
+): ResultData => {
+  if (!validateFileMimeType(file.mimetype)) {
+    callback(new Error('文件类型错误，只允许图片上传'), false);
+  }
+  callback(null, true);
+  return ResultData.messageSuccess('', '图片上传成功');
 };
