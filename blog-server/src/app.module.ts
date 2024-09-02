@@ -14,6 +14,8 @@ import { ArticleModule } from './business/article/article.module';
 import { UploadModule } from './business/upload/upload.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './business/user/user.module';
+import { TalkModule } from './talk/talk.module';
+import { TalkModule } from './business/talk/talk.module';
 
 @Module({
   imports: [
@@ -41,6 +43,7 @@ import { UserModule } from './business/user/user.module';
     AuthModule,
     UserModule,
     UploadModule,
+    TalkModule,
   ],
   controllers: [AppController],
   providers: [AppService],

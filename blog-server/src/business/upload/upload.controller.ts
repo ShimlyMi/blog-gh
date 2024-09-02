@@ -24,23 +24,6 @@ export class UploadController {
   }
 
   @Post('/files')
-  @UseInterceptors(FilesInterceptor('files', 20))
-  @Bind(
-    UploadedFiles(
-      new ParseFilePipeBuilder()
-        .addFileTypeValidator({
-          fileType: 'jpeg',
-        })
-        .build({
-          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-        }),
-    ),
-  )
-  uploadFile(files: Express.Multer.File) {
-    console.log(files);
-  }
-
-  @Post('/test')
   @UseInterceptors(FilesInterceptor('files', 20, { storage }))
   localFiles(
     @UploadedFiles(
@@ -54,10 +37,6 @@ export class UploadController {
     )
     files: Express.Multer.File,
   ) {
-    // return res.status(200).json({
-    //   message: 'File uploaded successfully',
-    //   filePath: files,
-    // });
     return ResultData.messageSuccess(
       { filePath: files },
       'File uploaded successfully',
