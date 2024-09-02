@@ -1,10 +1,7 @@
 import {
   Bind,
   Controller,
-  FileTypeValidator,
   HttpStatus,
-  MaxFileSizeValidator,
-  ParseFilePipe,
   ParseFilePipeBuilder,
   Post,
   UploadedFile,
@@ -13,11 +10,13 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
-import { UploadService } from './upload.service';
+// import { UploadService } from './upload.service';
+import { storage } from '../../common/filter/uploadFiles.filter';
+import { ResultData } from '../../common/utils/result';
 
 @Controller('upload')
 export class UploadController {
-  constructor(private uploadService: UploadService) {}
+  // constructor(private uploadService: UploadService) {}
   @Post('/one')
   @UseInterceptors(FileInterceptor('file'))
   oneUploadFile(@UploadedFile() file: Express.Multer.File) {
@@ -25,7 +24,7 @@ export class UploadController {
   }
 
   @Post('/files')
-  @UseInterceptors(FilesInterceptor('files'))
+  @UseInterceptors(FilesInterceptor('files', 20))
   @Bind(
     UploadedFiles(
       new ParseFilePipeBuilder()
@@ -42,13 +41,26 @@ export class UploadController {
   }
 
   @Post('/test')
-  @UseInterceptors(
-    FilesInterceptor('files', 20, this.uploadService.getMulterConfig()),
-  )
-  localFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
-    res.status(200).json({
-      message: 'File uploaded successfully',
-      filePath: files.path,
-    });
+  @UseInterceptors(FilesInterceptor('files', 20, { storage }))
+  localFiles(
+    @UploadedFiles(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: 'jpeg',
+        })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        }),
+    )
+    files: Express.Multer.File,
+  ) {
+    // return res.status(200).json({
+    //   message: 'File uploaded successfully',
+    //   filePath: files,
+    // });
+    return ResultData.messageSuccess(
+      { filePath: files },
+      'File uploaded successfully',
+    );
   }
 }

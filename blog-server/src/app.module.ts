@@ -19,7 +19,7 @@ import { UserModule } from './business/user/user.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.development'],
+      envFilePath: ['.env.development','.env'],
       // validationSchema: Joi.object({
       //   UPLOAD_FILES_DESTINATION: Joi.string().required(),
       // }),

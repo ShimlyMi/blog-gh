@@ -1,14 +1,25 @@
-import { validateFileMimeType } from '../utils/validateUpload';
-import { ResultData } from '../utils/result';
+import * as multer from 'multer';
+import * as dayjs from 'dayjs';
+import { checkAndCreate } from '../utils/validateUpload';
+import { extname } from 'path';
+import * as process from 'process';
 
-export const UploadFilesFilter = (
-  req?: any,
-  file: Express.Multer.File,
-  callback?: (error: Error | null, acceptFile: boolean) => void,
-): ResultData => {
-  if (!validateFileMimeType(file.mimetype)) {
-    callback(new Error('文件类型错误，只允许图片上传'), false);
-  }
-  callback(null, true);
-  return ResultData.messageSuccess('', '图片上传成功');
-};
+export const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const basePath = process.env.UPLOAD_FILES_DESTINATION;
+    const currentDate = dayjs().format('YYYY-MM');
+    // console.log(basePath);
+    const destinationPath = `${basePath}/${currentDate}`;
+
+    // 这里可以添加逻辑来确保目录存在
+    checkAndCreate(destinationPath);
+    cb(null, destinationPath);
+  },
+  filename: (req, file, cb) => {
+    const randomName = Array(32)
+      .fill(null)
+      .map(() => Math.round(Math.random() * 16).toString(16))
+      .join('');
+    cb(null, `${randomName}${extname(file.originalname)}`);
+  },
+});
