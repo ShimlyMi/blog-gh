@@ -16,6 +16,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './business/user/user.module';
 import { TalkModule } from './talk/talk.module';
 import { TalkModule } from './business/talk/talk.module';
+import { TalkPhotosModule } from './business/talk-photos/talk-photos.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { TalkModule } from './business/talk/talk.module';
     UserModule,
     UploadModule,
     TalkModule,
+    TalkPhotosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
