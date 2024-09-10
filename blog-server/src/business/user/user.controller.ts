@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -25,9 +27,22 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get('/findOne/:username')
-  findOne(@Param('username') username: string) {
-    return this.userService.findOne(username);
+  // @Get('/findOne/:username')
+  // findOneByUsername(@Param('username') username: string) {
+  //   return this.userService.findOne(username);
+  // }
+
+  @Get('/findOne/')
+  findOne(
+    @Query('username', { required: false }) username?: string,
+    @Query('id', ParseIntPipe, { required: false }) id?: number,
+  ) {
+    // return this.userService.findOne(id);
+    if (username) {
+      return this.userService.findOne(username);
+    } else if (id) {
+      return this.userService.findOne(id);
+    }
   }
 
   @Patch(':id')

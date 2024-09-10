@@ -1,16 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { TalkPhotosService } from './talk-photos.service';
 import { CreateTalkPhotoDto } from './dto/create-talk-photo.dto';
 import { UpdateTalkPhotoDto } from './dto/update-talk-photo.dto';
 
-@Controller('talk-photos')
+@Controller('talkPhotos')
 export class TalkPhotosController {
   constructor(private readonly talkPhotosService: TalkPhotosService) {}
-
-  @Post()
-  create(@Body() createTalkPhotoDto: CreateTalkPhotoDto) {
-    return this.talkPhotosService.create(createTalkPhotoDto);
-  }
 
   @Get()
   findAll() {
@@ -23,7 +26,10 @@ export class TalkPhotosController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTalkPhotoDto: UpdateTalkPhotoDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateTalkPhotoDto: UpdateTalkPhotoDto,
+  ) {
     return this.talkPhotosService.update(+id, updateTalkPhotoDto);
   }
 

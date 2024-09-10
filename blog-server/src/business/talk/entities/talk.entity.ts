@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { BaseColumn } from '../../baseColumnAbstract/baseColumn';
 import { User } from '../../user/entities/user.entity';
 
@@ -10,15 +10,11 @@ export class Talk extends BaseColumn {
   })
   content: string;
 
-  @OneToOne(() => User.id)
-  @JoinColumn()
-  userId: User;
-
-  @Column({
-    type: 'varchar',
-    comment: '说说图片路径',
+  @ManyToOne(() => User, (user) => user.id, {
+    cascade: true, // 启用级联操作，如保存时自动保存关联的User
   })
-  imageUrl: string;
+  @JoinColumn({ name: 'id' })
+  userId: number;
 
   @Column({
     type: 'tinyint',

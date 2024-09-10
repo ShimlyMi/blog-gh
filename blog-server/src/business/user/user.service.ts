@@ -70,18 +70,22 @@ export class UserService {
     return `This action returns all user`;
   }
 
-  async findOne(username: string) {
+  async findOne(username?: string, id?: number) {
     try {
-      console.log(username);
-      // const res = await this.userRepository.find({
-      //   select: ['id', 'username', 'role', 'avatar', 'nickname'],
-      //   where: { username: username },
-      // });
-
-      const res = await this.userRepository
-        .createQueryBuilder('u')
-        .where('u.username like :username', { username: `%${username}%` })
-        .getOne();
+      let res: any;
+      if (id) {
+        res = await this.userRepository.findOne({
+          where: { id: id },
+        });
+      } else if (username) {
+        res = await this.userRepository.findOne({
+          where: { username: username },
+        });
+      }
+      // const res = await this.userRepository
+      //   .createQueryBuilder('u')
+      //   .where('u.username like :username', { username: `%${username}%` })
+      //   .getOne();
       console.log(res);
       return ResultData.messageSuccess(res, `查询用户成功`);
     } catch (err) {

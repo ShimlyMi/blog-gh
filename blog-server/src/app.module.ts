@@ -14,7 +14,6 @@ import { ArticleModule } from './business/article/article.module';
 import { UploadModule } from './business/upload/upload.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './business/user/user.module';
-import { TalkModule } from './talk/talk.module';
 import { TalkModule } from './business/talk/talk.module';
 import { TalkPhotosModule } from './business/talk-photos/talk-photos.module';
 
@@ -22,7 +21,7 @@ import { TalkPhotosModule } from './business/talk-photos/talk-photos.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.development','.env'],
+      envFilePath: ['.env.development', '.env'],
       // validationSchema: Joi.object({
       //   UPLOAD_FILES_DESTINATION: Joi.string().required(),
       // }),

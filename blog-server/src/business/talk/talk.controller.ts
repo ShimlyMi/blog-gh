@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { TalkService } from './talk.service';
 import { CreateTalkDto } from './dto/create-talk.dto';
 import { UpdateTalkDto } from './dto/update-talk.dto';
@@ -7,9 +15,9 @@ import { UpdateTalkDto } from './dto/update-talk.dto';
 export class TalkController {
   constructor(private readonly talkService: TalkService) {}
 
-  @Post()
+  @Post('/add')
   create(@Body() createTalkDto: CreateTalkDto) {
-    return this.talkService.create(createTalkDto);
+    return this.talkService.addTalk(createTalkDto);
   }
 
   @Get()
