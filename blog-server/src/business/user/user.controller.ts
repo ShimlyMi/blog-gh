@@ -12,19 +12,16 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import {Public} from "../auth/constants";
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Public()
   @Post('/register')
   register(@Body() createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.userService.findAll();
   }
 
   // @Get('/findOne/:username')
@@ -32,17 +29,10 @@ export class UserController {
   //   return this.userService.findOne(username);
   // }
 
-  @Get('/findOne/')
-  findOne(
-    @Query('username', { required: false }) username?: string,
-    @Query('id', ParseIntPipe, { required: false }) id?: number,
-  ) {
-    // return this.userService.findOne(id);
-    if (username) {
-      return this.userService.findOne(username);
-    } else if (id) {
-      return this.userService.findOne(id);
-    }
+  @Public()
+  @Get('/findOne')
+  findOne(@Body() data: { id?: number; username?: string }) {
+    return this.userService.findOne(data);
   }
 
   @Patch(':id')

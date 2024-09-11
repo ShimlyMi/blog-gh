@@ -8,6 +8,7 @@ import * as bcrypt from 'bcrypt';
 import { ResultData } from '../../common/utils/result';
 import { ErrorCode } from '../../common/constants/constants';
 import { create } from '../../common/utils/transaction';
+import { decrypt } from 'dotenv';
 
 @Injectable()
 export class UserService {
@@ -66,28 +67,14 @@ export class UserService {
     }
   }
 
-  findAll() {
-    return `This action returns all user`;
-  }
-
-  async findOne(username?: string, id?: number) {
+  async findOne(data: any) {
     try {
-      let res: any;
-      if (id) {
-        res = await this.userRepository.findOne({
-          where: { id: id },
-        });
-      } else if (username) {
-        res = await this.userRepository.findOne({
-          where: { username: username },
-        });
-      }
-      // const res = await this.userRepository
-      //   .createQueryBuilder('u')
-      //   .where('u.username like :username', { username: `%${username}%` })
-      //   .getOne();
-      console.log(res);
-      return ResultData.messageSuccess(res, `查询用户成功`);
+      const { id, username } = data;
+      const res = await this.userRepository.findOne({
+        select: ['id', 'username', 'password', 'nickname', 'avatar', 'role'],
+        where: [{ id: id }, { username: username }],
+      });
+      return ResultData.messageSuccess(res, '查询用成功');
     } catch (err) {
       console.error(err);
       return ResultData.messageFail(ErrorCode.CATEGORY, '查询用户失败', '');

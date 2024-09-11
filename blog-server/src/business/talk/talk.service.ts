@@ -5,18 +5,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Talk } from './entities/talk.entity';
 import { Repository } from 'typeorm';
 import { ResultData } from '../../common/utils/result';
-import { User } from '../user/entities/user.entity';
-import { TalkPhoto } from '../talk-photos/entities/talk-photo.entity';
-import { create } from '../../common/utils/transaction';
 import { TalkPhotosService } from '../talk-photos/talk-photos.service';
 import { ErrorCode } from '../../common/constants/constants';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class TalkService {
   constructor(
+    private userService: UserService,
+    private talkPhotoService: TalkPhotosService,
     @InjectRepository(Talk)
     private talkRepository: Repository<Talk>,
-    private talkPhotoService: TalkPhotosService,
   ) {}
   async addTalk(createTalkDto: CreateTalkDto) {
     try {
@@ -24,26 +23,24 @@ export class TalkService {
       talk.content = createTalkDto.content;
       talk.status = createTalkDto.status;
       talk.isTop = createTalkDto.isTop;
-      talk.userId = createTalkDto.userId;
-      const talkPhoto = new TalkPhoto();
-      if (talk.id) {
-        talkPhoto.talkId = talk.id;
-        talkPhoto.url = createTalkDto.url;
-        await this.talkPhotoService.create(talkPhoto);
+      const talkImgList = createTalkDto.url;
+      const res = await this.talkRepository.save(talk);
+      if (res.id) {
+        await this.talkPhotoService.create(talkImgList);
       }
-      return await create(this.talkRepository, Talk, {
-        username: username,
-        content: talk.content,
-        url: talkPhoto.url,
-        isTop: talk.isTop,
-        status: talk.status,
-      });
+      return ResultData.messageSuccess(res, '新增说说成功');
     } catch (err) {
       console.log(err);
       return ResultData.messageFail(ErrorCode.TALK, '发表说说失败', '');
     }
   }
-
+  // const imgList = talkImgList.map((img: any) => {
+  //   return {
+  //     talkId: res.id,
+  //     url: img.url,
+  //   };
+  // });
+  // console.log(imgList);
   findAll() {
     return `This action returns all talk`;
   }

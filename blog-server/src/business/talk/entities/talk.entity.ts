@@ -13,8 +13,7 @@ export class Talk extends BaseColumn {
   @ManyToOne(() => User, (user) => user.id, {
     cascade: true, // 启用级联操作，如保存时自动保存关联的User
   })
-  @JoinColumn({ name: 'id' })
-  userId: number;
+  user: number;
 
   @Column({
     type: 'tinyint',

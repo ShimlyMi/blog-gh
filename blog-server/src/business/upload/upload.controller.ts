@@ -13,6 +13,7 @@ import { Express } from 'express';
 // import { UploadService } from './upload.service';
 import { storage } from '../../common/filter/uploadFiles.filter';
 import { ResultData } from '../../common/utils/result';
+import {Public} from "../auth/constants";
 
 @Controller('upload')
 export class UploadController {
@@ -23,6 +24,7 @@ export class UploadController {
     console.log('单个文件上传成功', file);
   }
 
+  @Public()
   @Post('/files')
   @UseInterceptors(FilesInterceptor('files', 20, { storage }))
   localFiles(

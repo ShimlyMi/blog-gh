@@ -7,8 +7,7 @@ export class TalkPhoto extends BaseColumn {
   @ManyToOne(() => Talk, (talk) => talk.id, {
     cascade: true, // 启用级联操作，如保存时自动保存关联的talk
   })
-  @JoinColumn({ name: 'id' })
-  talkId: number;
+  talk: number;
 
   @Column({
     type: 'varchar',

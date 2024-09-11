@@ -24,7 +24,7 @@ export const create = async (
   });
   // console.log('result.identifiers.length', result.identifiers.length);
   if (result.identifiers.length > 0) {
-    return ResultData.messageSuccess(result, '新增成功');
+    return ResultData.messageSuccess(result.generatedMaps, '新增成功');
   }
   return ResultData.messageFail(500, '新增失败', '');
 };
@@ -77,7 +77,7 @@ export const update = async (
   );
   // console.log('result.raw', result.affected);
   if (result.affected > 0) {
-    return ResultData.messageSuccess(result, '修改成功');
+    return ResultData.messageSuccess(result.generatedMaps, '修改成功');
   }
 
   return ResultData.messageFail(500, '修改失败', '');

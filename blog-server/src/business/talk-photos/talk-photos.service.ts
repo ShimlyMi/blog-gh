@@ -6,6 +6,7 @@ import { TalkPhoto } from './entities/talk-photo.entity';
 import { Repository } from 'typeorm';
 import { ResultData } from '../../common/utils/result';
 import { ErrorCode } from '../../common/constants/constants';
+import {Talk} from "../talk/entities/talk.entity";
 
 @Injectable()
 export class TalkPhotosService {
@@ -13,16 +14,12 @@ export class TalkPhotosService {
     @InjectRepository(TalkPhoto)
     private talkPhotoRepository: Repository<TalkPhoto>,
   ) {}
-  async create(data: any) {
+  async create(imgList: any) {
     try {
-      // const data = new TalkPhoto();
-      // data.url = createTalkPhotoDto.url;
-      // data.talkId = createTalkPhotoDto.talkId;
-      const res = await this.talkPhotoRepository.save(data);
-      return ResultData.messageSuccess(res, '新增说说图片成功');
+      return await this.talkPhotoRepository.save(imgList);
     } catch (err) {
       console.error(err);
-      return ResultData.messageFail(ErrorCode.PHOTO, '', '新增说说图片成功');
+      return ResultData.messageFail(ErrorCode.PHOTO, '', '新增说说图片失败');
     }
   }
 

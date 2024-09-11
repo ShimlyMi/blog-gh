@@ -10,11 +10,13 @@ import {
 import { TalkService } from './talk.service';
 import { CreateTalkDto } from './dto/create-talk.dto';
 import { UpdateTalkDto } from './dto/update-talk.dto';
+import {Public} from "../auth/constants";
 
 @Controller('talk')
 export class TalkController {
   constructor(private readonly talkService: TalkService) {}
 
+  @Public()
   @Post('/add')
   create(@Body() createTalkDto: CreateTalkDto) {
     return this.talkService.addTalk(createTalkDto);

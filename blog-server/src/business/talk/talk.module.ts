@@ -2,14 +2,18 @@ import { Module } from '@nestjs/common';
 import { TalkService } from './talk.service';
 import { TalkController } from './talk.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TalkPhoto } from '../talk-photos/entities/talk-photo.entity';
 import { Talk } from './entities/talk.entity';
-import {TalkPhotosService} from "../talk-photos/talk-photos.service";
+import { TalkPhotosModule } from '../talk-photos/talk-photos.module';
+import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Talk, TalkPhoto])],
+  imports: [
+    UserModule,
+    TalkPhotosModule,
+    TypeOrmModule.forFeature([Talk]),
+  ],
   controllers: [TalkController],
-  providers: [TalkPhotosService, TalkService],
+  providers: [TalkService],
   exports: [TalkService],
 })
 export class TalkModule {}
