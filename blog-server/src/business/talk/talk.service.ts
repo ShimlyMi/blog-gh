@@ -18,15 +18,19 @@ export class TalkService {
     private talkRepository: Repository<Talk>,
   ) {}
   async addTalk(createTalkDto: CreateTalkDto) {
+    console.log(JSON.stringify(createTalkDto));
     try {
       const talk = new Talk();
       talk.content = createTalkDto.content;
       talk.status = createTalkDto.status;
       talk.isTop = createTalkDto.isTop;
-      const talkImgList = createTalkDto.url;
       const res = await this.talkRepository.save(talk);
+      const data = {
+        talkId: res.id,
+        url: createTalkDto.url,
+      };
       if (res.id) {
-        await this.talkPhotoService.create(talkImgList);
+        await this.talkPhotoService.create(data);
       }
       return ResultData.messageSuccess(res, '新增说说成功');
     } catch (err) {

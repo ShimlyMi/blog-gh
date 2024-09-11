@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { Talk } from '../../talk/entities/talk.entity';
 import { BaseColumn } from '../../baseColumnAbstract/baseColumn';
 
@@ -13,5 +13,5 @@ export class TalkPhoto extends BaseColumn {
     type: 'varchar',
     comment: '图片地址',
   })
-  url: string[];
+  url: string;
 }

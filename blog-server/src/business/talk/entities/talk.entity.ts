@@ -10,11 +10,6 @@ export class Talk extends BaseColumn {
   })
   content: string;
 
-  @ManyToOne(() => User, (user) => user.id, {
-    cascade: true, // 启用级联操作，如保存时自动保存关联的User
-  })
-  user: number;
-
   @Column({
     type: 'tinyint',
     comment: '说说状态 1 公开 2 私密 3 回收站',
