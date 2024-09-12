@@ -24,9 +24,10 @@ export class UserController {
     return this.userService.createUser(createUserDto);
   }
 
-  // @Get('/findOne/:username')
-  // findOneByUsername(@Param('username') username: string) {
-  //   return this.userService.findOne(username);
+  // @Public()
+  // @Get('/findAll')
+  // getUserList() {
+  //   return this.userService.findAll();
   // }
 
   @Public()

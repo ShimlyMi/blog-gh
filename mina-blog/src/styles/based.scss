@@ -36,6 +36,12 @@ a {
   text-decoration: none;
   color: #f9f9f9;
 }
+.v-btn:focus,.v-btn:active,.v-btn:hover {
+  outline: none;
+  background: transparent;
+  color: var(--primary)
+}
+
 a:focus,a:active {
   outline: none;
   background: transparent;

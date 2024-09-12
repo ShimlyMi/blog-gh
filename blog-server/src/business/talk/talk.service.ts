@@ -38,13 +38,6 @@ export class TalkService {
       return ResultData.messageFail(ErrorCode.TALK, '发表说说失败', '');
     }
   }
-  // const imgList = talkImgList.map((img: any) => {
-  //   return {
-  //     talkId: res.id,
-  //     url: img.url,
-  //   };
-  // });
-  // console.log(imgList);
   findAll() {
     return `This action returns all talk`;
   }

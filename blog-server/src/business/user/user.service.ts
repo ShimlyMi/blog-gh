@@ -17,12 +17,14 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
+  /** 哈希加密密码 */
   async hashPassword(password: string): Promise<string> {
     // 生成 salt
     const salt = bcrypt.genSaltSync(10);
     // 使用 salt 加密密码
     return bcrypt.hashSync(password, salt);
   }
+  /** 验证用户名和昵称是否存在 */
   async validateName(username?: string, nickname?: string): Promise<boolean> {
     try {
       const res = await this.userRepository
@@ -39,12 +41,14 @@ export class UserService {
       return false;
     }
   }
+  /** 验证密码是否正确 */
   async validatePassword(
     hashPassword: string,
     enteredPassword: string,
   ): Promise<boolean> {
     return bcrypt.compareSync(enteredPassword, hashPassword);
   }
+
   /** 创建用户 */
   async createUser(createUserDto: CreateUserDto) {
     try {
@@ -78,6 +82,19 @@ export class UserService {
     } catch (err) {
       console.error(err);
       return ResultData.messageFail(ErrorCode.CATEGORY, '查询用户失败', '');
+    }
+  }
+
+  async findAll() {
+    try {
+      const res = await this.userRepository.find({
+        select: ['id', 'username', 'nickname', 'role'],
+        order: { id: 'DESC' },
+      });
+      return ResultData.messageSuccess(res, '获取用户列表成功');
+    } catch (err) {
+      console.error(err);
+      return ResultData.messageFail(ErrorCode.CATEGORY, '获取用户列表失败', '');
     }
   }
 

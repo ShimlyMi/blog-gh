@@ -14,7 +14,7 @@ const useWebsite = useWebsiteStore();
 /** 获取个人信息 */
 const getConfigDetail = async () => {
   const res = await useWebsite.sendWebsiteConfig()
-  console.log(res)
+  // console.log(res)
   configDetail.value = res
   useWebsite.setWebsiteConfig(configDetail.value)
 }
