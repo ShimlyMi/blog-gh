@@ -17,14 +17,14 @@ export class CategoryService {
     private readonly category: Repository<Category>,
   ) {}
 
-  async findCategory(categoryName: string) {
+  async findCategory(category_name: string) {
     try {
-      // console.log('categoryName', categoryName);
+      // console.log('category_name', category_name);
       const res = await this.category
         .createQueryBuilder('category')
         .select()
-        .where(`category.categoryName like :categoryName`, {
-          categoryName: `%${categoryName}%`,
+        .where(`category.category_name like :category_name`, {
+          category_name: `%${category_name}%`,
         })
         .getCount();
       return res > 0;
@@ -36,14 +36,14 @@ export class CategoryService {
   async createCategory(createCategoryDto: CreateCategoryDto) {
     try {
       const data = new CreateCategoryDto();
-      data.categoryName = createCategoryDto.categoryName;
+      data.category_name = createCategoryDto.category_name;
 
-      const res = await this.findCategory(data.categoryName);
+      const res = await this.findCategory(data.category_name);
       if (res) {
         return ResultData.messageFail(ErrorCode.CATEGORY, '已存在该分类', '');
       }
       return await create(this.category, Category, {
-        categoryName: data.categoryName,
+        category_name: data.category_name,
       });
       // return this.category.save(data);
       // return ResultData.messageSuccess( res, '创建成功');
@@ -56,16 +56,16 @@ export class CategoryService {
   async updateCategory(updateCategoryDto: UpdateCategoryDto) {
     try {
       const data = new UpdateCategoryDto();
-      data.categoryName = updateCategoryDto.categoryName;
+      data.category_name = updateCategoryDto.category_name;
       data.id = updateCategoryDto.id;
-      console.log('data', data.categoryName);
-      const res = await this.findCategory(data.categoryName);
+      console.log('data', data.category_name);
+      const res = await this.findCategory(data.category_name);
       if (res) {
         return ResultData.messageFail(ErrorCode.CATEGORY, '分类名称相同', '');
       }
       return await update(
         this.category,
-        { categoryName: data.categoryName },
+        { category_name: data.category_name },
         Category,
         'id = :id',
         { id: data.id },
@@ -93,7 +93,7 @@ export class CategoryService {
   async getCategoryDictionary() {
     try {
       const res = await this.category.find({
-        select: ['id', 'categoryName'],
+        select: ['id', 'category_name'],
       });
       return ResultData.messageSuccess(res, '查询分类字典成功');
     } catch (err) {

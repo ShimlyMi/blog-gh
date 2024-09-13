@@ -1,6 +1,5 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { BaseColumn } from '../../baseColumnAbstract/baseColumn';
-import { Upload } from '../../upload/entities/upload.entity';
 
 @Entity()
 export class Website extends BaseColumn {
@@ -10,32 +9,14 @@ export class Website extends BaseColumn {
     comment: '博客名称',
     default: '米娜的小屋',
   })
-  blogName: string;
+  blog_name: string;
 
   @Column({
     type: 'varchar',
     comment: '博客头像',
     default: 'http://127.0.0.1:8888/d534c7552f7a63793b1e00001.jpg',
   })
-  blogAvatar: string;
-
-  // @JoinColumn({ name: 'blogAvatarId' })
-  // @OneToOne(() => Upload, {
-  //   nullable: false,
-  // })
-  // public blogAvatar?: Upload;
-  //
-  // @Column({ nullable: false })
-  // public blogAvatarId?: number;
-  //
-  // @JoinColumn({ name: 'avatarBgId' })
-  // @OneToOne(() => Upload, {
-  //   nullable: false,
-  // })
-  // public avatarBg: Upload;
-  //
-  // @Column({ nullable: false })
-  // public avatarBgId: number;
+  blog_avatar: string;
 
   @Column({
     type: 'varchar',

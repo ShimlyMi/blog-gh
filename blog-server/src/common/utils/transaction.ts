@@ -26,7 +26,7 @@ export const create = async (
   if (result.identifiers.length > 0) {
     return ResultData.messageSuccess(result.generatedMaps, '新增成功');
   }
-  return ResultData.messageFail(500, '新增失败', '');
+  return ResultData.messageFail(500, '新增失败');
 };
 
 export const remove = async (
@@ -55,7 +55,7 @@ export const remove = async (
   if (result.affected > 0) {
     return ResultData.messageSuccess(result, '删除成功');
   }
-  return ResultData.messageFail(500, '删除失败', '');
+  return ResultData.messageFail(500, '删除失败');
 };
 
 export const update = async (
@@ -80,5 +80,5 @@ export const update = async (
     return ResultData.messageSuccess(result.generatedMaps, '修改成功');
   }
 
-  return ResultData.messageFail(500, '修改失败', '');
+  return ResultData.messageFail(500, '修改失败');
 };

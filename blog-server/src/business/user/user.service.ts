@@ -3,12 +3,11 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { ResultData } from '../../common/utils/result';
 import { ErrorCode } from '../../common/constants/constants';
-import { create } from '../../common/utils/transaction';
-import { decrypt } from 'dotenv';
+import { create, update } from '../../common/utils/transaction';
 
 @Injectable()
 export class UserService {
@@ -25,16 +24,22 @@ export class UserService {
     return bcrypt.hashSync(password, salt);
   }
   /** 验证用户名和昵称是否存在 */
-  async validateName(username?: string, nickname?: string): Promise<boolean> {
+  async validateName(type: string, value: string): Promise<boolean> {
     try {
-      const res = await this.userRepository
-        .createQueryBuilder('user')
-        .select()
-        .where(`user.username like :username OR user.nickname like :nickname`, {
-          username: `%${username}%`,
-          nickname: `%${nickname}%`,
-        })
-        .getCount();
+      let res: any;
+      if (type === 'username' || type === 'nickname') {
+        res = await this.userRepository
+          .createQueryBuilder('user')
+          .select()
+          .where(
+            `user.username like :username OR user.nickname like :nickname`,
+            {
+              username: `%${value}%`,
+              nickname: `%${value}%`,
+            },
+          )
+          .getCount();
+      }
       return res > 0;
     } catch (err) {
       console.error(err);
@@ -53,12 +58,11 @@ export class UserService {
   async createUser(createUserDto: CreateUserDto) {
     try {
       const data = createUserDto;
-      const res = await this.validateName(data.username);
+      const res = await this.validateName('username', data.username);
       if (res || data.username === 'admin' || data.username.includes('admin')) {
-        return ResultData.messageFail(ErrorCode.USER, '该用户名已存在', '');
+        return ResultData.messageFail(ErrorCode.USER, '该用户名已存在');
       }
-      const hashedPassword = await this.hashPassword(data.password);
-      data.password = hashedPassword;
+      data.password = await this.hashPassword(data.password);
       // console.log(data)
       return await create(this.userRepository, User, {
         username: data.username,
@@ -67,7 +71,7 @@ export class UserService {
       });
     } catch (err) {
       console.error(err);
-      return ResultData.messageFail(ErrorCode.CATEGORY, '新增用户失败', '');
+      return ResultData.messageFail(ErrorCode.USER, '新增用户失败');
     }
   }
 
@@ -81,7 +85,7 @@ export class UserService {
       return ResultData.messageSuccess(res, '查询用成功');
     } catch (err) {
       console.error(err);
-      return ResultData.messageFail(ErrorCode.CATEGORY, '查询用户失败', '');
+      return ResultData.messageFail(ErrorCode.USER, '查询用户失败');
     }
   }
 
@@ -94,14 +98,100 @@ export class UserService {
       return ResultData.messageSuccess(res, '获取用户列表成功');
     } catch (err) {
       console.error(err);
-      return ResultData.messageFail(ErrorCode.CATEGORY, '获取用户列表失败', '');
+      return ResultData.messageFail(ErrorCode.USER, '获取用户列表失败');
     }
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  // async updateUser(id: number, type: string, updateUserDto: UpdateUserDto) {
+  //   try {
+  //     const user = new User();
+  //     switch (type) {
+  //       case 'password':
+  //         const passV = await this.validatePassword(
+  //           updateUserDto.password,
+  //           user.password,
+  //         );
+  //         if (passV) {
+  //           return ResultData.messageFail(
+  //             ErrorCode.USER,
+  //             '新密码不可与原密码一致，请重新输入',
+  //           );
+  //         }
+  //         return await update(
+  //           this.userRepository,
+  //           { password: updateUserDto.password },
+  //           User,
+  //           'id = :id',
+  //           { id: id },
+  //         );
+  //       case 'nickname':
+  //         const nicknameV = await this.validateName(
+  //           'nickname',
+  //           updateUserDto.nickname,
+  //         );
+  //         if (nicknameV) {
+  //           return ResultData.messageFail(
+  //             ErrorCode.USER,
+  //             '该昵称已被使用，请换一个',
+  //           );
+  //         }
+  //         return await update(
+  //           this.userRepository,
+  //           { nickname: updateUserDto.nickname },
+  //           User,
+  //           'id = :id',
+  //           { id: id },
+  //         );
+  //     }
+  //   } catch (err) {}
+  // }
+
+  /** 更新密码 */
+  async updatePassword(id: number, newPassword: string) {
+    try {
+      const user = new User();
+      const passV = await this.validatePassword(newPassword, user.password);
+      if (passV) {
+        return ResultData.messageFail(
+          ErrorCode.USER,
+          '新密码不可与原密码一致，请重新输入',
+        );
+      }
+      return await update(
+        this.userRepository,
+        { password: newPassword },
+        User,
+        'id = :id',
+        { id: id },
+      );
+    } catch (err) {
+      console.error(err);
+      return ResultData.messageFail(ErrorCode.USER, '更新密码失败');
+    }
   }
 
+  /** 更新用户昵称 */
+  async updateNickname(id: number, newNickname: string) {
+    try {
+      const nicknameV = await this.validateName('nickname', newNickname);
+      if (nicknameV) {
+        return ResultData.messageFail(
+          ErrorCode.USER,
+          '该昵称已被使用，请换一个',
+        );
+      }
+      return await update(
+        this.userRepository,
+        { nickname: newNickname },
+        User,
+        'id = :id',
+        { id: id },
+      );
+    } catch (err) {
+      console.error(err);
+      return ResultData.messageFail(ErrorCode.USER, '更新用户昵称失败');
+    }
+  }
   remove(id: number) {
     return `This action removes a #${id} user`;
   }

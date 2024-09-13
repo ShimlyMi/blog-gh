@@ -29,5 +29,5 @@ export class Talk extends BaseColumn {
     comment: '点赞次数',
     default: 0,
   })
-  likeTimes: number;
+  like_times: number;
 }

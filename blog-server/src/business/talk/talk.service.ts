@@ -7,12 +7,10 @@ import { Repository } from 'typeorm';
 import { ResultData } from '../../common/utils/result';
 import { TalkPhotosService } from '../talk-photos/talk-photos.service';
 import { ErrorCode } from '../../common/constants/constants';
-import { UserService } from '../user/user.service';
 
 @Injectable()
 export class TalkService {
   constructor(
-    private userService: UserService,
     private talkPhotoService: TalkPhotosService,
     @InjectRepository(Talk)
     private talkRepository: Repository<Talk>,

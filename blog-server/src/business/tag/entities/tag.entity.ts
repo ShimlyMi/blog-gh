@@ -9,5 +9,5 @@ export class Tag extends BaseColumn {
     unique: true,
     comment: '标签名称 唯一',
   })
-  tagName: string;
+  tag_name: string;
 }

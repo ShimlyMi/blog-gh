@@ -9,5 +9,5 @@ export class Category extends BaseColumn {
     unique: true,
     comment: '分类名称 唯一',
   })
-  categoryName: string;
+  category_name: string;
 }

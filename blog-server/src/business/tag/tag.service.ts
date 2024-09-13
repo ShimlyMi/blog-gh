@@ -20,13 +20,13 @@ export class TagService {
   async createTag(createTagDto: CreateTagDto) {
     try {
       const data = new CreateTagDto();
-      data.tagName = createTagDto.tagName;
-      const res = await this.findTagName(data.tagName);
+      data.tag_name = createTagDto.tag_name;
+      const res = await this.findtag_name(data.tag_name);
       if (res) {
         return ResultData.messageFail(ErrorCode.TAG, '标签名称已存在', '');
       }
       return await create(this.tag, Tag, {
-        tagName: data.tagName,
+        tag_name: data.tag_name,
       });
     } catch (err) {
       console.error(err);
@@ -34,13 +34,13 @@ export class TagService {
     }
   }
 
-  async findTagName(tagName: string) {
+  async findtag_name(tag_name: string) {
     try {
       const res = await this.tag
         .createQueryBuilder('tag')
         .select()
-        .where(`tag.tagName like :tagName`, {
-          tagName: `%${tagName}%`,
+        .where(`tag.tag_name like :tag_name`, {
+          tag_name: `%${tag_name}%`,
         })
         .getCount();
       return res > 0;
@@ -53,15 +53,15 @@ export class TagService {
   async updateTag(updateTagDto: UpdateTagDto) {
     try {
       const data = new UpdateTagDto();
-      data.tagName = updateTagDto.tagName;
+      data.tag_name = updateTagDto.tag_name;
       data.id = updateTagDto.id;
-      const res = await this.findTagName(data.tagName);
+      const res = await this.findtag_name(data.tag_name);
       if (res) {
         return ResultData.messageFail(ErrorCode.TAG, '标签名称相同', '');
       }
       return await update(
         this.tag,
-        { tagName: data.tagName },
+        { tag_name: data.tag_name },
         Tag,
         'id = : id',
         { id: data.id },
@@ -85,7 +85,7 @@ export class TagService {
   async getTagDictionary() {
     try {
       const res = await this.tag.find({
-        select: ['id', 'tagName'],
+        select: ['id', 'tag_name'],
       });
       return ResultData.messageSuccess(res, '查询标签字典成功');
     } catch (err) {

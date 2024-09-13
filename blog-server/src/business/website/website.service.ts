@@ -30,8 +30,8 @@ export class WebsiteService {
     try {
       const data = await this.website.find({
         select: [
-          'blogName',
-          'blogAvatar',
+          'blog_name',
+          'blog_avatar',
           'avatarBg',
           'blogNotice',
           'personalSignature',
