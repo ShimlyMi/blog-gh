@@ -3,4 +3,9 @@ export default {
   about: 'About',
   workbench: 'Workbench',
   analysis: 'Analysis',
+  users: {
+    center: 'Center',
+    userInfo: 'UserInfo',
+    settings: 'Settings',
+  },
 }

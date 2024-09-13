@@ -76,7 +76,7 @@ const setting: ProjectConfig = {
   // Menu configuration
   menuSetting: {
     // sidebar menu bg color
-    bgColor: SIDE_BAR_BG_COLOR_LIST[0],
+    bgColor: SIDE_BAR_BG_COLOR_LIST[3],
     //  Whether to fix the left menu
     fixed: true,
     // Menu collapse
@@ -145,17 +145,20 @@ const setting: ProjectConfig = {
     openPageLoading: true,
 
     // Whether to open the top progress bar
-    openNProgress: false,
+    openNProgress: true,
   },
 
   // Whether to enable KeepAlive cache is best to close during development, otherwise the cache needs to be cleared every time
-  openKeepAlive: true,
+  openKeepAlive: false,
+
+  // 自动锁屏时间，为0不锁屏。 单位分钟 默认1个小时
+  // lockTime: 3600,
 
   // Whether to show breadcrumbs
   showBreadCrumb: true,
 
   // Whether to show the breadcrumb icon
-  showBreadCrumbIcon: false,
+  showBreadCrumbIcon: true,
 
   // Use error-handler-plugin
   useErrorHandle: false,

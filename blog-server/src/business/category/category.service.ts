@@ -104,8 +104,8 @@ export class CategoryService {
 
   async getCategoryList(pagination: Pagination) {
     try {
-      const { current, pageSize } = pagination;
-      const skip = (current - 1) * pageSize;
+      const { page, pageSize } = pagination;
+      const skip = (page - 1) * pageSize;
       const options: FindManyOptions<Category> = {
         skip,
         take: pageSize,

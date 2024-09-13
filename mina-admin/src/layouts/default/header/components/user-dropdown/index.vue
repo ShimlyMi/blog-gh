@@ -2,11 +2,11 @@
   <Dropdown placement="bottomLeft" :overlayClassName="`${prefixCls}-dropdown-overlay`">
     <span :class="[prefixCls, `${prefixCls}--${theme}`]" class="flex">
       <img :class="`${prefixCls}__header`" :src="getUserInfo.avatar" />
-      <span :class="`${prefixCls}__info hidden md:block`">
-        <span :class="`${prefixCls}__name  `" class="truncate">
-          {{ getUserInfo.realName }}
-        </span>
-      </span>
+<!--      <span :class="`${prefixCls}__info hidden md:block`">-->
+<!--        <span :class="`${prefixCls}__name  `" class="truncate">-->
+<!--          {{ getUserInfo.realName }}-->
+<!--        </span>-->
+<!--      </span>-->
     </span>
 
     <template #overlay>
@@ -48,7 +48,7 @@
 
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent'
 
-  type MenuEvent = 'logout' | 'doc'
+  type MenuEvent = 'logout' | 'center'
 
   export default defineComponent({
     name: 'UserDropdown',
@@ -89,7 +89,7 @@
           case 'logout':
             handleLoginOut()
             break
-          case 'doc':
+          case 'center':
             openDoc()
             break
         }
@@ -111,17 +111,17 @@
 
   .@{prefix-cls} {
     height: @header-height;
-    padding: 0 0 0 10px;
-    padding-right: 10px;
+    padding: 0 10px;
     overflow: hidden;
-    font-size: 12px;
+    font-size: 16px;
     cursor: pointer;
     align-items: center;
+    margin-right: 20px;
 
     img {
-      width: 24px;
-      height: 24px;
-      margin-right: 12px;
+      width: 30px;
+      height: 30px;
+      //margin-right: 12px;
     }
 
     &__header {

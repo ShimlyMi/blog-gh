@@ -113,6 +113,7 @@
       font-size: 1.2em;
       cursor: pointer;
       align-items: center;
+      margin: auto 10px;
 
       .ant-badge {
         height: @header-height;
@@ -161,7 +162,11 @@
       span[role='img'] {
         color: @text-color-base;
       }
+      &__mode {
+        margin: auto 10px;
+      }
     }
+
   }
 
   &--dark {
@@ -191,6 +196,10 @@
           background-color: @header-dark-bg-hover-color;
         }
       }
+    }
+    &__mode {
+      width: 24px;
+      height: 24px;
     }
   }
 }

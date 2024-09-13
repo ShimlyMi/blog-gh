@@ -1,5 +1,5 @@
 export class Pagination {
-  current: number;
+  page: number;
   pageSize: number;
   conditions?: any;
 }
