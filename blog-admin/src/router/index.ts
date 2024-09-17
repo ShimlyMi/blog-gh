@@ -11,7 +11,25 @@ import { routes } from 'vue-router/auto-routes'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: setupLayouts(routes),
+  routes: [
+    ...setupLayouts(routes),
+    {
+      path: '/home',
+      name: 'Home',
+      component: () => import('@/pages/home/index.vue'),
+      meta: {
+        title: '主页',
+      },
+    },
+    {
+      path: '/center',
+      name: 'Center',
+      component: () => import('@/pages/personality/index.vue'),
+      meta: {
+        title: '个人中心',
+      },
+    },
+  ],
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804
