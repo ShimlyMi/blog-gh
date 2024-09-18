@@ -2,24 +2,28 @@
   import { useRouter } from 'vue-router'
 
   const router = useRouter()
-  const route = router.currentRoute.value
-
-  const path = []
+  const path: any[] = []
   const fil = router.getRoutes()
-  fil.forEach(item => {
-    if (path.find(i => i.meta.title === route.meta.title && i.path === item.path) === undefined) {
-      path.push(item)
+  fil.forEach(r => {
+    if (typeof r.name === 'string' && !r.name.includes('/')) {
+      path.push(r)
     }
   })
-  console.log('fil', fil)
-  console.log(path)
 </script>
 
 <template>
   <v-navigation-drawer>
-<!--    <v-list-item v-for="(item, index) in path" :key="index" :value="index">-->
-<!--      <v-list-item-title>{{ item. mata.title }}</v-list-item-title>-->
-<!--    </v-list-item>-->
+    <v-list-item
+      v-for="(item, index) in path"
+      :key="index"
+      color="#b9b9df"
+      link
+      :title="item.meta.title"
+      :to="item.path"
+      :value="index"
+    >
+      <!--      <v-list-item-title>{{ item.meta.title }}</v-list-item-title>-->
+    </v-list-item>
   </v-navigation-drawer>
 </template>
 

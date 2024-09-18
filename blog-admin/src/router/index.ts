@@ -22,7 +22,7 @@ const router = createRouter({
       },
     },
     {
-      path: '/center',
+      path: '/personality',
       name: 'Center',
       component: () => import('@/pages/personality/index.vue'),
       meta: {

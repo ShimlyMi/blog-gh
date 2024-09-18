@@ -1,26 +1,33 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "jsx": "preserve",
-    "lib": ["DOM", "ESNext"],
-    "baseUrl": ".",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "paths": {
-      "@/*": ["src/*"]
-    },
+    "strict": true,
+    "noLib": false,
+    "forceConsistentCasingInFileNames": true,
+    "strictFunctionTypes": false,
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "allowJs": true,
+    "esModuleInterop": true,
     "resolveJsonModule": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "experimentalDecorators": true,
+    "lib": ["DOM", "ESNext"],
+    "noImplicitAny": false,
+    "removeComments": true,
+    "paths": {
+      "@/*": ["src/*"],
+      "#/*": ["types/*"]
+    },
     "types": [
       "vite/client",
       "vite-plugin-vue-layouts/client",
       "unplugin-vue-router/client"
     ],
-    "allowJs": true,
-    "strict": true,
     "strictNullChecks": true,
-    "noUnusedLocals": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "skipLibCheck": true
   },
@@ -36,6 +43,6 @@
     "build/**/*.d.ts",
     "vite.config.ts"
   ],
-  "exclude": ["dist", "node_modules", "cypress"],
+  "exclude": ["dist", "node_modules", "cypress", "**/*.js", "tests/server/**/*.ts"],
   "references": [{ "path": "./tsconfig.node.json" }],
 }
