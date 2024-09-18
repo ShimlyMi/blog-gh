@@ -2,9 +2,10 @@
   <v-layout class="rounded rounded-md">
     <Header />
     <Side />
-    <v-main class="d-flex align-center justify-center" style="min-height: 300px;">
-      Main Content
-    </v-main>
+    <Main />
+<!--    <v-main class="d-flex align-center justify-center" style="min-height: 300px;">-->
+<!--      Main Content-->
+<!--    </v-main>-->
   </v-layout>
 </template>
 
@@ -12,4 +13,5 @@
   //
   import Header from './default/header/index.vue'
   import Side from './default/sider/index.vue'
+  import Main from './default/main/index.vue'
 </script>
