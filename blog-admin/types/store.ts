@@ -20,7 +20,7 @@ export interface ErrorLoginInfo {
   time?: string
 }
 
-export interface userInfo {
+export interface UserInfo {
   userId: string | number
   username: string
   nickname: string

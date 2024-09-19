@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-    111
+  <v-container class="mi-home">
+
   </v-container>
 </template>
 
