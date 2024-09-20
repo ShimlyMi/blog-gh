@@ -35,7 +35,7 @@ export function useFormValid<T extends Object = any> (formRef: Ref<any>) {
   return { validForm }
 }
 
-export function useFormRules (formData?: Record<string, T>) {
+export function useFormRules (formData?: Recordable) {
   const getAccountFormRule = computed(() => createRule(system.login.accountPlaceholder))
   const getPasswordFormRule = computed(() => createRule(system.login.passwordPlaceholder))
   const validateConfirmPassword = (password: string) => {

@@ -25,7 +25,8 @@ export interface UserInfo {
   username: string
   nickname: string
   avatar: string
-  role: RoleInfo[]
+  homePath?: string
+  role: number
 }
 
 export interface beforeMiniState {

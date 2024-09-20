@@ -1,5 +1,5 @@
-import axios, {AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig} from "axios";
-import { messageError } from "@/utils/messgeBox";
+import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import { messageError } from '@/utils/messgeBox'
 
 interface ApiResponse<T> {
   code: number,
@@ -12,18 +12,18 @@ const instance: AxiosInstance = axios.create({
   timeout: 3000,
   headers: {
     // 设置后端需要的传参类型
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-  }
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
 })
 
 instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    return config;
+    return config
   },
   error => {
-    messageError("请求错误", "🚀~请求错误啦~ 请检查网络连接或联系网站管理员!")
-    return Promise.reject(error);
+    messageError('请求错误', '🚀~请求错误啦~ 请检查网络连接或联系网站管理员!')
+    return Promise.reject(error)
   }
 )
 
@@ -32,7 +32,7 @@ instance.interceptors.response.use(
     const status: number = response.status
     // console.log("response.data", response.data)
     if (status === 200) {
-      const result: ApiResponse<any> = response.data;
+      const result: ApiResponse<any> = response.data
       // console.log("result",result)
       return result.data
       // console.log("result.data", result.data)
@@ -44,10 +44,10 @@ instance.interceptors.response.use(
   (error: AxiosError) => {
     if (error.response) {
       const status: number = error.response?.status
-      let message: string;
+      let message: string
       switch (status) {
         case 400:
-          message = '输入信息无效，请检查并重新输入!';
+          message = '输入信息无效，请检查并重新输入!'
           break
         case 403:
           message = '禁止访问，您的权限被偷走啦~'
@@ -75,4 +75,4 @@ instance.interceptors.response.use(
   }
 )
 
-export default instance;
+export default instance
