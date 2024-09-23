@@ -1,11 +1,9 @@
-import { ErrorTypeEnum } from '/@/enums/exceptionEnum'
-import { MenuModeEnum, MenuTypeEnum } from '/@/enums/menuEnum'
-import { RoleInfo } from '/@/api/sys/model/userModel'
+import { ErrorTypeEnum } from '@/enums/exceptionEnum'
+import { RoleInfo } from '@/api/model/userModel'
 
-// Error-log information
-export interface ErrorLogInfo {
+export interface ErrorLoginInfo {
   // Type of error
-  type: ErrorTypeEnum
+  type: ErrorTypeEnum,
   // Error file
   file: string
   // Error name
@@ -25,16 +23,12 @@ export interface ErrorLogInfo {
 export interface UserInfo {
   userId: string | number
   username: string
-  realName: string
+  nickname: string
   avatar: string
-  desc?: string
   homePath?: string
-  roles: RoleInfo[]
+  role: number
 }
 
-export interface BeforeMiniState {
+export interface beforeMiniState {
   menuCollapsed?: boolean
-  menuSplit?: boolean
-  menuMode?: MenuModeEnum
-  menuType?: MenuTypeEnum
 }

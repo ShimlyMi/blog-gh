@@ -1,7 +1,6 @@
 export enum RoleEnum {
-  // super admin
-  SUPER = 'super',
-
-  // tester
-  TEST = 'test',
+    SUPER = 'super',
+    COMMON = 'common',
+    // 财务
+    FINANCE = 'finance',
 }
