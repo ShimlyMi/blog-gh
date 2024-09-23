@@ -1,4 +1,4 @@
-import {BasicPageEnum} from "/@/enums/pageEnum.ts";
+import {BasicPageEnum} from "@/enums/pageEnum.ts";
 
 
 export const remainingRouter =  [
