@@ -19,6 +19,7 @@ const router = createRouter({
       component: () => import('@/pages/home/index.vue'),
       meta: {
         title: '主页',
+        icon: 'mdi-home',
       },
     },
     {
@@ -27,6 +28,7 @@ const router = createRouter({
       component: () => import('@/pages/personality/index.vue'),
       meta: {
         title: '个人中心',
+        icon: 'mdi-account-circle',
       },
     },
   ],

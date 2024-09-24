@@ -16,7 +16,9 @@
     title="MINA ADMIN"
   >
     <template #prepend>
-      <img src="@/assets/logo.png">
+      <router-link to="/">
+        <img src="@/assets/logo.png">
+      </router-link>
     </template>
     <template #append>
       <v-btn icon="mdi-magnify" />

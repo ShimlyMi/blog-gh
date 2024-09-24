@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <v-main>
+  <v-main class="mi-main">
     <RouterView>
       <template #default="{ Component, route }">
         <transition appear mode="out-in" :name="getTransitionName(route)">

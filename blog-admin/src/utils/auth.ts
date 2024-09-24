@@ -2,6 +2,7 @@
 import Cookies from 'js-cookie'
 import { UserInfo } from '#/store'
 import { useUserStoreHook } from '@/stores/modules/user'
+import { storageSession } from '@/interface/session'
 export interface DataInfo<T = any> {
     /** token */
     token: string;
@@ -38,8 +39,8 @@ export function setToken (data: DataInfo<string>) {
     const { userInfo, role } = data
     setSessionKey(userInfo, role)
   } else {
-    const userInfo = sessionStorage.getItem<DataInfo<number>>(sessionKey)?.userInfo ?? ''
-    const role = sessionStorage.getItem<DataInfo<number>>(sessionKey)?.role ?? ''
+    const userInfo = storageSession.getItem<DataInfo<number>>(sessionKey)?.userInfo ?? ''
+    const role = storageSession.getItem<DataInfo<number>>(sessionKey)?.role ?? ''
     setSessionKey(userInfo, role)
   }
 }

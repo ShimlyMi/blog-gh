@@ -9,25 +9,29 @@ import { RoleEnum } from '@/enums/roleEnum'
 import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY } from '@/enums/cacheEnum'
 import { BasicPageEnum } from '@/enums/pageEnum'
 import { removeToken } from '@/utils/auth'
+import { storageSession } from '@/interface/session'
 
 export const useUserStore = defineStore({
   id: 'user',
   state: (): UserState => ({
     userInfo: null,
     token: undefined,
-    role: null,
+    role: 2,
     sessionTimeout: false,
     lastUpdateTime: 0,
   }),
   getters: {
     getUserInfo (): UserInfo {
-      return this.userInfo || sessionStorage.getItem<UserInfo>(USER_INFO_KEY)?.userInfo || {}
+      return this.userInfo || storageSession.getItem<string>(USER_INFO_KEY)?.userInfo
     },
     getToken (): string {
-      return this.token || sessionStorage.getItem<string>(TOKEN_KEY)?.token
+      return this.token || storageSession.getItem<string>(TOKEN_KEY)?.token
     },
-    getRoleList (): RoleEnum[] {
-      return this.roleList.length > 0 ? this.roleList : sessionStorage.getItem<RoleEnum[]>(ROLES_KEY)?.role
+    // getRoleList (): RoleEnum[] {
+    //   return this.role || storageSession.getItem<RoleEnum[]>(ROLES_KEY)?.role
+    // },
+    getRole (): string {
+      return this.role
     },
     getSessionTimeout (): boolean {
       return !!this.sessionTimeout
@@ -87,7 +91,7 @@ export const useUserStore = defineStore({
       const { role } = userInfo
       this.setRole(role)
       this.setUserInfo(userInfo)
-      sessionStorage.setItem<UserInfo>(USER_INFO_KEY, userInfo)
+      storageSession.setItem<UserInfo>(USER_INFO_KEY, userInfo)
       return userInfo
     },
   },

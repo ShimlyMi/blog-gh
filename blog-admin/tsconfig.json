@@ -42,7 +42,6 @@
     "build/**/*.ts",
     "build/**/*.d.ts",
     "vite.config.ts",
-    "../mina-admin/types/global.d.ts"
   ],
   "exclude": ["dist", "node_modules", "cypress", "**/*.js", "tests/server/**/*.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
