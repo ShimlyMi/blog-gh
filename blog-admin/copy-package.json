@@ -5,6 +5,7 @@
     "name": "mina"
   },
   "scripts": {
+    "boostrap": "pnpm install",
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "build:no-cache": "pnpm clean:cache && npm run build",

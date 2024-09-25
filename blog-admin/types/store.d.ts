@@ -29,6 +29,13 @@ export interface UserInfo {
   role: number
 }
 
+export type userInfoType = {
+  username: string
+  nickname: string
+  avatar: string
+  id?: number
+}
+
 export interface beforeMiniState {
   menuCollapsed?: boolean
 }

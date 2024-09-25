@@ -24,6 +24,12 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('profile')
   getProfile(@Request() req: any) {
-    return req.user;
+    return {
+      id: req.user.sub,
+      username: req.user.username,
+      nickname: req.user.nickname,
+      avatar: req.user.avatar,
+      role: req.user.role,
+    };
   }
 }

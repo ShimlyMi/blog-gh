@@ -1,13 +1,13 @@
 import instance from '@/utils/http/request'
-import {GetUserInfoModel, LoginParams} from '@/api/model/userModel'
+import { GetUserInfoModel, LoginParams, UserResult } from '@/api/model/userModel'
 
 enum Api {
   Login = '/api/auth/login',
-  GetUserInfo = '/api/user/findOne'
+  GetUserInfo = '/api/auth/profile'
 }
 
-export const loginApi = (params: LoginParams): Promise<LoginParams> => {
-  return instance.post<any, LoginParams>(Api.Login, params)
+export const loginApi = (params: LoginParams): Promise<UserResult> => {
+  return instance.post<any, UserResult>(Api.Login, params)
 }
 
 export const getUserInfo = (): Promise<GetUserInfoModel> => {

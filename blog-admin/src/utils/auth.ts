@@ -1,15 +1,18 @@
 // import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie'
-import { UserInfo } from '#/store'
-import { useUserStoreHook } from '@/stores/modules/user'
+import { storeToRefs } from 'pinia'
+import { useUserStore } from '@/stores/modules/user'
 import { storageSession } from '@/interface/session'
-export interface DataInfo<T = any> {
+const userStore = useUserStore()
+const { SET_USERNAME, SET_ROLE } = storeToRefs(userStore)
+export interface DataInfo<T> {
     /** token */
-    token: string;
+    token: string
     /** 用户名 */
-    userInfo: UserInfo;
+    username: string
     /** 当前登录用户的角色 */
     role?: number;
+    nickname: string
 }
 
 export const sessionKey = 'user-info'
@@ -18,7 +21,7 @@ export const TokenKey = 'authorized-token'
 /** 获取`token` */
 export function getToken (): DataInfo<number> {
 // 此处与`TokenKey`相同，此写法解决初始化时`Cookies`中不存在`TokenKey`报错
-  return Cookies.get(TokenKey) ? JSON.parse(Cookies.get(TokenKey)) : sessionStorage.getItem(sessionKey)
+  return Cookies.get(TokenKey) ? JSON.parse(<string>Cookies.get(TokenKey)) : storageSession.getItem(sessionKey)
 }
 
 /**
@@ -29,25 +32,25 @@ export function getToken (): DataInfo<number> {
  */
 export function setToken (data: DataInfo<string>) {
   const { token } = data
-  function setSessionKey (userInfo: UserInfo, role: number) {
-    useUserStoreHook().setUserInfo(userInfo)
-    useUserStoreHook().setRole(role)
-    sessionStorage.setItem(sessionKey, { userInfo, role })
+  function setSessionKey (username: string, role?: number) {
+    userStore.SET_USERNAME(username)
+    userStore.SET_ROLE(role)
+    storageSession.setItem(sessionKey, { username, role })
   }
   Cookies.set(TokenKey, JSON.stringify({ token }))
-  if (data.userInfo && data.role) {
-    const { userInfo, role } = data
-    setSessionKey(userInfo, role)
+  if (data.username && data.role) {
+    const { username, role } = data
+    setSessionKey(username, role)
   } else {
-    const userInfo = storageSession.getItem<DataInfo<number>>(sessionKey)?.userInfo ?? ''
-    const role = storageSession.getItem<DataInfo<number>>(sessionKey)?.role ?? ''
-    setSessionKey(userInfo, role)
+    const username = storageSession.getItem<DataInfo<string>>(sessionKey)?.username ?? ''
+    const role = storageSession.getItem<DataInfo<number>>(sessionKey)?.role
+    setSessionKey(username, role)
   }
 }
 /** 删除`token`以及key值为`user-info`的session信息 */
 export function removeToken () {
   Cookies.remove(TokenKey)
-  sessionStorage.clear()
+  storageSession.clear()
 }
 /** 格式化token（jwt格式） */
 export const formatToken = (token: string): string => {

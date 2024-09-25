@@ -6,7 +6,7 @@
 
 // Plugins
 import vuetify from './vuetify'
-import { store } from '@/stores'
+import pinia from '@/stores'
 import router from '../router'
 
 // Types
@@ -16,5 +16,5 @@ export function registerPlugins (app: App) {
   app
     .use(vuetify)
     .use(router)
-    .use(store)
+    .use(pinia)
 }
