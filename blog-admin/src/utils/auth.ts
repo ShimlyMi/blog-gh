@@ -1,10 +1,9 @@
 // import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie'
-import { storeToRefs } from 'pinia'
-import { useUserStore } from '@/stores/modules/user'
+import { useUserStore } from '@/stores/user'
 import { storageSession } from '@/interface/session'
+
 const userStore = useUserStore()
-const { SET_USERNAME, SET_ROLE } = storeToRefs(userStore)
 export interface DataInfo<T> {
     /** token */
     token: string
@@ -34,7 +33,7 @@ export function setToken (data: DataInfo<string>) {
   const { token } = data
   function setSessionKey (username: string, role?: number) {
     userStore.SET_USERNAME(username)
-    userStore.SET_ROLE(role)
+    userStore.SET_ROLE(typeof role === 'number' ? role : 2)
     storageSession.setItem(sessionKey, { username, role })
   }
   Cookies.set(TokenKey, JSON.stringify({ token }))
