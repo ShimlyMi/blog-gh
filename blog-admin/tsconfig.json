@@ -25,7 +25,6 @@
     "types": [
       "vite/client",
       "vite-plugin-vue-layouts/client",
-      "unplugin-vue-router/client"
     ],
     "strictNullChecks": true,
     "isolatedModules": true,

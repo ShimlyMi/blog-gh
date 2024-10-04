@@ -1,9 +1,8 @@
-// import CryptoJS from 'crypto-js';
 import Cookies from 'js-cookie'
-import { useUserStore } from '@/stores/user'
+import { useUserStoreHook } from '@/stores/user'
 import { storageSession } from '@/interface/session'
 
-const userStore = useUserStore()
+// const userStore = useUserStore()
 export interface DataInfo<T> {
     /** token */
     token: string
@@ -32,8 +31,10 @@ export function getToken (): DataInfo<number> {
 export function setToken (data: DataInfo<string>) {
   const { token } = data
   function setSessionKey (username: string, role?: number) {
-    userStore.SET_USERNAME(username)
-    userStore.SET_ROLE(typeof role === 'number' ? role : 2)
+    // userStore.SET_USERNAME(username)
+    // userStore.SET_ROLE(typeof role === 'number' ? role : 2)
+    useUserStoreHook().SET_USERNAME(username)
+    useUserStoreHook().SET_ROLE(typeof role === 'number' ? role : null)
     storageSession.setItem(sessionKey, { username, role })
   }
   Cookies.set(TokenKey, JSON.stringify({ token }))

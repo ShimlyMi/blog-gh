@@ -31,6 +31,24 @@ const router = createRouter({
         icon: 'mdi-account-circle',
       },
     },
+    {
+      path: '/login',
+      name: 'Login',
+      component: () => import('@/pages/system/login/Login.vue'),
+      meta: {
+        title: '登录',
+        showLink: false,
+      },
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: () => import('@/pages/system/login/RegisterForm.vue'),
+      meta: {
+        title: '注册',
+        showLink: false,
+      },
+    },
   ],
 })
 

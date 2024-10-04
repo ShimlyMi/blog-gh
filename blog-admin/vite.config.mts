@@ -8,9 +8,8 @@ import VueRouter from 'unplugin-vue-router/vite'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 // Utilities
-import { defineConfig, ConfigEnv, loadEnv } from 'vite'
+import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
-
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -24,7 +23,7 @@ export default defineConfig({
         'vue',
         {
           'vue-router/auto': ['useRoute', 'useRouter'],
-        }
+        },
       ],
       dts: 'src/auto-imports.d.ts',
       eslintrc: {
@@ -47,7 +46,7 @@ export default defineConfig({
     }),
     Fonts({
       google: {
-        families: [ {
+        families: [{
           name: 'Roboto',
           styles: 'wght@100;300;400;500;700;900',
         }],
@@ -72,15 +71,15 @@ export default defineConfig({
   },
   server: {
     host: true,
-    port: 4673,
+    port: 4699,
     proxy: {
       // target: 'http://localhost:8888',
       // changeOrigin: true,
-      "/api": {
-        //要访问的跨域的域名
-        target: "http://localhost:8888",
+      '/api': {
+        // 要访问的跨域的域名
+        target: 'http://localhost:8888',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        rewrite: path => path.replace(/^\/api/, ''),
       },
     },
   },

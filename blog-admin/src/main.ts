@@ -13,16 +13,16 @@ import App from './App.vue'
 // Composables
 import { createApp } from 'vue'
 
-// const app = createApp(App)
+const app = createApp(App)
 
-async function boostrap () {
-  const app = createApp(App)
-  registerPlugins(app)
-  app.mount('#app')
-}
+// async function boostrap () {
+//   const app = createApp(App)
+//   registerPlugins(app)
+//   app.mount('#app')
+// }
 
-// registerPlugins(app)
+registerPlugins(app)
 
-// app.mount('#app')
+app.mount('#app')
 
-boostrap()
+// boostrap()
