@@ -36,8 +36,14 @@ export class TalkService {
       return ResultData.messageFail(ErrorCode.TALK, '发表说说失败', '');
     }
   }
-  findAll() {
-    return `This action returns all talk`;
+  async findAll() {
+    try {
+      const res = await this.talkRepository.find()
+      return ResultData.messageSuccess(res, '查询说说成功');
+    } catch (err) {
+      console.log(err);
+      return ResultData.messageFail(ErrorCode.TALK, '查询说说失败', '');
+    }
   }
 
   findOne(id: number) {

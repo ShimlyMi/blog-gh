@@ -11,7 +11,7 @@
       path.push(r)
     }
   })
-  // console.log(fil)
+  console.log(path)
   function toggleMenu () {
     rail.value = !rail.value
   }

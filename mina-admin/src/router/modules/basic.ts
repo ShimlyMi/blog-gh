@@ -27,6 +27,9 @@ export default [
         path: '/redirect/:path(.*)',
         name: 'Redirect',
         component: () => import('@/layouts/redirect.vue'),
+        meta: {
+          showLink: false,
+        }
       }
     ]
   }
