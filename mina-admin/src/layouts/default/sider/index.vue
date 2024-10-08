@@ -1,5 +1,6 @@
 <script setup lang="ts" name="Side">
   import { useRouter } from 'vue-router'
+  import { ref } from 'vue'
 
   const rail = ref(false)
   const router = useRouter()
@@ -10,7 +11,7 @@
       path.push(r)
     }
   })
-  console.log(fil)
+  // console.log(fil)
   function toggleMenu () {
     rail.value = !rail.value
   }

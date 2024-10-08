@@ -5,27 +5,42 @@
  */
 
 // Composables
-import {createRouter, createWebHistory, RouteRecordRaw} from 'vue-router'
-import BasicRoutes from '@/router/modules/basic'
-import { formatFlatteningRoutes, formatTwoStageRoutes} from "@/router/utils";
+import {createRouter, createWebHistory, Router, RouteRecordRaw} from 'vue-router'
+import NProgress from '@/utils/progress/index'
+import {DataInfo, sessionKey} from '@/utils/auth'
+import {formatFlatteningRoutes, formatRoutes, ascending, initRouter} from "@/router/utils";
+import {buildHierarchyTree} from "@/utils/tree";
+import basicRoutes from "@/router/modules/basic";
+import {storageSession} from "@/interface/session";
+import {getConfig} from "@/config";
+import {usePermissionStoreHook} from "@/stores/permission";
 
 
 const modules: Record<string, any> = import.meta.glob([
   "./modules/**/*.ts", "!./modules/**/basic.ts",
 ], { eager: true })
+
 const routes = []
 Object.keys(modules).forEach(key => {
-  routes.push(modules[key].default);
+  routes.push(modules[key].default)
 })
-export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(routes);
+
+console.log(routes)
+
+/** 导出处理后的静态路由（三级及以上的路由全部拍成二级） */
+export const constantRoutes: Array<RouteRecordRaw> = formatRoutes(
+  formatFlatteningRoutes(buildHierarchyTree(ascending(routes)))
+)
+/** 用于渲染菜单，保持原始层级 */
+export const constantsMenus: Array<RouteRecordRaw> = ascending(routes).concat(...basicRoutes)
 /** 不参与菜单的路由 */
-export const remainingPaths = Object.keys(BasicRoutes).map(v => {
-  return BasicRoutes[v].path;
-});
+export const remainingPaths = Object.keys(basicRoutes).map(v => {
+  return basicRoutes[v].path
+})
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: constantRoutes.concat(...(remainingPaths as any)),
+  routes: constantRoutes.concat(...(basicRoutes as any)),
   strict: true,
   scrollBehavior(to, from, savedPosition) {
     return new Promise(resolve => {
@@ -61,45 +76,54 @@ router.isReady().then(() => {
   localStorage.removeItem('vuetify:dynamic-reload')
 })
 
+
 /** 路由白名单 */
-const whiteList = ["/login", "/register"];
-const { VITE_HIDE_HOME } = import.meta.env
-router.beforeEach( (to: ToRouteType, _from, next) => {
-  const userInfo = storageSession.getItem<DataInfo<number>>(USER_INFO_KEY);
-  if (!to.matched.length) {
-    next('/error/404')
-  }
-  if (userInfo) {
-    // 无权限跳转403页面
-    // if (to.meta?.role) {
-    //   next({ path: "/error/403" });
-    // }
-    // 开启隐藏首页后在浏览器地址栏手动输入首页welcome路由则跳转到404页面
-    if (VITE_HIDE_HOME === 'true' && to.fullPath === '/home') {
-      next({path: '/error/404'})
-    }
-    if (_from?.name) {
-      toCurrentRoute()
-    } else {
-      if (to.path !== '/login') {
-        initRouter().then((router: Router) => {
-          // 确保动态路由完全加入路由列表并且不影响静态路由（注意：动态路由刷新时router.beforeEach可能会触发两次，第一次触发动态路由还未完全添加，第二次动态路由才完全添加到路由列表，如果需要在router.beforeEach做一些判断可以在to.name存在的条件下去判断，这样就只会触发一次）
-          router.push(to.fullPath)
-        })
-      }
-      toCurrentRoute()
-    }
-  } else if (to.path !== '/login') {
-    if (whiteList.indexOf(to.path) !== -1) {
-      next()
-    } else {
-      next({path: '/login'})
-    }
-  } else {
-    next()
-  }
-  function toCurrentRoute() {
-    whiteList.includes(to.fullPath) ? next(_from?.fullPath) : next()
-  }
-})
+// const whiteList = ["/login", "/register"];
+// const { VITE_HIDE_HOME } = import.meta.env
+// router.beforeEach((to: ToRouteType, _from, next) => {
+//   const userInfo = storageSession.getItem<DataInfo<number>>(sessionKey)
+//   NProgress.start()
+//   if (userInfo) {
+//     // 无权限跳转403页面
+//     if (to.meta?.role) {
+//       next({ path: "/error/403" });
+//     }
+//     // 开启隐藏首页后在浏览器地址栏手动输入首页welcome路由则跳转到404页面
+//     if (VITE_HIDE_HOME === 'true' && to.fullPath === '/home') {
+//       next({ path: '/error/404' })
+//     }
+//     if (_from?.name) {
+//       toCorrectRoute()
+//     } else {
+//       if (
+//         usePermissionStoreHook().wholeMenus.length === 0 && to.path !== '/login'
+//       ) {
+//         initRouter().then((router: Router) => {
+//           router.push(to.fullPath)
+//         })
+//       }
+//       toCorrectRoute()
+//     }
+//   } else {
+//     if (to.paht !== '/login') {
+//       if (whiteList.indexOf(to.path) !== -1) {
+//         next()
+//       } else {
+//         next({ path: '/login' })
+//       }
+//     } else {
+//       next()
+//     }
+//   }
+//
+//
+//   /** 如果已经登录并存在登录信息后不能跳转到路由白名单，而是继续保持在当前页面 */
+//   function toCorrectRoute() {
+//     whiteList.includes(to.fullPath) ? next(_from.fullPath) : next();
+//   }
+// })
+// router.afterEach(() => {
+//   NProgress.done();
+// })
+
 export default router

@@ -106,3 +106,10 @@ declare module "vue-router" {
   interface RouteMeta extends CustomizeRouteMeta {
   }
 }
+
+
+
+declare function cloneDeep(val: any): any;
+declare const intersection: (...rest: any[]) => any[];
+declare function isUrl(value: string): boolean;
+declare const openLink: (href: string, target?: Target) => void;

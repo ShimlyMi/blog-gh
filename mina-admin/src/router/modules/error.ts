@@ -14,6 +14,7 @@ export default {
       component: () => import('@/pages/error/403.vue'),
       meta: {
         title: '403',
+        showLink: false,
       }
     },
     {
@@ -22,6 +23,7 @@ export default {
       component: () => import('@/pages/error/404.vue'),
       meta: {
         title: '404',
+        showLink: false,
       }
     },
     {
@@ -30,6 +32,7 @@ export default {
       component: () => import('@/pages/error/500.vue'),
       meta: {
         title: '500',
+        showLink: false,
       }
     }
   ]

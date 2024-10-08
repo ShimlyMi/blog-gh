@@ -1,16 +1,16 @@
 <script setup lang="ts" name="Header">
   import { useTheme } from 'vuetify'
-  import { useUserStore } from '@/stores/user'
+  // import { useUserStore } from '@/stores/user'
 
-  const userStore = useUserStore()
+  // const userStore = useUserStore()
   const theme = useTheme()
 
   function toggleTheme () {
     theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
   }
-  function logout () {
-    userStore.logout()
-  }
+  // function logout () {
+  //   userStore.logout()
+  // }
 </script>
 
 <template>
@@ -40,7 +40,7 @@
         <v-list>
           <v-list-item link prepend-icon="mdi-account-circle" title="用户中心" />
           <v-list-item link prepend-icon="mdi-cog" title="用户设置" />
-          <v-list-item link prepend-icon="mdi-logout" title="退出登录" @click="logout" />
+          <v-list-item link prepend-icon="mdi-logout" title="退出登录" />
         </v-list>
       </v-menu>
     </template>

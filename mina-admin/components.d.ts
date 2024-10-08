@@ -12,5 +12,6 @@ declare module 'vue' {
     Notification: typeof import('./src/components/Notification/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Tabs: typeof import('./src/components/Tabs/index.vue')['default']
   }
 }

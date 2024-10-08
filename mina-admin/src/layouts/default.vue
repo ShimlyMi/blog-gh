@@ -3,10 +3,13 @@
     <Header />
     <Side />
     <Main />
-    <!--    <v-main class="d-flex align-center justify-center" style="min-height: 300px;">-->
-    <!--      Main Content-->
-    <!--    </v-main>-->
   </v-layout>
+
+<!--  <v-layout>-->
+<!--    <Header />-->
+<!--    <Side />-->
+<!--    <Main />-->
+<!--  </v-layout>-->
 </template>
 
 <script lang="ts" setup>
