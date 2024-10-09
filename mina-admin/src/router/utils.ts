@@ -10,7 +10,7 @@ function handRank(routeInfo: any): boolean {
   return isEmpty(parentId) ? isEmpty(meta?.rank) || (meta?.rank === 0 && name !== 'Home' && path !== '/') : false
 }
 
-function isEmpty(value: any): boolean {
+export function isEmpty(value: any): boolean {
   // 直接检查 null 和 undefined
   if (value === null || value === undefined) {
     return true;
@@ -105,7 +105,7 @@ function getArrayIntersection<T>(arr1: T[], arr2: T[]): T[] {
 }
 /** 判断两个数组彼此是否存在相同值 */
 function isOneOfArray(a: Array<string>, b: Array<number>) {
-  return Array.isArray(a) && Array.isArray(b) ? true : intersection(a, b).length > 0
+  return Array.isArray(a) && Array.isArray(b) ? true : getArrayIntersection(a, b).length > 0
 }
 
 /** 从sessionStorage里取出当前登陆用户的角色roles，过滤无权限的菜单 */

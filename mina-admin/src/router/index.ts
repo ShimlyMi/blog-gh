@@ -31,6 +31,7 @@ console.log(routes)
 export const constantRoutes: Array<RouteRecordRaw> = formatRoutes(
   formatFlatteningRoutes(buildHierarchyTree(ascending(routes)))
 )
+console.log(constantRoutes)
 /** 用于渲染菜单，保持原始层级 */
 export const constantsMenus: Array<RouteRecordRaw> = ascending(routes).concat(...basicRoutes)
 

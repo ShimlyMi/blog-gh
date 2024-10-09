@@ -4,7 +4,7 @@
   import LoginFormTitle from './LoginFormTitle.vue'
   import system from '@/locale/system'
   import { messageError, messageSuccess } from '@/utils/messgeBox'
-  import { LoginStateEnum, useLoginState } from '@/pages/system/login/useLogin'
+  import { LoginStateEnum, useLoginState, useFormRules } from '@/pages/system/login/useLogin'
   import router from '@/router'
 
   const v$ = useVuelidate()
@@ -51,7 +51,7 @@
 <template>
   <v-sheet>
     <LoginFormTitle v-show="getShow" />
-    <v-form v-show="getShow" ref="formRef" :model="formData">
+    <v-form v-show="getShow" ref="formRef" :model="formData" :rules="useFormRules">
       <v-text-field v-model="formData.username" :label="system.login.username" />
       <v-text-field v-model="formData.password" :label="system.login.password" />
       <v-checkbox v-model="rememberMe" :label="system.login.rememberMe" />
