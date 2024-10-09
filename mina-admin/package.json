@@ -19,6 +19,7 @@
     "@vuelidate/core": "^2.0.3",
     "@vuelidate/validators": "^2.0.4",
     "axios": "^1.7.7",
+    "browser-image-compression": "^2.0.2",
     "core-js": "^3.37.1",
     "dayjs": "^1.11.13",
     "js-cookie": "^3.0.5",

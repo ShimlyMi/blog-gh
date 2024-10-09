@@ -38,7 +38,7 @@ export class TalkService {
   }
   async findAll() {
     try {
-      const res = await this.talkRepository.find()
+      const res = await this.talkRepository.find();
       return ResultData.messageSuccess(res, '查询说说成功');
     } catch (err) {
       console.log(err);

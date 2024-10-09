@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import * as process from 'process';
 // import Joi from 'joi';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-
 import { WebsiteModule } from './business/website/website.module';
 import { CategoryModule } from './business/category/category.module';
 import { TagModule } from './business/tag/tag.module';
@@ -16,6 +16,7 @@ import { UserModule } from './business/user/user.module';
 import { TalkModule } from './business/talk/talk.module';
 import { TalkPhotosModule } from './business/talk-photos/talk-photos.module';
 import { AuthModule } from './business/auth/auth.module';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -36,6 +37,10 @@ import { AuthModule } from './business/auth/auth.module';
       autoLoadEntities: true,
       logging: true,
     }),
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', 'public/upload'),
+    //   serveRoot: '/upload/',
+    // }),
     WebsiteModule,
     CategoryModule,
     TagModule,

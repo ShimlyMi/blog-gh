@@ -33,6 +33,7 @@ export const constantRoutes: Array<RouteRecordRaw> = formatRoutes(
 )
 /** 用于渲染菜单，保持原始层级 */
 export const constantsMenus: Array<RouteRecordRaw> = ascending(routes).concat(...basicRoutes)
+
 /** 不参与菜单的路由 */
 export const remainingPaths = Object.keys(basicRoutes).map(v => {
   return basicRoutes[v].path
@@ -105,7 +106,7 @@ router.isReady().then(() => {
 //       toCorrectRoute()
 //     }
 //   } else {
-//     if (to.paht !== '/login') {
+//     if (to.path !== '/login') {
 //       if (whiteList.indexOf(to.path) !== -1) {
 //         next()
 //       } else {
