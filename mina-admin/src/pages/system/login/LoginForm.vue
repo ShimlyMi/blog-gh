@@ -6,6 +6,9 @@
   import { useUserStoreHook } from "@/stores/user";
   import {storageLocal} from "@/interface/session";
   import {loginApi} from "@/api/system/user";
+  import {initRouter} from "@/router/utils";
+  import router from "@/router";
+  import {messageSuccess} from "@/utils/messgeBox";
 
   type ruleFormType = {
     username: string,
@@ -18,6 +21,7 @@
     username: '',
     password: '',
   })
+  const showPassword = ref(false)
   const { getLoginState } = useLoginState()
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN)
   const usernameRules = [
@@ -28,20 +32,20 @@
     v => v.length >= 8 && v.length <= 16 && REGEXP_PWD.test(v) || '密码格式应为6-18位数字、字母、符号的任意两种组合'
   ]
   const handleLogin = async () => {
-    const res = await loginApi(formData.value)
-    console.log(res)
-    // if (formRef.value) {
-    //   await formRef.value.validate(async (valid: any, fields: any) => {
-    //     if (valid) {
-    //       if (rememberMe.value) {
-    //         storageLocal.setItem('loginInfo', formData.value)
-    //       } else {
-    //         storageLocal.removeItem('loginInfo')
-    //       }
-    //
-    //     }
-    //   })
-    // }
+    if (formRef.value) {
+      await formRef.value.validate()
+      if (formData.value) {
+        const data = unref(formData.value)
+        const res = await loginApi(data)
+        console.log(res)
+        useUserStoreHook().login(data).then(res => {
+          initRouter().then(() => {
+            router.push('/')
+            messageSuccess('Success','登录成功')
+          })
+        })
+      }
+    }
   }
 
 </script>
@@ -54,13 +58,20 @@
         v-model="formData.username"
         :label="system.login.username"
         :rules="usernameRules"
+        prepend-inner-icon="mdi-account"
+        :placeholder="system.login.accountPlaceholder"
         required
       />
       <v-text-field
         v-model="formData.password"
         :label="system.login.password"
         :rules="passwordRules"
+        :type="showPassword ? 'text' : 'password'"
+        prepend-inner-icon="mdi-lock"
+        :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+        :placeholder="system.login.passwordPlaceholder"
         required
+        @click:append-inner="showPassword = !showPassword"
       />
       <v-checkbox v-model="rememberMe" :label="system.login.rememberMe" />
       <v-btn>{{ system.login.forgetPassword }}</v-btn>
