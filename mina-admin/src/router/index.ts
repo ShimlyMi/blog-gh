@@ -80,52 +80,52 @@ router.isReady().then(() => {
 
 
 /** 路由白名单 */
-// const whiteList = ["/login", "/register"];
-// const { VITE_HIDE_HOME } = import.meta.env
-// router.beforeEach((to: ToRouteType, _from, next) => {
-//   const userInfo = storageSession.getItem<DataInfo<number>>(sessionKey)
-//   NProgress.start()
-//   if (userInfo) {
-//     // 无权限跳转403页面
-//     if (to.meta?.role) {
-//       next({ path: "/error/403" });
-//     }
-//     // 开启隐藏首页后在浏览器地址栏手动输入首页welcome路由则跳转到404页面
-//     if (VITE_HIDE_HOME === 'true' && to.fullPath === '/home') {
-//       next({ path: '/error/404' })
-//     }
-//     if (_from?.name) {
-//       toCorrectRoute()
-//     } else {
-//       if (
-//         usePermissionStoreHook().wholeMenus.length === 0 && to.path !== '/login'
-//       ) {
-//         initRouter().then((router: Router) => {
-//           router.push(to.fullPath)
-//         })
-//       }
-//       toCorrectRoute()
-//     }
-//   } else {
-//     if (to.path !== '/login') {
-//       if (whiteList.indexOf(to.path) !== -1) {
-//         next()
-//       } else {
-//         next({ path: '/login' })
-//       }
-//     } else {
-//       next()
-//     }
-//   }
-//
-//
-//   /** 如果已经登录并存在登录信息后不能跳转到路由白名单，而是继续保持在当前页面 */
-//   function toCorrectRoute() {
-//     whiteList.includes(to.fullPath) ? next(_from.fullPath) : next();
-//   }
-// })
-// router.afterEach(() => {
-//   NProgress.done();
-// })
+const whiteList = ["/login", "/register"];
+const { VITE_HIDE_HOME } = import.meta.env
+router.beforeEach((to: ToRouteType, _from, next) => {
+  const userInfo = storageSession.getItem<DataInfo<number>>(sessionKey)
+  NProgress.start()
+  if (userInfo) {
+    // 无权限跳转403页面
+    if (to.meta?.role) {
+      next({ path: "/error/403" });
+    }
+    // 开启隐藏首页后在浏览器地址栏手动输入首页welcome路由则跳转到404页面
+    if (VITE_HIDE_HOME === 'true' && to.fullPath === '/home') {
+      next({ path: '/error/404' })
+    }
+    if (_from?.name) {
+      toCorrectRoute()
+    } else {
+      if (
+        usePermissionStoreHook().wholeMenus.length === 0 && to.path !== '/login'
+      ) {
+        initRouter().then((router: Router) => {
+          router.push(to.fullPath)
+        })
+      }
+      toCorrectRoute()
+    }
+  } else {
+    if (to.path !== '/login') {
+      if (whiteList.indexOf(to.path) !== -1) {
+        next()
+      } else {
+        next({ path: '/login' })
+      }
+    } else {
+      next()
+    }
+  }
+
+
+  /** 如果已经登录并存在登录信息后不能跳转到路由白名单，而是继续保持在当前页面 */
+  function toCorrectRoute() {
+    whiteList.includes(to.fullPath) ? next(_from.fullPath) : next();
+  }
+})
+router.afterEach(() => {
+  NProgress.done();
+})
 
 export default router

@@ -7,17 +7,19 @@ export interface GetUserInfoParams {
   id?: number
   username?: string
 }
-
 export type UserResult = {
-  /** 用户名 */
-  username: string;
-  /** 当前登陆用户的角色 */
-  role: number;
-  /** `token` */
-  token: string;
-  id: number; // 用户id
-  nickname: string;
-};
+  access_token: string
+}
+// export type UserResult = {
+//   /** 用户名 */
+//   username: string;
+//   /** 当前登陆用户的角色 */
+//   role: number;
+//   /** `token` */
+//   access_token: string;
+//   id: number; // 用户id
+//   nickname: string;
+// };
 
 export interface RoleInfo {
   roleName: string

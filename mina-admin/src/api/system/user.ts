@@ -7,7 +7,7 @@ enum Api {
 }
 
 export const loginApi = (params: LoginParams): Promise<UserResult> => {
-  return instance.post<any, UserResult>(Api.Login, params)
+  return instance.post(Api.Login, params)
 }
 
 export const getUserInfo = (): Promise<GetUserInfoModel> => {

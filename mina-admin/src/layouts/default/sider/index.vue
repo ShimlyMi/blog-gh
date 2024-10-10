@@ -3,15 +3,6 @@
   import { ref } from 'vue'
   import {menuType} from "@/layouts/types";
 
-  const props = defineProps({
-    item: {
-      type: Object as PropType<menuType>,
-    },
-    basePath: {
-      type: String,
-      default: ''
-    }
-  })
   const rail = ref(false)
   function toggleMenu () {
     rail.value = !rail.value

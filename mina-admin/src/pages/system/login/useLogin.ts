@@ -1,6 +1,5 @@
 import { required, sameAs } from '@vuelidate/validators'
 import { ref, computed } from 'vue'
-import system from '@/locale/system'
 
 export enum LoginStateEnum {
   LOGIN,
@@ -23,34 +22,8 @@ export function useLoginState () {
   return { setLoginState, getLoginState, handleBackLogin }
 }
 
-const getAccountFormRule = computed(() => createRule(system.login.accountPlaceholder))
-const getPasswordFormRule = computed(() => createRule(system.login.passwordPlaceholder))
-const validateConfirmPassword = (password: string) => sameAs(password)
-
-
-
-export function useFormRules (formData?: Recordable) {
-  const accountFormRule = unref(getAccountFormRule)
-  const passwordFormRule = unref(getPasswordFormRule)
-  switch (unref(currentState)) {
-    case LoginStateEnum.REGISTER:
-      return {
-        account: accountFormRule,
-        password: passwordFormRule,
-        confirmPassword: [
-          { validator: validateConfirmPassword(formData?.password), trigger: 'change' },
-        ],
-      }
-    case LoginStateEnum.RESET_PASSWORD: {
-      return { account: accountFormRule }
-    }
-    default:
-      return {
-        account: accountFormRule,
-        password: passwordFormRule,
-      }
-  }
-}
+export const REGEXP_PWD = /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)]|[()])+$)(?!^.*[\u4E00-\u9FA5].*$)([^(0-9a-zA-Z)]|[()]|[a-z]|[A-Z]|[0-9]){8,18}$/;
+export const validateConfirmPassword = (password: string) => sameAs(password)
 
 export function createRule (message: string) {
   return {
