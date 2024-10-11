@@ -11,7 +11,7 @@ import {DataInfo, sessionKey} from '@/utils/auth'
 import {formatFlatteningRoutes, formatRoutes, ascending, initRouter} from "@/router/utils";
 import {buildHierarchyTree} from "@/utils/tree";
 import basicRoutes from "@/router/modules/basic";
-import { getSessionItem } from "@/interface/session";
+import { s } from "@/interface/session";
 import {getConfig} from "@/config";
 import {usePermissionStoreHook} from "@/stores/permission";
 
@@ -81,7 +81,7 @@ router.isReady().then(() => {
 const whiteList = ["/login", "/register"];
 const { VITE_HIDE_HOME } = import.meta.env
 router.beforeEach((to: ToRouteType, _from, next) => {
-  const userInfo = getSessionItem(sessionKey)
+  const userInfo = sessionStorage.getItem(sessionKey)
   NProgress.start()
   if (userInfo) {
     // 无权限跳转403页面

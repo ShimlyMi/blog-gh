@@ -68,7 +68,7 @@ export const useUserStore = defineStore(
         const token = access_token.token
         if (!token) return null
         const userInfo = await this.getUserInfoAction()
-        goHome && (await router.replace(BasicPageEnum.BASE_HOME))
+        goHome && await router.push('/')
         return userInfo
       },
 

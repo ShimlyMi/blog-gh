@@ -4,6 +4,7 @@
   import system from '@/locale/system'
   import {LoginStateEnum, useLoginState, REGEXP_PWD} from '@/pages/system/login/useLogin'
   import { useUserStore } from "@/stores/user";
+  import {messageError, messageSuccess} from "@/utils/messgeBox";
 
   const userStore = useUserStore()
   const formRef = ref()
@@ -31,8 +32,12 @@
       const username = unref<string>(usernameRef)
       const password = unref<string>(passwordRef)
       let data = { username, password }
-      let res = await userStore.login(data)
-      console.log(res)
+      try {
+        let { nickname } = await userStore.login(data)
+        messageSuccess('欢迎回来', `${nickname}${system.login.loginSuccessTitle}`)
+      } catch (error) {
+        messageError(`${system.api.errorTip}`, `${system.api.networkExceptionMsg}`)
+      }
     }
   }
 
