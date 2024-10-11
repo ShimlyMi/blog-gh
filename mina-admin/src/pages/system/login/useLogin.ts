@@ -1,5 +1,5 @@
 import { required, sameAs } from '@vuelidate/validators'
-import { ref, computed } from 'vue'
+import {ref, computed, Ref, unref} from 'vue'
 
 export enum LoginStateEnum {
   LOGIN,
@@ -21,6 +21,8 @@ export function useLoginState () {
 
   return { setLoginState, getLoginState, handleBackLogin }
 }
+
+
 
 export const REGEXP_PWD = /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)]|[()])+$)(?!^.*[\u4E00-\u9FA5].*$)([^(0-9a-zA-Z)]|[()]|[a-z]|[A-Z]|[0-9]){8,18}$/;
 export const validateConfirmPassword = (password: string) => sameAs(password)

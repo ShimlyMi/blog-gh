@@ -2,25 +2,16 @@
   import {ref, computed, unref} from 'vue'
   import LoginFormTitle from './LoginFormTitle.vue'
   import system from '@/locale/system'
-  import { LoginStateEnum, useLoginState, REGEXP_PWD } from '@/pages/system/login/useLogin'
-  import { useUserStoreHook } from "@/stores/user";
-  import {storageLocal} from "@/interface/session";
-  import {loginApi} from "@/api/system/user";
-  import {initRouter} from "@/router/utils";
-  import router from "@/router";
-  import {messageSuccess} from "@/utils/messgeBox";
+  import {LoginStateEnum, useLoginState, REGEXP_PWD} from '@/pages/system/login/useLogin'
+  import { useUserStore } from "@/stores/user";
 
-  type ruleFormType = {
-    username: string,
-    password: string
-  }
+  const userStore = useUserStore()
   const formRef = ref()
   const loading = ref(false)
+  const usernameRef = ref<string>('')
+  const passwordRef = ref<string>('')
+  const valid = ref<boolean>(true)
   const rememberMe = ref(false)
-  const formData = ref<ruleFormType>({
-    username: '',
-    password: '',
-  })
   const showPassword = ref(false)
   const { getLoginState } = useLoginState()
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.LOGIN)
@@ -31,20 +22,17 @@
     v => !!v || system.login.passwordPlaceholder,
     v => v.length >= 8 && v.length <= 16 && REGEXP_PWD.test(v) || '密码格式应为6-18位数字、字母、符号的任意两种组合'
   ]
+
   const handleLogin = async () => {
-    if (formRef.value) {
-      await formRef.value.validate()
-      if (formData.value) {
-        const data = unref(formData.value)
-        const res = await loginApi(data)
-        console.log(res)
-        useUserStoreHook().login(data).then(res => {
-          initRouter().then(() => {
-            router.push('/')
-            messageSuccess('Success','登录成功')
-          })
-        })
-      }
+    const form = unref(formRef)
+    if (!form) return
+    await form.validate()
+    if (valid.value) {
+      const username = unref<string>(usernameRef)
+      const password = unref<string>(passwordRef)
+      let data = { username, password }
+      let res = await userStore.login(data)
+      console.log(res)
     }
   }
 
@@ -53,9 +41,9 @@
 <template>
   <v-sheet class="mi-login">
     <LoginFormTitle v-show="getShow" />
-    <v-form v-show="getShow" ref="formRef" :model="formData" >
+    <v-form v-show="getShow" ref="formRef" v-model="valid" >
       <v-text-field
-        v-model="formData.username"
+        v-model="usernameRef"
         :label="system.login.username"
         :rules="usernameRules"
         prepend-inner-icon="mdi-account"
@@ -63,7 +51,7 @@
         required
       />
       <v-text-field
-        v-model="formData.password"
+        v-model="passwordRef"
         :label="system.login.password"
         :rules="passwordRules"
         :type="showPassword ? 'text' : 'password'"

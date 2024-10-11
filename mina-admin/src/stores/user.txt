@@ -1,31 +1,33 @@
 import { defineStore } from 'pinia'
-import {  userType } from './types'
-import { getToken, removeToken, setToken} from '@/utils/auth'
+import { userInfoType, userType } from './types'
+import { storageSession } from '@/interface/session'
+import { DataInfo, getToken, removeToken, setToken } from '@/utils/auth'
 import { USER_INFO_KEY } from '@/enums/cacheEnum'
-import {GetUserInfoModel, LoginParams} from '@/api/model/userModel'
+import {GetUserInfoModel, LoginParams, UserResult} from '@/api/model/userModel'
 import { getUserInfo, loginApi } from '@/api/system/user'
 import router from '@/router'
 import { BasicPageEnum } from '@/enums/pageEnum'
+import {messageError} from "@/utils/messgeBox";
 
 export const useUserStore = defineStore(
   'user',
   {
     state: (): userType => ({
-      username: sessionStorage.getItem(USER_INFO_KEY)?.username ?? '',
-      nickname: sessionStorage.getItem(USER_INFO_KEY)?.nickname ?? '',
-      role: sessionStorage.getItem(USER_INFO_KEY)?.role,
+      username: storageSession.getItem<DataInfo<string>>(USER_INFO_KEY)?.username ?? '',
+      nickname: storageSession.getItem<DataInfo<string>>(USER_INFO_KEY)?.nickname ?? '',
+      role: storageSession.getItem<DataInfo<number>>(USER_INFO_KEY)?.role,
       avatar: '',
       userId: 0,
     }),
     getters: {
       getUserId (): any {
-        return (this.userId || sessionStorage.getItem(USER_INFO_KEY)?.id)
+        return (this.userId || storageSession.getItem<userInfoType>(USER_INFO_KEY)?.id)
       },
       getAvatar (): any {
-        return (this.avatar || sessionStorage.getItem(USER_INFO_KEY)?.avatar)
+        return (this.avatar || storageSession.getItem<userInfoType>(USER_INFO_KEY)?.avatar)
       },
       getNickname (): any {
-        return (this.nickname || sessionStorage.getItem(USER_INFO_KEY)?.nickname)
+        return (this.nickname || storageSession.getItem<userInfoType>(USER_INFO_KEY)?.nickname)
       },
     },
     actions: {
@@ -50,22 +52,19 @@ export const useUserStore = defineStore(
       async login (params: LoginParams & { goHome?: boolean }) {
         try {
           const { goHome = true, ...loginParams } = params
-          // console.log(params)
-          const res = await loginApi(loginParams)
-          console.log(res)
-          const { access_token } = res
-          setToken(access_token)
-          this.SET_TOKEN(access_token)
-          return this.afterLogin(goHome)
-          // return res
-        } catch (err) {
-          return Promise.reject(err)
+          const data = await loginApi(loginParams)
+            console.log(data)
+          // setToken(data)
+          // this.SET_TOKEN(String(data.id))
+          // return this.afterLogin(goHome)
+        } catch (error) {
+          console.error(error)
+          // messageError('温馨提示', error)
         }
       },
 
       async afterLogin (goHome?: boolean): Promise<GetUserInfoModel | null> {
-        const access_token = getToken()
-        const token = access_token.token
+        const token = getToken()
         if (!token) return null
         const userInfo = await this.getUserInfoAction()
         goHome && (await router.replace(BasicPageEnum.BASE_HOME))
@@ -73,15 +72,13 @@ export const useUserStore = defineStore(
       },
 
       async getUserInfoAction (): Promise<GetUserInfoModel | null> {
-        const access_token = getToken()
-        const token = access_token.token
+        const token = getToken()
         if (!token) return null
         const userInfo = await getUserInfo()
-        console.log("userInfo", userInfo)
         this.SET_AVATAR(userInfo.avatar)
         this.SET_NICKNAME(userInfo.nickname)
-        this.SET_ID(userInfo.id)
-        sessionStorage.setItem(USER_INFO_KEY, userInfo)
+        this.SET_ID(userInfo.userId)
+        storageSession.setItem<userInfoType>(USER_INFO_KEY, userInfo)
         return userInfo
       },
       logout () {

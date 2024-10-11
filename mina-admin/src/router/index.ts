@@ -11,7 +11,7 @@ import {DataInfo, sessionKey} from '@/utils/auth'
 import {formatFlatteningRoutes, formatRoutes, ascending, initRouter} from "@/router/utils";
 import {buildHierarchyTree} from "@/utils/tree";
 import basicRoutes from "@/router/modules/basic";
-import {storageSession} from "@/interface/session";
+import { getSessionItem } from "@/interface/session";
 import {getConfig} from "@/config";
 import {usePermissionStoreHook} from "@/stores/permission";
 
@@ -28,9 +28,7 @@ Object.keys(modules).forEach(key => {
 console.log(routes)
 
 /** 导出处理后的静态路由（三级及以上的路由全部拍成二级） */
-export const constantRoutes: Array<RouteRecordRaw> = formatRoutes(
-  formatFlatteningRoutes(buildHierarchyTree(ascending(routes)))
-)
+export const constantRoutes: Array<RouteRecordRaw> = formatRoutes(routes)
 console.log(constantRoutes)
 /** 用于渲染菜单，保持原始层级 */
 export const constantsMenus: Array<RouteRecordRaw> = ascending(routes).concat(...basicRoutes)
@@ -83,7 +81,7 @@ router.isReady().then(() => {
 const whiteList = ["/login", "/register"];
 const { VITE_HIDE_HOME } = import.meta.env
 router.beforeEach((to: ToRouteType, _from, next) => {
-  const userInfo = storageSession.getItem<DataInfo<number>>(sessionKey)
+  const userInfo = getSessionItem(sessionKey)
   NProgress.start()
   if (userInfo) {
     // 无权限跳转403页面

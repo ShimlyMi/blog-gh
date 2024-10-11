@@ -21,6 +21,7 @@
     "axios": "^1.7.7",
     "browser-image-compression": "^2.0.2",
     "core-js": "^3.37.1",
+    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
     "js-cookie": "^3.0.5",
     "nprogress": "^0.2.0",

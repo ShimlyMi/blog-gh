@@ -1,9 +1,10 @@
 import {RouteComponent, RouteRecordRaw} from "vue-router";
 import {buildHierarchyTree} from "@/utils/tree";
-import {storageSession} from "@/interface/session";
-import {DataInfo, sessionKey} from "@/utils/auth";
+// import {storageSession} from "@/interface/session";
+// import {DataInfo, sessionKey} from "@/utils/auth";
+// import { deepClone } from "@/utils/tool";
 import router from "@/router/index";
-import {usePermissionStoreHook} from "@/stores/permission";
+// import {usePermissionStoreHook} from "@/stores/permission";
 
 function handRank(routeInfo: any): boolean {
   const { name, path, parentId, meta } = routeInfo;
@@ -60,23 +61,23 @@ function ascending(arr: any[]) {
 }
 
 /** 过滤meta中showLink为false的菜单 */
-function filterTree(data: RouteComponent[]) {
-  const newTree = cloneDeep(data).filter(
-    (v: { meta: { showLink: boolean } }) => v.meta?.showLink !== false
-  )
-  newTree.forEach(
-    (v: { children }) => v.children && (v.children = filterTree(v.children))
-  )
-  return newTree
-}
-/** 过滤children长度为0的的目录，当目录下没有菜单时，会过滤此目录，目录没有赋予roles权限，当目录下只要有一个菜单有显示权限，那么此目录就会显示 */
-function filterChildrenTree(data: RouteComponent[]) {
-  const newTree = cloneDeep(data).filter((v: any) => v?.children?.length !== 0);
-  newTree.forEach(
-    (v: { children }) => v.children && (v.children = filterTree(v.children))
-  );
-  return newTree;
-}
+// function filterTree(data: RouteComponent[]) {
+//   const newTree = deepClone(data).filter(
+//     (v: { meta: { showLink: boolean } }) => v.meta?.showLink !== false
+//   )
+//   newTree.forEach(
+//     (v: { children }) => v.children && (v.children = filterTree(v.children))
+//   )
+//   return newTree
+// }
+// /** 过滤children长度为0的的目录，当目录下没有菜单时，会过滤此目录，目录没有赋予roles权限，当目录下只要有一个菜单有显示权限，那么此目录就会显示 */
+// function filterChildrenTree(data: RouteComponent[]) {
+//   const newTree = deepClone(data).filter((v: any) => v?.children?.length !== 0);
+//   newTree.forEach(
+//     (v: { children }) => v.children && (v.children = filterTree(v.children))
+//   );
+//   return newTree;
+// }
 /**
  * 将多级嵌套路由处理成一维数组
  * @param routesList 传入路由
@@ -98,7 +99,7 @@ function getArrayIntersection<T>(arr1: T[], arr2: T[]): T[] {
   const intersection = []
   for (const i of arr2) {
     if (setArr.has(i)) {
-      intersection.push(item)
+      intersection.push(i)
     }
   }
   return intersection
@@ -109,12 +110,12 @@ function isOneOfArray(a: Array<string>, b: Array<number>) {
 }
 
 /** 从sessionStorage里取出当前登陆用户的角色roles，过滤无权限的菜单 */
-function filterNoPermissionTree(data: RouteComponent[]) {
-  const currentRoles = storageSession.getItem<DataInfo<number>>(sessionKey)?.role
-  const newTree = cloneDeep(data).filter((v: any) => isOneOfArray(v.meta?.role, [currentRoles]))
-  newTree.forEach((v: any) => v.children && (v.children = filterNoPermissionTree(v.children)))
-  return filterChildrenTree(newTree)
-}
+// function filterNoPermissionTree(data: RouteComponent[]) {
+//   const currentRoles = storageSession.getItem<DataInfo<number>>(sessionKey)?.role
+//   const newTree = deepClone(data).filter((v: any) => isOneOfArray(v.meta?.role, [currentRoles]))
+//   newTree.forEach((v: any) => v.children && (v.children = filterNoPermissionTree(v.children)))
+//   return filterChildrenTree(newTree)
+// }
 
 /**
  * 一维数组处理成多级嵌套数组（三级及以上的路由全部拍成二级，keep-alive 只支持到二级缓存）
@@ -144,17 +145,17 @@ function formatRoutes(routesList: RouteRecordRaw[]) {
 function initRouter() {
   return new Promise(resolve => {
     // 初始化路由
-    usePermissionStoreHook().handleWholeMenus([]);
+    // usePermissionStoreHook().handleWholeMenus([]);
     resolve(router);
   });
 }
 
 export {
   ascending,
-  filterChildrenTree,
-  filterTree,
+  // filterChildrenTree,
+  // filterTree,
+  // filterNoPermissionTree,
   formatFlatteningRoutes,
   formatRoutes,
-  filterNoPermissionTree,
   initRouter
 }

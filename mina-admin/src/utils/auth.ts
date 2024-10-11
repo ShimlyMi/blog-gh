@@ -1,12 +1,10 @@
 import Cookies from 'js-cookie'
-import { useUserStoreHook } from '@/stores/user'
-import { storageSession } from '@/interface/session'
+import {getSessionItem} from '@/interface/session'
 
-// const userStore = useUserStore()
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export interface DataInfo<T> {
+export interface DataInfo {
     /** token */
-    token: string
+    access_token: string
     /** 用户名 */
     username: string
     /** 当前登录用户的角色 */
@@ -16,11 +14,12 @@ export interface DataInfo<T> {
 
 export const sessionKey = 'user-info'
 export const TokenKey = 'authorized-token'
-
+// const userStore = useUserStore()
 /** 获取`token` */
-export function getToken (): DataInfo<number> {
+export function getToken () {
 // 此处与`TokenKey`相同，此写法解决初始化时`Cookies`中不存在`TokenKey`报错
-  return Cookies.get(TokenKey) ? JSON.parse(<string>Cookies.get(TokenKey)) : storageSession.getItem(sessionKey)
+    console.log("JSON", JSON.parse(<string>Cookies.get(TokenKey)))
+  return Cookies.get(TokenKey) ? JSON.parse(<string>Cookies.get(TokenKey)) : sessionStorage.getItem(TokenKey)
 }
 
 /**
@@ -29,29 +28,14 @@ export function getToken (): DataInfo<number> {
  * 将`token`、`expires`这两条信息放在key值为authorized-token的cookie里（过期自动销毁）
  * 将`username`、`roles`、`refreshToken`、`expires`这四条信息放在key值为`user-info`的sessionStorage里（浏览器关闭自动销毁）
  */
-export function setToken (data: DataInfo<string>) {
-  const { token } = data
-  function setSessionKey (username: string, role?: number) {
-    // userStore.SET_USERNAME(username)
-    // userStore.SET_ROLE(typeof role === 'number' ? role : 2)
-    useUserStoreHook().SET_USERNAME(username)
-    useUserStoreHook().SET_ROLE(typeof role === 'number' ? role : null)
-    storageSession.setItem(sessionKey, { username, role })
-  }
-  Cookies.set(TokenKey, JSON.stringify({ token }))
-  if (data.username && data.role) {
-    const { username, role } = data
-    setSessionKey(username, role)
-  } else {
-    const username = storageSession.getItem<DataInfo<string>>(sessionKey)?.username ?? ''
-    const role = storageSession.getItem<DataInfo<number>>(sessionKey)?.role
-    setSessionKey(username, role)
-  }
+export function setToken(token: string) {
+    Cookies.set(TokenKey, JSON.stringify({ token }))
+    sessionStorage.setItem(TokenKey, token)
 }
 /** 删除`token`以及key值为`user-info`的session信息 */
 export function removeToken () {
   Cookies.remove(TokenKey)
-  storageSession.clear()
+  sessionStorage.clear()
 }
 /** 格式化token（jwt格式） */
 export const formatToken = (token: string): string => {

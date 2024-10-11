@@ -4,7 +4,6 @@ import {ServerConfigs} from "#/store";
 
 let config: object = {};
 const {VITE_PUBLIC_PATH} = import.meta.env;
-
 const setConfig = (cfg?: unknown) => {
   config = Object.assign(config, cfg);
 };

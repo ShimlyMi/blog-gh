@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { messageError } from '@/utils/messgeBox'
+import {getToken} from "@/utils/auth";
 
 interface ApiResponse<T> {
   code: number,
@@ -19,6 +20,12 @@ const instance: AxiosInstance = axios.create({
 
 instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    const access_token = getToken()
+    const token = access_token.token
+    // console.log("token", token)
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`
+    }
     return config
   },
   error => {
@@ -29,11 +36,11 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
-    const status: number = response.status
-    // console.log("response.data", response.data)
+    const status: number = response.data.code
+    console.log("response.data", response.data)
     if (status === 200) {
       const result: ApiResponse<any> = response.data
-      // console.log("result",result)
+      // console.log("result",result.data)
       return result.data
       // console.log("result.data", result.data)
       // if (result.code === 0) {
