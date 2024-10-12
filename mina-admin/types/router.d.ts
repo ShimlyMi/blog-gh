@@ -108,8 +108,4 @@ declare module "vue-router" {
 }
 
 
-
-declare function cloneDeep(val: any): any;
-declare const intersection: (...rest: any[]) => any[];
-declare function isUrl(value: string): boolean;
-declare const openLink: (href: string, target?: Target) => void;
+declare type Nullable<T> = T | null

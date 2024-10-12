@@ -1,12 +1,9 @@
 export type userType = {
   userId: number
-  role?: number
-  verifyCode?: string
-  currentPage?: number
+  role?: number | null
   avatar: string
   username: string
   nickname: string
-  token?: string
 }
 
 export type userInfoType = {

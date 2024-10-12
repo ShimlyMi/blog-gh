@@ -32,9 +32,12 @@
       const username = unref<string>(usernameRef)
       const password = unref<string>(passwordRef)
       let data = { username, password }
+        // let res = await userStore.login(data)
+        // console.log(res)
       try {
-        let { nickname } = await userStore.login(data)
-        messageSuccess('欢迎回来', `${nickname}${system.login.loginSuccessTitle}`)
+        let userInfo = await userStore.login(data)
+          // console.log(userInfo)
+        messageSuccess('欢迎回来', `${userInfo?.nickname}${system.login.loginSuccessTitle}`)
       } catch (error) {
         messageError(`${system.api.errorTip}`, `${system.api.networkExceptionMsg}`)
       }

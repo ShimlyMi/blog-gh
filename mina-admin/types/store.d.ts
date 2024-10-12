@@ -1,5 +1,4 @@
 import { ErrorTypeEnum } from '@/enums/exceptionEnum'
-import { RoleInfo } from '@/api/model/userModel'
 
 export interface ErrorLoginInfo {
   // Type of error
@@ -21,11 +20,10 @@ export interface ErrorLoginInfo {
 }
 
 export interface UserInfo {
-  userId: string | number
+  id: string | number
   username: string
   nickname: string
   avatar: string
-  homePath?: string
   role: number
 }
 
@@ -64,4 +62,9 @@ interface ServerConfigs {
   CachingAsyncRoutes?: boolean;
   TooltipEffect?: Effect;
   ResponsiveStorageNameSpace?: string;
+}
+
+declare type Nullable<T> = T | null
+declare interface Fn<T = any, R = T> {
+  (...arg: T[]): R
 }

@@ -1,51 +1,64 @@
-import { defineStore } from 'pinia'
-import {  userType } from './types'
-import { getToken, removeToken, setToken} from '@/utils/auth'
-import { USER_INFO_KEY } from '@/enums/cacheEnum'
-import {GetUserInfoModel, LoginParams} from '@/api/model/userModel'
-import { getUserInfo, loginApi } from '@/api/system/user'
+import {defineStore} from 'pinia'
+import {getAuthCache, getToken, removeToken, sessionKey, setAuthCache, setToken} from '@/utils/auth'
+import {LoginParams} from '@/api/model/userModel'
+import {getUserInfo, loginApi} from '@/api/system/user'
 import router from '@/router'
-import { BasicPageEnum } from '@/enums/pageEnum'
+import {BasicPageEnum} from '@/enums/pageEnum'
+import {UserInfo} from "#/store";
+import {TOKEN_KEY, USER_INFO_KEY} from "@/enums/cacheEnum";
 
+interface UserState {
+  userInfo: Nullable<UserInfo>
+  token?: string
+  role?: number | null
+  sessionTimeout?: boolean
+  lastUpdateTime: number
+}
 export const useUserStore = defineStore(
   'user',
   {
-    state: (): userType => ({
-      username: sessionStorage.getItem(USER_INFO_KEY)?.username ?? '',
-      nickname: sessionStorage.getItem(USER_INFO_KEY)?.nickname ?? '',
-      role: sessionStorage.getItem(USER_INFO_KEY)?.role,
-      avatar: '',
-      userId: 0,
+    state: (): UserState => ({
+      userInfo: null,
+      token: undefined,
+      role: null,
+      sessionTimeout: false,
+      lastUpdateTime: 0
     }),
     getters: {
-      getUserId (): any {
-        return (this.userId || sessionStorage.getItem(USER_INFO_KEY)?.id)
+      getUserInfo (): UserInfo {
+        return this.userInfo || getAuthCache<UserInfo>(USER_INFO_KEY) || {}
       },
-      getAvatar (): any {
-        return (this.avatar || sessionStorage.getItem(USER_INFO_KEY)?.avatar)
+      getToken(): string {
+        return this.token || getAuthCache<string>(TOKEN_KEY)
       },
-      getNickname (): any {
-        return (this.nickname || sessionStorage.getItem(USER_INFO_KEY)?.nickname)
+      getSessionTimeout(): boolean {
+        return !!this.sessionTimeout
+      },
+      getLastUpdateTime(): number {
+        return this.lastUpdateTime
       },
     },
     actions: {
-      SET_USERNAME (username: string) {
-        this.username = username
+      SET_USERINFO (info: UserInfo | null) {
+        this.userInfo = info
+        this.lastUpdateTime = new Date().getTime()
+        setAuthCache(USER_INFO_KEY, info)
       },
       SET_ROLE (role: number) {
         this.role = role
       },
-      SET_TOKEN (token: string) {
-        this.token = token
+      SET_TOKEN (token: string | undefined) {
+        this.token = token ? token : ''
+        setAuthCache(TOKEN_KEY, token)
       },
-      SET_AVATAR (avatar: string) {
-        this.avatar = avatar
+      SET_SESSION_TIMEOUT(flag: boolean) {
+        this.sessionTimeout = flag
       },
-      SET_NICKNAME (nickname: string) {
-        this.nickname = nickname
-      },
-      SET_ID (id: number) {
-        this.userId = id
+      RESET_STATE() {
+        this.userInfo = null
+        this.token = ''
+        this.role = null
+        this.sessionTimeout = false
       },
       async login (params: LoginParams & { goHome?: boolean }) {
         try {
@@ -54,7 +67,6 @@ export const useUserStore = defineStore(
           const res = await loginApi(loginParams)
           console.log(res)
           const { access_token } = res
-          setToken(access_token)
           this.SET_TOKEN(access_token)
           return this.afterLogin(goHome)
           // return res
@@ -63,32 +75,35 @@ export const useUserStore = defineStore(
         }
       },
 
-      async afterLogin (goHome?: boolean): Promise<GetUserInfoModel | null> {
-        const access_token = getToken()
-        const token = access_token.token
-        if (!token) return null
+      async afterLogin (goHome?: boolean) {
+        if (!this.token) return null
         const userInfo = await this.getUserInfoAction()
-        goHome && await router.push('/')
+        console.log("afterLogin", userInfo)
+        const sessionTimeout = this.sessionTimeout
+        if (sessionTimeout) {
+          this.SET_SESSION_TIMEOUT(false)
+        } else {
+          const permissionStore =
+        }
+        await router.replace('/')
         return userInfo
       },
 
-      async getUserInfoAction (): Promise<GetUserInfoModel | null> {
-        const access_token = getToken()
-        const token = access_token.token
-        if (!token) return null
+      async getUserInfoAction (): Promise<UserInfo | null> {
+        if (!this.token) return null
         const userInfo = await getUserInfo()
-        console.log("userInfo", userInfo)
-        this.SET_AVATAR(userInfo.avatar)
-        this.SET_NICKNAME(userInfo.nickname)
-        this.SET_ID(userInfo.id)
-        sessionStorage.setItem(USER_INFO_KEY, userInfo)
+        const { role } = userInfo
+        this.SET_ROLE(role)
+        this.SET_USERINFO(userInfo)
         return userInfo
       },
-      logout () {
-        removeToken()
-        this.username = ''
-        router.push(BasicPageEnum.BASE_LOGIN)
+      logout (goLogin = false) {
+        this.SET_TOKEN(undefined)
+        this.SET_SESSION_TIMEOUT(false)
+        this.SET_USERINFO(null)
+        goLogin && router.push(BasicPageEnum.BASE_LOGIN)
       },
+
     },
   }
 )

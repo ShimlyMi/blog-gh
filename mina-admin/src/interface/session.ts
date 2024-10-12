@@ -1,134 +1,70 @@
-const config = {
-  ENCRYPTION: true
+import {AesEncryption, EncryptionParams} from "@/utils/encipher";
+import {cacheCipher} from "@/config/encryption";
+import {isNullOrUnDef} from "@/utils/is";
+
+export interface CreateStorageParams extends EncryptionParams {
+  prefixKey: string
+  storage: Storage
+  hasEncrypt: boolean
+  localDrSessionStorage: boolean
+  timeout?: Nullable<number>
 }
 
-export const Base64 = {
-  encode: function (v) {
-    return window.btoa(window.encodeURIComponent(v));
-  },
-  decode: function (v) {
-    return window.decodeURIComponent(window.atob(v));
-  }
-};
+export const createStorage = ({
+  prefixKey = '',
+  storage = sessionStorage,
+  key = cacheCipher.SECRET_KEY,
+  iv = cacheCipher.SECRET_IV,
+  timeout = null
+}: Partial<CreateStorageParams> = {}) => {
 
-export const setLocalItem = (key: string, value) => {
-  try {
-    if (key === "" || key === undefined) {
-      return;
-    }
-    if (key) {
-      if (value == 0) {
-        value = JSON.stringify(value);
-        localStorage.setItem(config.ENCRYPTION ? Base64.encode(key) : key, value);
-        return;
-      }
-      if (value === null || value === undefined || value === "") {
-        return "";
-      }
-      // 编码
-      const enObj = JSON.stringify(value);
-      if (config.ENCRYPTION) {
-        localStorage.setItem(Base64.encode(key), Base64.encode(enObj));
-      } else {
-        localStorage.setItem(key, enObj);
-      }
-    }
-  } catch (err) {
-    console.error(err);
+  if ([key.length, iv.length].some((item) => item !== 16)) {
+    throw new Error('When hasEncrypt is true, the key or iv must be 16 bits!')
   }
-};
-
-export const getLocalItem = (key) => {
-  try {
-    if (key === null || key === "" || key === undefined) {
-      return ""
+  const encryption = new AesEncryption()
+  const LocalCache =  class LocalCache {
+    private getKey(key: string) {
+      return `${prefixKey}${key}`.toUpperCase()
     }
-    if (key) {
-      let value = localStorage.getItem(config.ENCRYPTION ? Base64.encode(key) : key);
-      if (value === null || value == undefined || value === "") {
-        return "";
-      } else {
-        value = config.ENCRYPTION ? Base64.decode(value) : value;
-        return JSON.parse(value);
+
+    setCache<T = any>(key: string, value: T, expire: number | null = timeout) {
+     try {
+       const stringData = JSON.stringify({
+         value,
+         time: Date.now(),
+         expire: isNullOrUnDef(expire) ? new Date().getTime() + expire * 1000 : null
+       })
+       const stringifyValue = encryption.encryptByAES(stringData)
+       storage.setItem(this.getKey(key), stringifyValue)
+       return true
+     } catch (error) {
+       return false
+     }
+    }
+
+    getCache<T>(key: string, def: any = null): T {
+      const val = storage.getItem(this.getKey(key))
+      if (!val) return def
+      console.log("getItem", val)
+      try {
+        const decVal = encryption.decryptByAES(val)
+        const data = JSON.parse(decVal)
+        const { value, expire } = data
+        if (isNullOrUnDef(expire) || expire >= new Date().getTime()) {
+          return value
+        }
+        this.deleteCache(key)
+      } catch (error) {
+        return def
       }
     }
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-export const setSessionItem = (key, value) => {
-  try {
-    if (key === "" || key === undefined) {
-      return;
+    deleteCache(key: string): void {
+      storage.removeItem(key)
     }
-    if (key) {
-      if (value == 0) {
-        value = JSON.stringify(value);
-        sessionStorage.setItem(config.ENCRYPTION ? Base64.encode(key) : key, value);
-      }
-      if (value === null || value === undefined || value === "") {
-        return "";
-      }
-      // 编码
-      const enObj = JSON.stringify(value);
-      if (config.ENCRYPTION) {
-        sessionStorage.setItem(Base64.encode(key), Base64.encode(enObj));
-      } else {
-        sessionStorage.setItem(key, enObj);
-      }
+    clearCache(): void {
+      storage.clear()
     }
-  } catch (e) {
-    console.log(e);
-    return sessionStorage.setItem(config.ENCRYPTION ? Base64.encode(key) : key, value);
   }
-};
 
-export const getSessionItem = (key) => {
-  if (key === null || key === "" || key === undefined) {
-    return null;
-  }
-  try {
-    if (key) {
-      let value = sessionStorage.getItem(config.ENCRYPTION ? Base64.encode(key) : key);
-      if (value === null || value === undefined || value === "") {
-        return value;
-      } else {
-        value = config.ENCRYPTION ? Base64.decode(value) : value;
-        return JSON.parse(value);
-      }
-    }
-  } catch (e) {
-    console.log(e);
-    return  sessionStorage.getItem(config.ENCRYPTION ? Base64.encode(key) : key);
-  }
-};
-
-export const removeLocalItem = (key) => {
-  if (key === null || key === "" || key === undefined) {
-    return;
-  }
-  if (key) {
-    const enObj = config.ENCRYPTION ? Base64.encode(key) : key;
-    localStorage.removeItem(enObj);
-  }
-}
-
-// 清空 session 数据
-export const removeSessionItem = (key) => {
-  if (key === null || key === "" || key === undefined) {
-    return;
-  }
-  if (key) {
-    const enObj = config.ENCRYPTION ? Base64.encode(key) : key;
-    sessionStorage.removeItem(enObj);
-  }
-}
-
-export const clearSession = () => {
-  sessionStorage.clear()
-}
-
-export const clearLocal = () => {
-  localStorage.clear()
+  return new LocalCache()
 }

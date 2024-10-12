@@ -7,20 +7,17 @@
 // Composables
 import {createRouter, createWebHistory, Router, RouteRecordRaw} from 'vue-router'
 import NProgress from '@/utils/progress/index'
-import {DataInfo, sessionKey} from '@/utils/auth'
-import {formatFlatteningRoutes, formatRoutes, ascending, initRouter} from "@/router/utils";
-import {buildHierarchyTree} from "@/utils/tree";
+import { sessionKey} from '@/utils/auth'
+import { formatRoutes, ascending, initRouter} from "@/router/utils";
 import basicRoutes from "@/router/modules/basic";
-import { s } from "@/interface/session";
-import {getConfig} from "@/config";
 import {usePermissionStoreHook} from "@/stores/permission";
-
+const Layout = () => import('@/layouts/default.vue')
 
 const modules: Record<string, any> = import.meta.glob([
-  "./modules/**/*.ts", "!./modules/**/basic.ts",
+  "./modules/**/*.ts", "./modules/**/basic.ts"
 ], { eager: true })
 
-const routes = []
+const routes: any[] = []
 Object.keys(modules).forEach(key => {
   routes.push(modules[key].default)
 })
@@ -31,16 +28,51 @@ console.log(routes)
 export const constantRoutes: Array<RouteRecordRaw> = formatRoutes(routes)
 console.log(constantRoutes)
 /** 用于渲染菜单，保持原始层级 */
-export const constantsMenus: Array<RouteRecordRaw> = ascending(routes).concat(...basicRoutes)
+// export const constantsMenus: Array<RouteRecordRaw> = ascending(routes).concat(...basicRoutes)
 
 /** 不参与菜单的路由 */
-export const remainingPaths = Object.keys(basicRoutes).map(v => {
-  return basicRoutes[v].path
-})
+// export const remainingPaths = Object.keys(basicRoutes).map(v => {
+//   return basicRoutes[v].path
+// })
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: constantRoutes.concat(...(basicRoutes as any)),
+  routes: [
+      ...routes,
+      {
+          path: '/login',
+          name: 'Login',
+          component: () => import('@/pages/system/login/Login.vue'),
+          meta: { title: '登录', showLink: false },
+      },
+      {
+          path: '/register',
+          name: 'Register',
+          component: () => import('@/pages/system/login/RegisterForm.vue'),
+          meta: {
+              title: '注册',
+              showLink: false,
+          }
+      },
+      {
+          path: "/redirect",
+          component: Layout,
+          meta: {
+              showLink: false,
+              rank: 104
+          },
+          children: [
+              {
+                  path: '/redirect/:path(.*)',
+                  name: 'Redirect',
+                  component: () => import('@/layouts/redirect.vue'),
+                  meta: {
+                      showLink: false,
+                  }
+              }
+          ]
+      }
+  ],
   strict: true,
   scrollBehavior(to, from, savedPosition) {
     return new Promise(resolve => {
@@ -82,6 +114,7 @@ const whiteList = ["/login", "/register"];
 const { VITE_HIDE_HOME } = import.meta.env
 router.beforeEach((to: ToRouteType, _from, next) => {
   const userInfo = sessionStorage.getItem(sessionKey)
+    console.log('route', userInfo)
   NProgress.start()
   if (userInfo) {
     // 无权限跳转403页面
@@ -96,7 +129,7 @@ router.beforeEach((to: ToRouteType, _from, next) => {
       toCorrectRoute()
     } else {
       if (
-        usePermissionStoreHook().wholeMenus.length === 0 && to.path !== '/login'
+        to.path !== '/login'
       ) {
         initRouter().then((router: Router) => {
           router.push(to.fullPath)

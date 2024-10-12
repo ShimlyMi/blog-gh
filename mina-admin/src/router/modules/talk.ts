@@ -1,6 +1,6 @@
 
 export default {
-  path: "talk",
+  path: "/talk",
   meta: {
     title: '说说管理',
     icon: 'mdi-chat-processing',
