@@ -24,6 +24,7 @@
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
     "js-cookie": "^3.0.5",
+    "lodash-es": "^4.17.21",
     "nprogress": "^0.2.0",
     "pinia": "^2.2.4",
     "pinia-plugin-persistedstate": "^4.0.2",
