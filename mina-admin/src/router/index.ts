@@ -5,88 +5,26 @@
  */
 
 // Composables
-import {createRouter, createWebHistory, Router, RouteRecordRaw} from 'vue-router'
+import {createRouter, createWebHistory, Router} from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 import NProgress from '@/utils/progress/index'
-import { sessionKey} from '@/utils/auth'
-import { formatRoutes, ascending, initRouter} from "@/router/utils";
-import basicRoutes from "@/router/modules/basic";
-import {usePermissionStoreHook} from "@/stores/permission";
-const Layout = () => import('@/layouts/default.vue')
+import { basicRoutes } from "@/router/routes";
 
-const modules: Record<string, any> = import.meta.glob([
-  "./modules/**/*.ts", "./modules/**/basic.ts"
-], { eager: true })
-
-const routes: any[] = []
-Object.keys(modules).forEach(key => {
-  routes.push(modules[key].default)
-})
-
-console.log(routes)
-
-/** 导出处理后的静态路由（三级及以上的路由全部拍成二级） */
-export const constantRoutes: Array<RouteRecordRaw> = formatRoutes(routes)
-console.log(constantRoutes)
-/** 用于渲染菜单，保持原始层级 */
-// export const constantsMenus: Array<RouteRecordRaw> = ascending(routes).concat(...basicRoutes)
-
-/** 不参与菜单的路由 */
-// export const remainingPaths = Object.keys(basicRoutes).map(v => {
-//   return basicRoutes[v].path
-// })
+const whiteNameList: string[] = []
+const getRouteNames = (array: any[]) => {
+  array.forEach((item) => {
+    whiteNameList.push(item.name)
+      getRouteNames(item.children || [])
+  })
+}
+getRouteNames(basicRoutes)
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-      ...routes,
-      {
-          path: '/login',
-          name: 'Login',
-          component: () => import('@/pages/system/login/Login.vue'),
-          meta: { title: '登录', showLink: false },
-      },
-      {
-          path: '/register',
-          name: 'Register',
-          component: () => import('@/pages/system/login/RegisterForm.vue'),
-          meta: {
-              title: '注册',
-              showLink: false,
-          }
-      },
-      {
-          path: "/redirect",
-          component: Layout,
-          meta: {
-              showLink: false,
-              rank: 104
-          },
-          children: [
-              {
-                  path: '/redirect/:path(.*)',
-                  name: 'Redirect',
-                  component: () => import('@/layouts/redirect.vue'),
-                  meta: {
-                      showLink: false,
-                  }
-              }
-          ]
-      }
-  ],
+  routes: basicRoutes as unknown as RouteRecordRaw[],
+  // 是否应该禁止尾部斜杠。默认为假
   strict: true,
-  scrollBehavior(to, from, savedPosition) {
-    return new Promise(resolve => {
-      if (savedPosition) {
-        return savedPosition;
-      } else {
-        if (from.meta.saveSrollTop) {
-          const top: number =
-            document.documentElement.scrollTop || document.body.scrollTop;
-          resolve({ left: 0, top });
-        }
-      }
-    });
-  }
+  scrollBehavior: () => ({ left: 0, top: 0 }),
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804

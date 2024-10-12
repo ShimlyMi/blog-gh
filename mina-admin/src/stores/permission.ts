@@ -40,6 +40,9 @@ export const usePermissionStore = defineStore({
     getPermCodeList(): string[] | number[] {
       return this.permCodeList
     },
+    getBackMenuList(): Menu[] {
+      return this.backMenuList
+    },
     getFrontMenuList(): Menu[] {
       return this.frontMenuList
     },
@@ -52,11 +55,29 @@ export const usePermissionStore = defineStore({
   },
   actions: {
     /** 组装整体路由生成的菜单 */
-    // handleWholeMenus(routes: any[]) {
-    //   this.wholeMenus = ascending(this.constantsMenus.concat(routes))
-    //     console.log("this.wholeMenus", this.wholeMenus)
-    //     console.log("routes", routes)
-    // },
+    setPermCodeList(codeList: string[]) {
+      this.permCodeList = codeList
+    },
+    setBackMenuList(list: Menu[]) {
+      this.backMenuList = list
+      list?.length > 0 && this.setLastBuildMenuTime()
+    },
+    setFrontMenuList(list: Menu[]) {
+      this.frontMenuList = list
+    },
+    setLastBuildMenuTime() {
+      this .lastBuildMenuTime = new Date().getTime()
+    },
+    setDynamicAddedRoute(added: boolean) {
+      this.isDynamicAddedRoute = added
+    },
+    resetState(): void {
+      this.isDynamicAddedRoute = false
+      this.permCodeList = []
+      this.backMenuList = []
+      this.lastBuildMenuTime = 0
+    },
+
   }
 })
 

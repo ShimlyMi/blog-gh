@@ -1,4 +1,3 @@
-import {config} from "dotenv";
 import {Fn} from "#/store";
 
 interface TreeHelperConfig {
@@ -71,5 +70,115 @@ export function findNodeAll<T = any>(tree: any, func: Fn, config: Partial<TreeHe
 }
 
 export function findPath<T = any>(tree: any, func: Fn, config: Partial<TreeHelperConfig> = {}): T | T[] | null {
+    config = getConfig(config)
+    const path: T[] = []
+    const list = [...tree]
+    const visitedSet = new Set()
+    const { children } = config
+    while (list.length) {
+        const node = list[0]
+        if (visitedSet.has(node)) {
+            path.pop()
+            list.shift()
+        } else {
+            visitedSet.add(node)
+            node[children!] && list.unshift(...node[children!])
+            path.push(node)
+            if (func(node)) {
+                return path
+            }
+        }
+    }
+    return null
+}
 
+export function findPathAll(tree: any, func: Fn, config: Partial<TreeHelperConfig> = {}) {
+    config = getConfig(config)
+    const path: any[] = []
+    const list = [...tree]
+    const result: any[] = []
+    const visitedSet = new Set(), { children } = config
+    while (list.length) {
+        const node = list[0]
+        if (visitedSet.has(node)) {
+            path.pop()
+            list.shift()
+        } else {
+            visitedSet.add(node)
+            node[children!] && list.unshift(...node[children!])
+            path.push(node)
+            func(node) && result.push([...path])
+        }
+    }
+    return result
+}
+
+export function filter<T = any>(tree: T[], func: (n: T) => boolean, config: Partial<TreeHelperConfig> = {}): T[] {
+    config = getConfig(config)
+    const children = config.children as string
+    function listFilter(list: T[]) {
+        return list.map((node: any) => ({...node})).filter((node) => {
+            node[children] = node[children] && listFilter(node[children])
+            return func(node) || (node[children] && node[children].length)
+        })
+    }
+    return listFilter((tree))
+}
+
+export function forEach<T = any>(tree: T[], func: (n: T) => any, config: Partial<TreeHelperConfig> = {}) {
+    config = getConfig(config)
+    const { children } = config
+    const list: any[] = [...tree]
+    for (let i = 0; i < list.length; i++) {
+        if (func(list[i])) {
+            return
+        }
+        children && list[i][children] && list.splice(i + 1, 0, ...list[i][children])
+    }
+}
+
+export function treeMap<T = any>(treeData: T[], opt: { children?: string; conversion: Fn }): T[] {
+    return treeData.map((item: T) => treeMapEach(item, opt))
+}
+
+/**
+ * @description: Extract tree specified structure
+ * @description: 提取树指定结构
+ */
+export function treeMapEach(
+    data: any,
+    { children = 'children', conversion }: { children?: string; conversion: Fn },
+) {
+    const haveChildren = Array.isArray(data[children]) && data[children].length > 0
+    const conversionData = conversion(data) || {}
+    if (haveChildren) {
+        return {
+            ...conversionData,
+            [children]: data[children].map((i: number) =>
+                treeMapEach(i, {
+                    children,
+                    conversion,
+                }),
+            ),
+        }
+    } else {
+        return {
+            ...conversionData,
+        }
+    }
+}
+
+/**
+ * 递归遍历树结构
+ * @param treeData 树
+ * @param callBack 回调
+ * @param parentNode 父节点
+ */
+export function eachTree(treeData: any[], callBack: Fn, parentNode = {}) {
+    treeData.forEach((element) => {
+        const newNode = callBack(element, parentNode) || element
+        if (element.children) {
+            eachTree(element.children, callBack, newNode)
+        }
+    })
 }
