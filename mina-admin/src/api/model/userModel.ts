@@ -15,7 +15,7 @@ export interface UserResult {
   avatar: string
   nickname: string;
   /** 当前登陆用户的角色 */
-  role: number;
+  role: RoleInfo[]
 };
 
 export interface RoleInfo {
@@ -31,7 +31,7 @@ export interface LoginResultModel {
   avatar: string
   nickname: string;
   /** 当前登陆用户的角色 */
-  role: number;
+  role: RoleInfo[];
 }
 
 export interface GetUserInfoModel {
@@ -39,5 +39,5 @@ export interface GetUserInfoModel {
   username: string
   nickname: string
   avatar: string
-  role: number
+  role: RoleInfo[]
 }

@@ -1,4 +1,5 @@
 import { ErrorTypeEnum } from '@/enums/exceptionEnum'
+import {RoleInfo} from "@/api/model/userModel";
 
 export interface ErrorLoginInfo {
   // Type of error
@@ -24,7 +25,8 @@ export interface UserInfo {
   username: string
   nickname: string
   avatar: string
-  role: number
+  homePath?: string
+  role: RoleInfo[]
 }
 
 export type userInfoType = {

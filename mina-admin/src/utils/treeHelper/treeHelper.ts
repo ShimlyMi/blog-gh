@@ -21,7 +21,7 @@ export function listToTree<T = any>(list: any[], config: Partial<TreeHelperConfi
     const { id, children, pid } = conf
 
     for (const node of list) {
-        node[children] = node[children] | []
+        node[children] = node[children] || []
         nodeMap.set(node[id], node)
     }
     for (const node of list) {
@@ -136,7 +136,10 @@ export function forEach<T = any>(tree: T[], func: (n: T) => any, config: Partial
         children && list[i][children] && list.splice(i + 1, 0, ...list[i][children])
     }
 }
-
+/**
+ * @description: Extract tree specified structure
+ * @description: 提取树指定结构
+ */
 export function treeMap<T = any>(treeData: T[], opt: { children?: string; conversion: Fn }): T[] {
     return treeData.map((item: T) => treeMapEach(item, opt))
 }
@@ -146,27 +149,28 @@ export function treeMap<T = any>(treeData: T[], opt: { children?: string; conver
  * @description: 提取树指定结构
  */
 export function treeMapEach(
-    data: any,
-    { children = 'children', conversion }: { children?: string; conversion: Fn },
+  data: any,
+  { children = 'children', conversion }: { children?: string; conversion: Fn },
 ) {
-    const haveChildren = Array.isArray(data[children]) && data[children].length > 0
-    const conversionData = conversion(data) || {}
-    if (haveChildren) {
-        return {
-            ...conversionData,
-            [children]: data[children].map((i: number) =>
-                treeMapEach(i, {
-                    children,
-                    conversion,
-                }),
-            ),
-        }
-    } else {
-        return {
-            ...conversionData,
-        }
+  const haveChildren = Array.isArray(data[children]) && data[children].length > 0
+  const conversionData = conversion(data) || {}
+  if (haveChildren) {
+    return {
+      ...conversionData,
+      [children]: data[children].map((i: number) =>
+        treeMapEach(i, {
+          children,
+          conversion,
+        }),
+      ),
     }
+  } else {
+    return {
+      ...conversionData,
+    }
+  }
 }
+
 
 /**
  * 递归遍历树结构
