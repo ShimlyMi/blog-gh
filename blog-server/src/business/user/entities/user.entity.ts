@@ -1,5 +1,6 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany } from 'typeorm';
 import { BaseColumn } from '../../baseColumnAbstract/baseColumn';
+import { Role } from '../../role/entities/role.entity';
 
 @Entity()
 export class User extends BaseColumn {
@@ -19,13 +20,9 @@ export class User extends BaseColumn {
   })
   password: string;
 
-  @Column({
-    type: 'tinyint',
-    nullable: false,
-    comment: '用户角色 1 管理员 2 普通用户',
-    default: 2,
-  })
-  role: number;
+  @OneToMany(() => Role, (role) => role.value)
+  @JoinColumn()
+  role: Role[];
 
   @Column({
     type: 'varchar',

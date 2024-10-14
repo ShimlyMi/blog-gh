@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { ServeStaticModule } from '@nestjs/serve-static';
 import * as process from 'process';
-// import Joi from 'joi';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -16,7 +14,7 @@ import { UserModule } from './business/user/user.module';
 import { TalkModule } from './business/talk/talk.module';
 import { TalkPhotosModule } from './business/talk-photos/talk-photos.module';
 import { AuthModule } from './business/auth/auth.module';
-import { join } from 'path';
+import { RoleModule } from './business/role/role.module';
 
 @Module({
   imports: [
@@ -50,6 +48,7 @@ import { join } from 'path';
     UploadModule,
     TalkModule,
     TalkPhotosModule,
+    RoleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
