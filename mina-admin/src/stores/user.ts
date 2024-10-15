@@ -2,14 +2,14 @@ import {defineStore} from 'pinia'
 import {getAuthCache, setAuthCache} from '@/utils/auth'
 import {LoginParams, RoleInfo} from '@/api/model/userModel'
 import {getUserInfo, loginApi} from '@/api/system/user'
-import {router} from '@/router'
+import {router} from '@/router/copy'
 import {BasicPageEnum} from '@/enums/pageEnum'
 import {UserInfo} from "#/store";
 import {ROLES_KEY, TOKEN_KEY, USER_INFO_KEY} from "@/enums/cacheEnum";
 import {isArray} from "@/utils/is";
 import {RoleEnum} from "@/enums/roleEnum";
 import {usePermissionStore} from "@/stores/permission";
-import {PAGE_NOT_FOUND_ROUTE} from "@/router/routes/basic";
+import {PAGE_NOT_FOUND_ROUTE} from "@/router/copy/routes/basic";
 import { RouteRecordRaw} from "vue-router";
 
 interface UserState {

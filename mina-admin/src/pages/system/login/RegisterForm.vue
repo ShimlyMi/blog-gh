@@ -3,7 +3,7 @@
   import system from '@/locale/system'
   import LoginFormTitle from '@/pages/system/login/LoginFormTitle.vue'
   import { LoginStateEnum, useLoginState } from '@/pages/system/login/useLogin'
-  import router from "@/router";
+  import router from "@/router/copy";
 
   const { getLoginState } = useLoginState()
   const getShow = computed(() => unref(getLoginState) === LoginStateEnum.REGISTER)

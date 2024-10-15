@@ -5,18 +5,17 @@
  */
 
 // Plugins
-import { registerPlugins } from '@/plugins'
+import pinia from 'pinia'
+import vuetify from "@/plugins/vuetify";
 
 // Components
 import App from './App.vue'
 
 // Composables
 import { createApp } from 'vue'
-import {setupRouter} from "@/router";
+import {setupRouter} from "@/router/copy";
 
 const app = createApp(App)
 setupRouter(app)
-registerPlugins(app)
 
-
-app.mount('#app')
+app.use(pinia).use(vuetify).mount('#app')

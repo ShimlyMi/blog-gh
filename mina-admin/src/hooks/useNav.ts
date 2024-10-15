@@ -3,7 +3,7 @@ import {storeToRefs} from "pinia";
 import {usePermissionStoreHook} from "@/stores/permission";
 import {computed} from "vue";
 import {useUserStoreHook} from "@/stores/user";
-import {remainingPaths} from "@/router";
+import {remainingPaths} from "@/router/copy";
 
 const errorInfo = '当前路由配置不正确，请检查配置'
 

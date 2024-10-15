@@ -1,9 +1,9 @@
 import { BasicPageEnum } from "@/enums/pageEnum";
-import { RootRoute } from "@/router/routes";
+import { RootRoute } from "@/router/copy/routes";
 import {Router, RouteRecordRaw} from "vue-router";
 import { useUserStoreHook } from "@/stores/user";
 import {usePermissionStoreHook} from "@/stores/permission";
-import {PAGE_NOT_FOUND_ROUTE} from "@/router/routes/basic";
+import {PAGE_NOT_FOUND_ROUTE} from "@/router/copy/routes/basic";
 
 const LOGIN_PATH = BasicPageEnum.BASE_LOGIN
 const ROOT_PATH = RootRoute.path

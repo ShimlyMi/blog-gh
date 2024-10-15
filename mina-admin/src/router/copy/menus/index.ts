@@ -1,8 +1,8 @@
-import { Menu, MenuModule } from "@/router/types";
+import { Menu, MenuModule } from "@/router/copy/types";
 import { PermissionModeEnum } from "@/enums/roleEnum";
-import { getAllParentPath, transformMenuModule } from "@/router/helper/menuHelper";
+import { getAllParentPath, transformMenuModule } from "@/router/copy/helper/menuHelper";
 import { usePermissionStore} from "@/stores/permission";
-import router from "@/router";
+import router from "@/router/copy";
 import { filter } from "@/utils/treeHelper/treeHelper";
 import { RouteRecordNormalized } from "vue-router";
 import { isUrl } from "@/utils/is";

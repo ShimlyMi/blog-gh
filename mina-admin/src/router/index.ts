@@ -1,59 +1,49 @@
-/**
- * router/index.ts
- *
- * Automatic routes for `./src/pages/*.vue`
- */
+import { createRouter, createWebHistory } from "vue-router";
+import type {AppRouteRecordRaw} from "@/router/copy/types";
+import {useUserStoreHook} from "@/stores/user";
 
-import {createRouter, createWebHistory} from 'vue-router'
-import type { App } from 'vue'
-import type { RouteRecordRaw } from 'vue-router'
-import { basicRoutes } from "@/router/routes";
-
-const whiteNameList: string[] = []
-const getRouteNames = (array: any[]) => {
-  array.forEach((item) => {
-    whiteNameList.push(item.name)
-      getRouteNames(item.children || [])
-  })
-}
-getRouteNames(basicRoutes)
-
-export const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: basicRoutes as unknown as RouteRecordRaw[],
-  // 是否应该禁止尾部斜杠。默认为假
-  strict: true,
-  scrollBehavior: () => ({ left: 0, top: 0 }),
+const Layout = () =>import("@/layouts/default.vue.vue");
+const modules = import.meta.glob('../modules/**/*.ts', { eager: true });
+const routeModuleList = []
+Object.keys(modules).forEach((key) => {
+  const mod = modules[key].default || {}
+  const modList = Array.isArray(mod) ? [...mod] : [mod]
+  routeModuleList.push(...modList)
 })
+console.log("routeModuleList", routeModuleList)
 
-// Workaround for https://github.com/vitejs/vite/issues/11804
-router.onError((err, to) => {
-  if (err?.message?.includes?.('Failed to fetch dynamically imported module')) {
-    if (!localStorage.getItem('vuetify:dynamic-reload')) {
-      console.log('Reloading page to fix dynamic import error')
-      localStorage.setItem('vuetify:dynamic-reload', 'true')
-      location.assign(to.fullPath)
-    } else {
-      console.error('Dynamic import error, reloading page did not fix it', err)
-    }
-  } else {
-    console.error(err)
+const systemRoutes: AppRouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'Layout',
+    component: Layout,
+    children: [
+      {
+        path: '/home',
+        name: 'Home',
+        component: () => import('@/pages/home/index.vue'),
+        meta: {
+          title: '首页',
+        }
+      }
+    ]
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('@/pages/system/login/Login.vue'),
   }
+]
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [...systemRoutes]
 })
 
-router.isReady().then(() => {
-  localStorage.removeItem('vuetify:dynamic-reload')
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStoreHook()
+  if (to.path === '/login') {
+    next()
+  }
+  if (userStore.userInfo)
 })
-
-export function resetRouter() {
-  router.getRoutes().forEach((route) => {
-    const { name } = route
-    if (name && !whiteNameList.includes(name as string)) {
-      router.hasRoute(name) && router.removeRoute(name)
-    }
-  })
-}
-
-export function setupRouter(app: App<Element>) {
-  app.use(router)
-}

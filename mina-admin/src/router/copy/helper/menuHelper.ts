@@ -1,5 +1,5 @@
 import {findPath, treeMap} from "@/utils/treeHelper/treeHelper";
-import {AppRouteModule, AppRouteRecordRaw, Menu, MenuModule} from "@/router/types";
+import {AppRouteModule, AppRouteRecordRaw, Menu, MenuModule} from "@/router/copy/types";
 import {isUrl} from "@/utils/is";
 import {cloneDeep} from "lodash-es";
 import {RouteParams} from "vue-router";

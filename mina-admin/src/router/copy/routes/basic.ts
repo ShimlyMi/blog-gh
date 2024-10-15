@@ -1,5 +1,5 @@
-import type { AppRouteRecordRaw } from "@/router/types";
-import { REDIRECT_NAME, LAYOUT, PAGE_NOT_FOUND_NAME } from "@/router/constant";
+import type { AppRouteRecordRaw } from "@/router/copy/types";
+import { REDIRECT_NAME, LAYOUT, PAGE_NOT_FOUND_NAME } from "@/router/copy/constant";
 
 export const PAGE_NOT_FOUND_ROUTE: AppRouteRecordRaw = {
   path: '/error',

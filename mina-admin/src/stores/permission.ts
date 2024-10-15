@@ -1,12 +1,12 @@
 import {defineStore} from "pinia"
-import type {AppRouteRecordRaw, Menu} from "@/router/types"
+import type {AppRouteRecordRaw, Menu} from "@/router/copy/types"
 import {useUserStore} from "@/stores/user";
 import { BasicPageEnum } from "@/enums/pageEnum";
 import { PermissionModeEnum } from "@/enums/roleEnum";
-import {flatMultiLevelRoutes} from "@/router/helper/routeHelper";
+import {flatMultiLevelRoutes} from "@/router/copy/helper/routeHelper";
 import {filter} from "@/utils/treeHelper/treeHelper";
-import {transformRouteToMenu} from "@/router/helper/menuHelper";
-import {asyncRoutes} from "@/router/routes";
+import {transformRouteToMenu} from "@/router/copy/helper/menuHelper";
+import {asyncRoutes} from "src/router/copy/routes";
 
 interface PermissionState {
   // Permission code list

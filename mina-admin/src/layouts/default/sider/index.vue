@@ -1,9 +1,9 @@
 <script setup lang="ts" name="Side">
 import {ref, unref, watch} from "vue";
-import { Menu } from "@/router/types";
+import { Menu } from "@/router/copy/types";
 import { useRouter } from "vue-router";
 import { usePermissionStore } from "@/stores/permission";
-import { getChildrenMenus, getCurrentParentPath, getMenus } from "@/router/menus";
+import { getChildrenMenus, getCurrentParentPath, getMenus } from "src/router/copy/menus";
 import {useGo} from "@/hooks/usePage";
 
 const rail = ref(false)

@@ -1,8 +1,8 @@
 import {ref, unref, watch} from "vue";
 import {useRouter} from "vue-router";
 import {usePermissionStore} from "@/stores/permission";
-import {getChildrenMenus, getCurrentParentPath} from "@/router/menus";
-import { Menu } from "@/router/types";
+import {getChildrenMenus, getCurrentParentPath} from "src/router/copy/menus";
+import { Menu } from "@/router/copy/types";
 
 export function useLayoutMenu() {
     const menusRef = ref<Menu[]>([])

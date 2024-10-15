@@ -1,5 +1,5 @@
-import type { AppRouteRecordRaw, AppRouteModule } from "@/router/types";
-import { PAGE_NOT_FOUND_ROUTE, REDIRECT_ROUTE } from "@/router/routes/basic";
+import type { AppRouteRecordRaw, AppRouteModule } from "@/router/copy/types";
+import { PAGE_NOT_FOUND_ROUTE, REDIRECT_ROUTE } from "@/router/copy/routes/basic";
 import { BasicPageEnum } from "@/enums/pageEnum";
 
 const modules = import.meta.glob('./modules/**/*.ts', { eager: true })

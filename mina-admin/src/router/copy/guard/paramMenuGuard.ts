@@ -1,8 +1,8 @@
 import {Router} from "vue-router";
 import {usePermissionStoreHook} from "@/stores/permission";
-import {Menu} from "@/router/types";
+import {Menu} from "@/router/copy/types";
 import {PermissionModeEnum} from "@/enums/roleEnum";
-import {configureDynamicParamsMenu} from "@/router/helper/menuHelper";
+import {configureDynamicParamsMenu} from "@/router/copy/helper/menuHelper";
 
 export function createParamMenuGuard(router: Router) {
     const permissionStore = usePermissionStoreHook()
