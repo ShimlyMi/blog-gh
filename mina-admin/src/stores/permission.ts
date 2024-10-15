@@ -78,7 +78,7 @@ export const usePermissionStore = defineStore({
     async buildRoutesAction() {
       const userStore = useUserStore()
       let routes: AppRouteRecordRaw[] = []
-      const roleList = toRaw(userStore.getRoleList) || []
+      const roleList = userStore.getRoleList || []
       const routeFilter = (route: AppRouteRecordRaw) => {
         const { meta } = route
         const { role } = meta || {}
@@ -96,7 +96,6 @@ export const usePermissionStore = defineStore({
       const patchHomeAffix = (routes: AppRouteRecordRaw[]) => {
         if (!routes || routes.length === 0) return
         let homePath: string = userStore.getUserInfo.homePath || BasicPageEnum.BASE_HOME
-        const permissionMode = PermissionModeEnum
         function patcher(routes: AppRouteRecordRaw[], parentPath = '') {
           if (parentPath) parentPath = parentPath + '/'
           routes.forEach((route: AppRouteRecordRaw) => {
@@ -121,10 +120,10 @@ export const usePermissionStore = defineStore({
         }
         return
       }
-
+      const permissionMode = PermissionModeEnum
       switch (permissionMode) {
           // 角色权限
-        case PermissionModeEnum.ROLE:
+        case permissionMode.ROLE:
           // 对非一级路由进行过滤
           routes = filter(asyncRoutes, routeFilter)
           // 对一级路由根据角色权限过滤
@@ -135,7 +134,7 @@ export const usePermissionStore = defineStore({
           break
 
           // 路由映射， 默认进入该case
-        case PermissionModeEnum.ROUTE_MAPPING:
+        case permissionMode.ROUTE_MAPPING:
           // 对非一级路由进行过滤
           routes = filter(asyncRoutes, routeFilter)
           // 对一级路由再次根据角色权限过滤

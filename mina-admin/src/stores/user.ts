@@ -2,7 +2,7 @@ import {defineStore} from 'pinia'
 import {getAuthCache, setAuthCache} from '@/utils/auth'
 import {LoginParams, RoleInfo} from '@/api/model/userModel'
 import {getUserInfo, loginApi} from '@/api/system/user'
-import router from '@/router'
+import {router} from '@/router'
 import {BasicPageEnum} from '@/enums/pageEnum'
 import {UserInfo} from "#/store";
 import {ROLES_KEY, TOKEN_KEY, USER_INFO_KEY} from "@/enums/cacheEnum";
@@ -10,12 +10,12 @@ import {isArray} from "@/utils/is";
 import {RoleEnum} from "@/enums/roleEnum";
 import {usePermissionStore} from "@/stores/permission";
 import {PAGE_NOT_FOUND_ROUTE} from "@/router/routes/basic";
-import {RouteRecord, RouteRecordRaw} from "vue-router";
+import { RouteRecordRaw} from "vue-router";
 
 interface UserState {
   userInfo: Nullable<UserInfo>
   token?: string
-  role: RoleEnum[]
+  role: RoleInfo
   sessionTimeout?: boolean
   lastUpdateTime: number
 }
@@ -33,8 +33,8 @@ export const useUserStore = defineStore(
       getUserInfo (): UserInfo {
         return this.userInfo || getAuthCache<UserInfo>(USER_INFO_KEY) || {}
       },
-      getRoleList(): RoleEnum[] {
-        return this.role > 0 ? this.role : getAuthCache<RoleEnum[]>(ROLES_KEY)
+      getRoleList(): RoleInfo {
+        return this.role ||  getAuthCache<RoleInfo>(ROLES_KEY)
       },
       getToken(): string {
         return this.token || getAuthCache<string>(TOKEN_KEY)
@@ -52,7 +52,7 @@ export const useUserStore = defineStore(
         this.lastUpdateTime = new Date().getTime()
         setAuthCache(USER_INFO_KEY, info)
       },
-      SET_ROLE (role: RoleEnum[]) {
+      SET_ROLE (role: RoleInfo) {
         this.role = role
         setAuthCache(ROLES_KEY, role)
       },
@@ -66,7 +66,7 @@ export const useUserStore = defineStore(
       RESET_STATE() {
         this.userInfo = null
         this.token = ''
-        this.role = null
+        this.role = []
         this.sessionTimeout = false
       },
       async login (params: LoginParams & { goHome?: boolean }) {
@@ -96,7 +96,7 @@ export const useUserStore = defineStore(
             if (!permissionStore.isDynamicAddedRoute) {
               const routes = await permissionStore.buildRoutesAction()
               routes.forEach((r) => {
-                router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw)
+                router.addRoute(r as unknown as RouteRecordRaw)
               })
               router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw)
               permissionStore.setDynamicAddedRoute(true)
@@ -109,14 +109,9 @@ export const useUserStore = defineStore(
       async getUserInfoAction (): Promise<UserInfo | null> {
         if (!this.token) return null
         const userInfo = await getUserInfo()
-        const { role = [] } = userInfo
-        if (isArray(role)) {
-          const roleList = role.map((item) => item.value) as RoleEnum[]
-          this.SET_ROLE(roleList)
-        } else {
-          userInfo.role = []
-          this.SET_ROLE([])
-        }
+        console.log("userInfo", userInfo)
+        const { role } = userInfo
+        this.SET_ROLE(role)
         this.SET_USERINFO(userInfo)
         return userInfo
       },

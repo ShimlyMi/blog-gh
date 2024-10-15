@@ -8,10 +8,14 @@ import * as bcrypt from 'bcrypt';
 import { ResultData } from '../../common/utils/result';
 import { ErrorCode } from '../../common/constants/constants';
 import { create, update } from '../../common/utils/transaction';
+import { RoleService } from '../role/role.service';
+import { Role } from '../role/entities/role.entity';
 
 @Injectable()
 export class UserService {
   constructor(
+    private roleService: RoleService,
+
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
@@ -56,19 +60,40 @@ export class UserService {
 
   /** 创建用户 */
   async createUser(createUserDto: CreateUserDto) {
+    console.log(createUserDto);
     try {
       const data = createUserDto;
       const res = await this.validateName('username', data.username);
-      if (res || data.username === 'admin' || data.username.includes('admin')) {
-        return ResultData.messageFail(ErrorCode.USER, '该用户名已存在');
-      }
+      const roles = await this.roleService.find();
+      // console.log(roles)
+      const user = new User();
       data.password = await this.hashPassword(data.password);
+      user.username = data.username;
+      user.password = data.password;
+      user.nickname = data.nickname;
+      if (
+        (res && data.username === 'admin') ||
+        data.username.includes('admin')
+      ) {
+        return ResultData.messageFail(
+          ErrorCode.USER,
+          '不可创建此用户名，请重新输入',
+        );
+      } else {
+        user.role = roles.data[1];
+        await this.userRepository.save(user);
+        return ResultData.messageSuccess(
+          {
+            id: user.id,
+            username: user.username,
+            nickname: user.nickname,
+            avatar: user.avatar,
+            role: user.role,
+          },
+          '新增用户成功',
+        );
+      }
       // console.log(data)
-      return await create(this.userRepository, User, {
-        username: data.username,
-        password: data.password,
-        nickname: data.nickname,
-      });
     } catch (err) {
       console.error(err);
       return ResultData.messageFail(ErrorCode.USER, '新增用户失败');
@@ -80,9 +105,25 @@ export class UserService {
       const { id, username } = data;
       const res = await this.userRepository.findOne({
         select: ['id', 'username', 'password', 'nickname', 'avatar', 'role'],
+        relations: ['role'],
         where: [{ id: id }, { username: username }],
       });
-      return ResultData.messageSuccess(res, '查询用成功');
+      return ResultData.messageSuccess(
+        {
+          id: res.id,
+          username: res.username,
+          password: res.password,
+          nickname: res.nickname,
+          avatar: res.nickname,
+          role: [
+            {
+              real_name: res.role.real_name,
+              value: res.role.value,
+            },
+          ],
+        },
+        '查询用成功',
+      );
     } catch (err) {
       console.error(err);
       return ResultData.messageFail(ErrorCode.USER, '查询用户失败');
@@ -92,7 +133,8 @@ export class UserService {
   async findAll() {
     try {
       const res = await this.userRepository.find({
-        select: ['id', 'username', 'nickname', 'role'],
+        select: ['id', 'username', 'password', 'nickname', 'avatar', 'role'],
+        relations: ['role'],
         order: { id: 'DESC' },
       });
       return ResultData.messageSuccess(res, '获取用户列表成功');

@@ -1,6 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { BaseColumn } from '../../baseColumnAbstract/baseColumn';
-import { User } from '../../user/entities/user.entity';
 
 @Entity()
 export class Talk extends BaseColumn {

@@ -2,7 +2,7 @@ import { RouteLocationNormalized, Router } from "vue-router";
 import { setRouteChange } from "@/logics/mitt/routeChange";
 
 
-export function setupRouterGuard(router: Router) {
+export function setupRouterGuard(router: Router): any {
     createPageGuard(router)
     createScrollGuard(router)
 }

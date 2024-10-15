@@ -1,13 +1,15 @@
 <script setup lang="ts" name="Header">
   import { useTheme } from 'vuetify'
-  // import { useUserStore } from '@/stores/user'
+  import { useUserStore } from '@/stores/user'
 
-  // const userStore = useUserStore()
+  const userStore = useUserStore()
   const theme = useTheme()
 
   function toggleTheme () {
     theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
   }
+
+  console.log(userStore.getUserInfo)
   // function logout () {
   //   userStore.logout()
   // }

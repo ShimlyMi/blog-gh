@@ -6,7 +6,8 @@
 
 // Plugins
 import vuetify from './vuetify'
-import router from '../router'
+import {router} from '@/router'
+import { setupRouterGuard } from "@/router/guard";
 import pinia from '../stores'
 
 // Types
@@ -16,6 +17,6 @@ export function registerPlugins (app: App) {
   app
      .use(pinia)
     .use(vuetify)
-    .use(router)
+    .use(setupRouterGuard(router))
 
 }

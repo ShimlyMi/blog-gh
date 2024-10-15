@@ -35,8 +35,8 @@ const sessionMemory = new Memory(DEFAULT_CACHE_TIME)
 
 function initPersistentMemory() {
     const localCache = storageLocal.getCache(APP_LOCAL_CACHE_KEY)
-    const sessionCache = storageSession.getCache(APP_LOCAL_CACHE_KEY)
-    localCache && localMemory.resetCache(sessionCache)
+    const sessionCache = storageSession.getCache(APP_SESSION_CACHE_KEY)
+    localCache && localMemory.resetCache(localCache)
     sessionCache && sessionMemory.resetCache(sessionCache)
 }
 

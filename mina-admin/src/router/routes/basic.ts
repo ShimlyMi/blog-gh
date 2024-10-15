@@ -2,7 +2,7 @@ import type { AppRouteRecordRaw } from "@/router/types";
 import { REDIRECT_NAME, LAYOUT, PAGE_NOT_FOUND_NAME } from "@/router/constant";
 
 export const PAGE_NOT_FOUND_ROUTE: AppRouteRecordRaw = {
-  path: '/:path(.*)*',
+  path: '/error',
   name: PAGE_NOT_FOUND_NAME,
   component: LAYOUT,
   meta: {

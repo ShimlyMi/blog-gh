@@ -1,6 +1,6 @@
-import { RoleNameEnum, RoleValueEnum } from '../../../enum/role.enum';
+import { IsString } from 'class-validator';
 
 export class CreateRoleDto {
-  real_name: RoleNameEnum;
-  value: RoleValueEnum;
+  @IsString()
+  value: string;
 }

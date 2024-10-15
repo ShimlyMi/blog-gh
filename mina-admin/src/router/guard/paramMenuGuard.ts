@@ -1,4 +1,4 @@
-import { Router } from "vue-router";
+import {Router} from "vue-router";
 import {usePermissionStoreHook} from "@/stores/permission";
 import {Menu} from "@/router/types";
 import {PermissionModeEnum} from "@/enums/roleEnum";
@@ -17,15 +17,14 @@ export function createParamMenuGuard(router: Router) {
         }
         let menus: Menu[] = []
         if (isRouteMappingMode()) {
-            menus = permissionStore.setFrontMenuList()
+            menus = permissionStore.setFrontMenuList
         }
         menus.forEach((item) => configureDynamicParamsMenu(item, to.params))
         next()
     })
 }
 const getPermissionMode = () => {
-    const permission = PermissionModeEnum
-    return permission
+    return PermissionModeEnum
 }
 const isRouteMappingMode = () => {
     return getPermissionMode().ROUTE_MAPPING

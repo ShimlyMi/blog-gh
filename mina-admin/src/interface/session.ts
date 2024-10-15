@@ -23,8 +23,16 @@ export const createStorage = ({
   }
   const encryption = new AesEncryption()
   const LocalCache =  class LocalCache {
+    private storage: Storage
+    private prefixKey?: string
+    private encryption: AesEncryption
+    constructor() {
+      this.storage = storage
+      this.encryption = encryption
+      this.prefixKey = prefixKey
+    }
     private getKey(key: string) {
-      return `${prefixKey}${key}`.toUpperCase()
+      return `${this.prefixKey}${key}`.toUpperCase()
     }
 
     setCache<T = any>(key: string, value: T, expire: number | null = timeout) {
@@ -34,20 +42,20 @@ export const createStorage = ({
          time: Date.now(),
          expire: isNullOrUnDef(expire) ? new Date().getTime() + expire * 1000 : null
        })
-       const stringifyValue = encryption.encryptByAES(stringData)
-       storage.setItem(this.getKey(key), stringifyValue)
+       const stringifyValue = this.encryption.encryptByAES(stringData)
+       this.storage.setItem(this.getKey(key), stringifyValue)
        return true
      } catch (error) {
        return false
      }
     }
 
-    getCache<T>(key: string, def: any = null): T {
-      const val = storage.getItem(this.getKey(key))
+    getCache(key: string, def: any = null): any {
+      const val = this.storage.getItem(this.getKey(key))
       if (!val) return def
       console.log("getItem", val)
       try {
-        const decVal = encryption.decryptByAES(val)
+        const decVal = this.encryption.decryptByAES(val)
         const data = JSON.parse(decVal)
         const { value, expire } = data
         if (isNullOrUnDef(expire) || expire >= new Date().getTime()) {
@@ -59,10 +67,10 @@ export const createStorage = ({
       }
     }
     deleteCache(key: string): void {
-      storage.removeItem(key)
+      this.storage.removeItem(key)
     }
     clearCache(): void {
-      storage.clear()
+      this.storage.clear()
     }
   }
 

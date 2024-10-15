@@ -20,7 +20,7 @@ export class AuthService {
       user.data.password,
       password,
     );
-    // console.log(passV);
+    console.log(passV);
     if (!passV) {
       throw new UnauthorizedException();
     }
