@@ -8,7 +8,7 @@ import { RouteRecordNormalized } from "vue-router";
 import { isUrl } from "@/utils/is";
 import { pathToRegexp } from "path-to-regexp";
 
-const modules = import.meta.glob('./modules/**/*.ts', { eager: true })
+const modules = import.meta.glob('../modules/**/*.ts', { eager: true })
 const menuModules: MenuModule[] = []
 Object.keys(modules).forEach((key) => {
     const mod = modules[key].default || {}

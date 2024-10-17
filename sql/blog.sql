@@ -11,7 +11,7 @@
  Target Server Version : 80029
  File Encoding         : 65001
 
- Date: 08/10/2024 17:49:58
+ Date: 15/10/2024 15:56:10
 */
 
 SET NAMES utf8mb4;
@@ -35,6 +35,28 @@ CREATE TABLE `category`  (
 -- Records of category
 -- ----------------------------
 INSERT INTO `category` VALUES (1, '2024-08-28 16:06:14.572756', '2024-08-28 16:06:14.572756', NULL, '测试分类2');
+
+-- ----------------------------
+-- Table structure for role
+-- ----------------------------
+DROP TABLE IF EXISTS `role`;
+CREATE TABLE `role`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+  `deletedAt` datetime(6) NULL DEFAULT NULL,
+  `real_name` varchar(55) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '角色名称',
+  `value` tinyint(0) NOT NULL COMMENT '权限数字',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `IDX_6b5b701377b0071693edf05aa9`(`real_name`) USING BTREE,
+  UNIQUE INDEX `IDX_98082dbb08817c9801e32dd015`(`value`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of role
+-- ----------------------------
+INSERT INTO `role` VALUES (1, '2024-10-15 10:01:30.102316', '2024-10-15 10:01:30.102316', NULL, '超级管理员', 1);
+INSERT INTO `role` VALUES (2, '2024-10-15 10:01:50.157187', '2024-10-15 10:01:50.157187', NULL, '普通用户', 2);
 
 -- ----------------------------
 -- Table structure for tag
@@ -107,18 +129,20 @@ CREATE TABLE `user`  (
   `deletedAt` datetime(6) NULL DEFAULT NULL,
   `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名,唯一',
   `password` char(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '密码',
-  `role` tinyint(0) NOT NULL DEFAULT 2 COMMENT '用户角色 1 管理员 2 普通用户',
   `nickname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户昵称',
   `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'http://127.0.0.1:8888/665d7417ccaa2b7287f6da700.jpg' COMMENT '用户头像',
+  `roleId` int(0) NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `IDX_78a916df40e02a9deb1c4b75ed`(`username`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+  UNIQUE INDEX `IDX_78a916df40e02a9deb1c4b75ed`(`username`) USING BTREE,
+  UNIQUE INDEX `REL_c28e52f758e7bbc53828db9219`(`roleId`) USING BTREE,
+  CONSTRAINT `FK_c28e52f758e7bbc53828db92194` FOREIGN KEY (`roleId`) REFERENCES `role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, '2024-09-11 12:47:09.294231', '2024-09-11 14:45:52.338419', NULL, 'admin', '$2b$10$e1bSK1jMcJ3K8KPFG4muR.BFf6uRNpkqeO0kID4mehTNRmXMsAIRC', 1, '超级管理员', 'http://127.0.0.1:8888/665d7417ccaa2b7287f6da700.jpg');
-INSERT INTO `user` VALUES (2, '2024-09-11 14:47:09.854461', '2024-09-11 14:47:09.854461', NULL, 'MINA', '$2b$10$F6tEpxDmYhmHAbpRDakl1uwhdd18K04hJwxO4o8k3IGvp9XKk8xee', 2, '米娜', 'http://127.0.0.1:8888/665d7417ccaa2b7287f6da700.jpg');
+INSERT INTO `user` VALUES (1, '2024-10-15 11:37:57.359505', '2024-10-15 11:37:57.359505', NULL, 'admin', '$2b$10$ctoGwtixY95WcT0SY8mPi.cXuhG.Uqlre8nYxfOg4tdPcN9gdIMGa', '超级管理员', 'http://127.0.0.1:8888/665d7417ccaa2b7287f6da700.jpg', 1);
+INSERT INTO `user` VALUES (2, '2024-10-15 11:43:18.683684', '2024-10-15 11:43:18.683684', NULL, 'MINA', '$2b$10$L0MqJZZnWCopFpkTY8Ff8.PjGpUffUQ8xMFlcbC21mFtX.BLnoFx6', '米娜', 'http://127.0.0.1:8888/665d7417ccaa2b7287f6da700.jpg', 2);
 
 -- ----------------------------
 -- Table structure for website

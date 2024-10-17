@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {getAuthCache, setAuthCache} from '@/utils/auth'
+import cookieStorage, {getAuthCache, setAuthCache} from '@/utils/auth'
 import {LoginParams, RoleInfo} from '@/api/model/userModel'
 import {getUserInfo, loginApi} from '@/api/system/user'
 import {router} from '@/router/copy'
@@ -31,13 +31,13 @@ export const useUserStore = defineStore(
     }),
     getters: {
       getUserInfo (): UserInfo {
-        return this.userInfo || getAuthCache<UserInfo>(USER_INFO_KEY) || {}
+        return this.userInfo || getAuthCache<UserInfo>(USER_INFO_KEY) || cookieStorage.get(USER_INFO_KEY) || {}
       },
       getRoleList(): RoleInfo {
-        return this.role ||  getAuthCache<RoleInfo>(ROLES_KEY)
+        return this.role ||  getAuthCache<RoleInfo>(ROLES_KEY) || cookieStorage.get(ROLES_KEY)
       },
       getToken(): string {
-        return this.token || getAuthCache<string>(TOKEN_KEY)
+        return this.token || getAuthCache<string>(TOKEN_KEY) || cookieStorage.get(TOKEN_KEY)
       },
       getSessionTimeout(): boolean {
         return !!this.sessionTimeout
@@ -51,14 +51,17 @@ export const useUserStore = defineStore(
         this.userInfo = info
         this.lastUpdateTime = new Date().getTime()
         setAuthCache(USER_INFO_KEY, info)
+        cookieStorage.save(USER_INFO_KEY, info, '1d')
       },
       SET_ROLE (role: RoleInfo) {
         this.role = role
         setAuthCache(ROLES_KEY, role)
+        cookieStorage.save(ROLES_KEY, role, '1d')
       },
       SET_TOKEN (token: string | undefined) {
         this.token = token ? token : ''
         setAuthCache(TOKEN_KEY, token)
+        cookieStorage.save(TOKEN_KEY, token, '1d')
       },
       SET_SESSION_TIMEOUT(flag: boolean) {
         this.sessionTimeout = flag
@@ -92,15 +95,6 @@ export const useUserStore = defineStore(
         if (sessionTimeout) {
           this.SET_SESSION_TIMEOUT(false)
         } else {
-          const permissionStore = usePermissionStore()
-            if (!permissionStore.isDynamicAddedRoute) {
-              const routes = await permissionStore.buildRoutesAction()
-              routes.forEach((r) => {
-                router.addRoute(r as unknown as RouteRecordRaw)
-              })
-              router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw)
-              permissionStore.setDynamicAddedRoute(true)
-            }
             goHome && (await router.replace(userInfo?.homePath || BasicPageEnum.BASE_HOME))
         }
         return userInfo

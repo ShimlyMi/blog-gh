@@ -5,17 +5,23 @@
  */
 
 // Plugins
-import pinia from 'pinia'
+import pinia from '@/stores'
 import vuetify from "@/plugins/vuetify";
-
+import { setupRouter } from '@/router'
+import './router/permission'
 // Components
 import App from './App.vue'
 
 // Composables
 import { createApp } from 'vue'
-import {setupRouter} from "@/router/copy";
 
-const app = createApp(App)
-setupRouter(app)
 
-app.use(pinia).use(vuetify).mount('#app')
+const boostrap = async () => {
+  const app = createApp(App)
+  setupRouter(app)
+  app.use(pinia)
+  app.use(vuetify)
+  app.mount('#app')
+}
+
+boostrap()

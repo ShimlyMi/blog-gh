@@ -1,6 +1,6 @@
 import {BasicKeys, Persistent} from "@/utils/cache/persistent";
 import {TOKEN_KEY} from "@/enums/cacheEnum";
-
+import Cookies from "js-cookie";
 
 
 export function getToken() {
@@ -22,3 +22,17 @@ export function clearAuthCache(immediate = true, isLocal = false) {
     const fn = isLocal ? Persistent.clearLocal : Persistent.clearSession
     return fn(immediate)
 }
+
+const cookieStorage = {
+  save: (name: string, value: any, exp: any) => {
+    Cookies.set(name, value, { expires: exp })
+  },
+  remove(name: string) {
+    Cookies.remove(name)
+  },
+  get(name: string){
+    return Cookies.get(name)
+  }
+}
+
+export default cookieStorage

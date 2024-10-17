@@ -9,7 +9,7 @@
     theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
   }
 
-  console.log(userStore.getUserInfo)
+  // console.log(userStore.getUserInfo)
   // function logout () {
   //   userStore.logout()
   // }

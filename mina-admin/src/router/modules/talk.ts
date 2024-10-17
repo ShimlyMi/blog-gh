@@ -4,7 +4,8 @@ export default {
   meta: {
     title: '说说管理',
     icon: 'mdi-chat-processing',
-    rank: 2
+    rank: 2,
+    showLink: true
   },
   children: [
     {
@@ -12,7 +13,8 @@ export default {
       name: 'talkList',
       component: () => import('@/pages/feature/talk/index.vue'),
       meta: {
-        title: '说说列表'
+        title: '说说列表',
+        showLink: true
       }
     },
     {
@@ -20,7 +22,8 @@ export default {
       mame: "addTalk",
       component: () => import("@/pages/feature/talk/add-edit-talk.vue"),
       meta: {
-        title: "发布说说"
+        title: "发布说说",
+        showLink: true
       }
     },
     {

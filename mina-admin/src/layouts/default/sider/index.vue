@@ -1,69 +1,24 @@
 <script setup lang="ts" name="Side">
-import {ref, unref, watch} from "vue";
-import { Menu } from "@/router/copy/types";
-import { useRouter } from "vue-router";
-import { usePermissionStore } from "@/stores/permission";
-import { getChildrenMenus, getCurrentParentPath, getMenus } from "src/router/copy/menus";
+import {onMounted, ref } from "vue";
 import {useGo} from "@/hooks/usePage";
+import MenuGroup from "@/layouts/default/sider/menuGroup.vue";
+import {useRouter} from "vue-router";
+import {filterTree} from "@/router/permission";
+import {usePermissionStoreHook} from "@/stores/permission";
+import {constantMenus} from "@/router";
 
 const rail = ref(false)
   function toggleMenu () {
     rail.value = !rail.value
   }
-const menusRef = ref<Menu[]>([])
-const { currentRoute } = useRouter()
-const permissionStore = usePermissionStore()
-const go = useGo()
-watch(
-    [() => unref(currentRoute).path],
-    async ([path]: [string]) => {
-      const { meta } = unref(currentRoute)
-      const currentActiveMenu = meta.currentActiveMenu as string
-      let parentPath = await getCurrentParentPath(path)
-      if (!parentPath) {
-        parentPath = await getCurrentParentPath(currentActiveMenu)
-      }
-      parentPath && await handleSplitLeftMenu(parentPath)
-    },
-    {
-      immediate: true
-    }
-)
-watch(
-    [() => permissionStore.getLastBuildMenuTime, () => permissionStore.getFrontMenuList],
-    () => getMenu(),
-    { immediate: true }
-)
-
-async function handleSplitLeftMenu(parentPath: string) {
-  const children = await getChildrenMenus(parentPath)
-  console.log("children", children)
-  if (!children || !children.length) {
-    menusRef.value = []
-    return
-  }
-  menusRef.value = children
-}
-
-async function getMenu() {
-  menusRef.value = await getMenus()
-  console.log("menusRef", menusRef.value)
-}
-
-/**
- * click menu
- * @param menu
- */
-
-function handleMenuClick(path: string) {
-  go(path)
-}
+const menus = filterTree(constantMenus)
+console.log(menus)
 
 </script>
 
 <template>
   <v-navigation-drawer :rail="rail">
-
+    <menu-group :menus="menus" />
     <v-list-item>
       <v-btn v-if="rail" block @click="toggleMenu">
         <v-icon icon="mdi-menu-close" />

@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import qs from 'qs'
 import { messageError } from '@/utils/messgeBox'
 import {getToken} from "@/utils/auth";
 
@@ -21,8 +22,14 @@ const instance: AxiosInstance = axios.create({
 instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const access_token = getToken()
-    console.log("token", access_token)
-    config.headers['Authorization'] = `Bearer ${access_token}`
+    if (access_token) {
+      config.headers['Authorization'] = 'Bearer ' + access_token
+    }
+    if (config.method === 'get') {
+      config.paramsSerializer = (params: any) => {
+        return qs.stringify(params, { arrayFormat: 'repeat' })
+      }
+    }
     return config
   },
   error => {

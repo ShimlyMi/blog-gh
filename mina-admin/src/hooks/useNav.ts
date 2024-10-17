@@ -1,9 +1,10 @@
 import {useRoute, useRouter} from "vue-router";
 import {storeToRefs} from "pinia";
-import {usePermissionStoreHook} from "@/stores/permission";
 import {computed} from "vue";
+
+import {usePermissionStoreHook} from "@/stores/permission";
 import {useUserStoreHook} from "@/stores/user";
-import {remainingPaths} from "@/router/copy";
+import {remainingPaths} from "@/router";
 
 const errorInfo = '当前路由配置不正确，请检查配置'
 
@@ -13,18 +14,8 @@ export function useNav() {
   const { wholeMenus } = storeToRefs(usePermissionStoreHook())
 
   /** 用户信息 */
-  const username = computed(() => {
-    return useUserStoreHook()?.username
-  })
-  const nickname = computed(() => {
-    return useUserStoreHook()?.getNickname
-  })
-  const avatar = computed(() => {
-    return useUserStoreHook()?.getAvatar
-  })
-  const userId = useUserStoreHook()?.getUserId
-  const role = computed(() => {
-    return useUserStoreHook()?.role
+  const userInfo = computed(() => {
+    return useUserStoreHook().userInfo
   })
 
   /** 退出登录 */
@@ -50,11 +41,7 @@ export function useNav() {
     route,
     routers,
     wholeMenus,
-    username,
-    nickname,
-    avatar,
-    userId,
-    role,
+    userInfo,
     logOut,
     isRemaining,
     resolvePath
