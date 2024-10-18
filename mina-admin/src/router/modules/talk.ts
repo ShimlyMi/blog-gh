@@ -1,6 +1,7 @@
-
+import Layout from '@/layouts/default.vue'
 export default {
   path: "/talk",
+  component: Layout,
   meta: {
     title: '说说管理',
     icon: 'mdi-chat-processing',
@@ -19,7 +20,7 @@ export default {
     },
     {
       path: "/talk/add",
-      mame: "addTalk",
+      mame: "addEditTalk",
       component: () => import("@/pages/feature/talk/add-edit-talk.vue"),
       meta: {
         title: "发布说说",
@@ -28,7 +29,7 @@ export default {
     },
     {
       path: "/talk/edit",
-      mame: "editTalk",
+      mame: "addEditTalk",
       component: () => import("@/pages/feature/talk/add-edit-talk.vue"),
       meta: {
         title: "修改说说",

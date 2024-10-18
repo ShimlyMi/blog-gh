@@ -4,10 +4,12 @@ const remainingRouter = [
   {
     path: '/',
     component: Layout,
-    redirect: 'home',
+    redirect: '/home',
     meta: {
       title: '首页',
       showLink: true,
+      icon: 'mdi-home',
+      rank: 0
     },
     children: [
       {

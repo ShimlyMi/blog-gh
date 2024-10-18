@@ -1,11 +1,9 @@
 <script setup lang="ts">
-defineOptions({
-  name: 'addEditTalk'
-})
+
 </script>
 
 <template>
-<h1>添加编辑说说页面</h1>
+
 </template>
 
 <style scoped lang="less">

@@ -3,6 +3,8 @@
 import {useNav} from "@/hooks/useNav";
 
 import {menuType} from "@/layouts/types";
+import {filterHomeTree} from "@/router/permission";
+import {RouteRecordRaw} from "vue-router";
 
 defineOptions({
   name: 'MenuGroup',
@@ -14,30 +16,49 @@ const props = defineProps({
     }
 })
 console.log(props.menus)
+const hasChildren = (route: { children?: Array<{ path: string; name: string }> }) => {
+  return route.children && route.children.length > 0;
+};
+const homePath: RouteRecordRaw[] = []
 
+const filterHomeRoute = filterHomeTree(props.menus)
 </script>
 
 <template>
-  <v-list nav>
-    <div v-for="(route, index) in menus" :key="index">
+  <v-list
+      :lines="false"
+      density="compact">
+    <v-list>
       <v-list-item
           link
-          v-if="!route.children"
-          :to="route.path"
-          ripple="ripple"
-          :prepend-icon="route.meta.icon || route.meta.title.substring(0,1)"
-      >
-        <v-list-item-title>{{ route.meta.title }}</v-list-item-title>
-      </v-list-item>
-      <v-list-group v-else :prepend-icon="route.meta.icon">
-        <v-list-item
-            link
-            :to="route.path"
-            ripple="ripple">
+          prepend-icon="mdi-home"
+          title="主页"
+          to="/"
+      ></v-list-item>
+    </v-list>
+    <v-list v-for="(route, i) in filterHomeRoute" :key="i">
+      <v-list-item v-if="!route.children" :value="route" :prepend-icon="route.meta.icon">
+        <v-list-item-title>
           {{ route.meta.title }}
-        </v-list-item>
+        </v-list-item-title>
+      </v-list-item>
+      <v-list-group v-else :value="route.meta.title">
+        <template #activator="{ props }">
+          <v-list-item
+              v-bind="props"
+              :title="route.meta.title"
+              :prepend-icon="route.meta.icon"
+          ></v-list-item>
+        </template>
+        <v-list-item
+            v-bind="props"
+            link v-for="routeChildren in route.children"
+            :key="routeChildren.path"
+            :to="routeChildren.path"
+            :title="routeChildren.meta.title"
+        ></v-list-item>
       </v-list-group>
-    </div>
+    </v-list>
   </v-list>
 </template>
 

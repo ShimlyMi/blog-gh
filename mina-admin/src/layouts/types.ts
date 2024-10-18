@@ -1,7 +1,7 @@
 
 export type routeMetaType = {
   title?: string;
-  icon?: string | IconifyIcon;
+  icon?: string;
   showLink?: boolean;
   savedPosition?: boolean;
   auths?: Array<string>;

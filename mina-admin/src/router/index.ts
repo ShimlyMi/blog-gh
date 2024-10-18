@@ -15,9 +15,7 @@ Object.keys(modules).forEach((key) => {
     menus.push(modules[key].default)
 })
 // console.log(menus)
-export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(
-    formatFlatteningRoutes(buildHierarchyTree(ascending(menus)))
-)
+export const constantRoutes: Array<RouteRecordRaw> = buildHierarchyTree(ascending(menus))
 
 console.log(constantRoutes)
 const router = createRouter({
@@ -41,21 +39,24 @@ export const remainingPaths = Object.keys(remainingRouter).map(v => {
 });
 
 
+// router.beforeEach((to, from, next) => {
+//     const
+// })
 
 
-function initRouter() {
-  return new Promise(resolve => {
-    // 初始化路由
-    usePermissionStoreHook().handleWholeMenus([]);
-    resolve(router);
-  });
-}
-//
-router.beforeEach((to: ToRouteType, _from, next) => {
-  initRouter().then(r => r.path)
-  // console.log(routerList)
-  next()
-})
+// function initRouter() {
+//   return new Promise(resolve => {
+//     // 初始化路由
+//     usePermissionStoreHook().handleWholeMenus([]);
+//     resolve(router);
+//   });
+// }
+// //
+// router.beforeEach((to: ToRouteType, _from, next) => {
+//   initRouter().then(r => r.path)
+//   // console.log(routerList)
+//   next()
+// })
 
 // router.afterEach((to) => {  })
 

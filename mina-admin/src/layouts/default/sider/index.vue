@@ -1,32 +1,22 @@
 <script setup lang="ts" name="Side">
-import {onMounted, ref } from "vue";
-import {useGo} from "@/hooks/usePage";
+import { ref } from "vue";
 import MenuGroup from "@/layouts/default/sider/menuGroup.vue";
-import {useRouter} from "vue-router";
-import {filterTree} from "@/router/permission";
-import {usePermissionStoreHook} from "@/stores/permission";
+import {ascending, filterTree} from "@/router/permission";
 import {constantMenus} from "@/router";
 
 const rail = ref(false)
+const drawer = ref(true)
   function toggleMenu () {
     rail.value = !rail.value
   }
-const menus = filterTree(constantMenus)
+const menus = filterTree(ascending(constantMenus))
 console.log(menus)
 
 </script>
 
 <template>
-  <v-navigation-drawer :rail="rail">
+  <v-navigation-drawer app>
     <menu-group :menus="menus" />
-    <v-list-item>
-      <v-btn v-if="rail" block @click="toggleMenu">
-        <v-icon icon="mdi-menu-close" />
-      </v-btn>
-      <v-btn v-else block @click="toggleMenu">
-        <v-icon icon="mdi-menu-open" />
-      </v-btn>
-    </v-list-item>
   </v-navigation-drawer>
 </template>
 
