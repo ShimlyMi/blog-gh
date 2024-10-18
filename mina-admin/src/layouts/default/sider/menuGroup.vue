@@ -34,10 +34,16 @@ const filterHomeRoute = filterHomeTree(props.menus)
           prepend-icon="mdi-home"
           title="主页"
           to="/"
+          color="primary"
       ></v-list-item>
     </v-list>
     <v-list v-for="(route, i) in filterHomeRoute" :key="i">
-      <v-list-item v-if="!route.children" :value="route" :prepend-icon="route.meta.icon">
+      <v-list-item
+          v-if="!route.children"
+          :value="route"
+          :prepend-icon="route.meta.icon"
+          color="primary"
+      >
         <v-list-item-title>
           {{ route.meta.title }}
         </v-list-item-title>
@@ -56,6 +62,7 @@ const filterHomeRoute = filterHomeTree(props.menus)
             :key="routeChildren.path"
             :to="routeChildren.path"
             :title="routeChildren.meta.title"
+            color="primary"
         ></v-list-item>
       </v-list-group>
     </v-list>

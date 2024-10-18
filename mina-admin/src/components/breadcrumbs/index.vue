@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <v-breadcrumbs :items="name">
+  <v-breadcrumbs :items="['name1', 'name2']">
     <template #prepend>
       <v-icon icon="mdi-home" />
     </template>

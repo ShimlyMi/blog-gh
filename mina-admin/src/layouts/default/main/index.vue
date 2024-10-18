@@ -1,5 +1,4 @@
 <script setup lang="ts" name="MainLayout">
-  // import { computed, defineComponent, unref } from 'vue'
   import { getTransitionName } from './transition'
 
 </script>

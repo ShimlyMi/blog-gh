@@ -5,9 +5,9 @@
   const userStore = useUserStore()
   const theme = useTheme()
 
-  function toggleTheme () {
-    theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
-  }
+  // function toggleTheme () {
+  //   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+  // }
 
   // console.log(userStore.getUserInfo)
   // function logout () {
@@ -19,17 +19,16 @@
   <v-app-bar
     app
     class="mi-header"
-    :elevation="1"
     title="MINA ADMIN"
   >
-    <template #prepend>
-      <router-link to="/mina-admin/public">
-        <img src="@/assets/logo.png">
-      </router-link>
-    </template>
+<!--    <template #prepend>-->
+<!--      <router-link to="/mina-admin/public">-->
+<!--        <img src="@/assets/logo.png">-->
+<!--      </router-link>-->
+<!--    </template>-->
     <template #append>
       <v-btn icon="mdi-magnify" />
-      <v-btn icon="mdi-white-balance-sunny" @click="toggleTheme" />
+<!--      <v-btn icon="mdi-white-balance-sunny" @click="toggleTheme" />-->
       <v-btn icon="mdi-bell-outline" />
       <v-menu location="bottom">
         <template #activator="{ props }">
