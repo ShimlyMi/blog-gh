@@ -8,38 +8,41 @@ enum StaticApi {
   UPLOAD = '/api/upload/files'
 }
 
-export const uploadApi = async (data) => {
+/** 图片上传接口 */
+export const imgUpload = async data => {
+  // 文件压缩 太大了上传不了，我的服务器比较垃圾
   let res;
-  console.log(data.raw);
-  if (data.size > 820) {
-    const files = await conversion(data.raw)
-    if (!files) {
-      return messageError('错误提示', '图片上传失败')
+  // 没有raw.size 就表示已经压缩过了（多图片上传那里我压缩了一次） 有的话小于800不用压缩
+  // console.log(data.raw);
+  if (data.raw.size > 820) {
+    const file = await conversion(data.raw);
+    if (!file) {
+      messageError("错误提示","图片上传失败")
+      return;
     } else {
-      res = files
+      res = file;
     }
   } else {
-    res = data.raw
+    res = data.raw;
   }
+  const formData = new FormData();
+  formData.append("file", res);
+  const token = getToken();
 
-  const formData = new FormData()
-  formData.append('files',res)
-  const token = getToken()
-  console.log(token)
   return new Promise<SiteResult>(resolve => {
     instance({
-      method: 'post',
+      method: "post",
       url: StaticApi.UPLOAD,
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
-        Authorization: token
+        Authorization: token.token
       }
-    }).then(response =>{
+    }).then(response => {
       resolve(response.data);
-    })
-  })
-}
+    });
+  });
+};
 
 export const conversion = file => {
   return new Promise<Blob>(resolve => {
