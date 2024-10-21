@@ -1,21 +1,20 @@
 import {defineStore} from 'pinia'
-import cookieStorage, {getAuthCache, setAuthCache} from '@/utils/auth'
-import {LoginParams, RoleInfo} from '@/api/model/userModel'
+import { sessionCache, setToken} from '@/utils/auth'
+import {LoginParams} from '@/api/model/userModel'
 import {getUserInfo, loginApi} from '@/api/system/user'
-import {router} from '@/router/copy'
+import router from '@/router'
 import {BasicPageEnum} from '@/enums/pageEnum'
 import {UserInfo} from "#/store";
 import {ROLES_KEY, TOKEN_KEY, USER_INFO_KEY} from "@/enums/cacheEnum";
 import {isArray} from "@/utils/is";
 import {RoleEnum} from "@/enums/roleEnum";
-import {usePermissionStore} from "@/stores/permission";
-import {PAGE_NOT_FOUND_ROUTE} from "@/router/copy/routes/basic";
-import { RouteRecordRaw} from "vue-router";
+import Cookies from "js-cookie";
+import {_decrypt, _encrypt} from "@/utils/encipher";
 
 interface UserState {
   userInfo: Nullable<UserInfo>
   token?: string
-  role: RoleInfo
+  role: RoleEnum[]
   sessionTimeout?: boolean
   lastUpdateTime: number
 }
@@ -31,13 +30,13 @@ export const useUserStore = defineStore(
     }),
     getters: {
       getUserInfo (): UserInfo {
-        return this.userInfo || getAuthCache<UserInfo>(USER_INFO_KEY) || cookieStorage.get(USER_INFO_KEY) || {}
+        return this.userInfo || sessionCache.getCache(USER_INFO_KEY) || {}
       },
-      getRoleList(): RoleInfo {
-        return this.role ||  getAuthCache<RoleInfo>(ROLES_KEY) || cookieStorage.get(ROLES_KEY)
+      getRoleList(): RoleEnum[] {
+        return this.role.length > 0 ? this.role : sessionCache.getCache(ROLES_KEY)
       },
       getToken(): string {
-        return this.token || getAuthCache<string>(TOKEN_KEY) || cookieStorage.get(TOKEN_KEY)
+        return this.token || sessionCache.getCache(TOKEN_KEY)
       },
       getSessionTimeout(): boolean {
         return !!this.sessionTimeout
@@ -50,18 +49,18 @@ export const useUserStore = defineStore(
       SET_USERINFO (info: UserInfo | null) {
         this.userInfo = info
         this.lastUpdateTime = new Date().getTime()
-        setAuthCache(USER_INFO_KEY, info)
-        cookieStorage.save(USER_INFO_KEY, info, '1d')
+        const users = _encrypt(info)
+        sessionCache.setCache(USER_INFO_KEY, users)
       },
-      SET_ROLE (role: RoleInfo) {
+      SET_ROLE (role: RoleEnum[]) {
         this.role = role
-        setAuthCache(ROLES_KEY, role)
-        cookieStorage.save(ROLES_KEY, role, '1d')
+        const roles = _encrypt(role)
+        sessionStorage.setItem(ROLES_KEY, roles)
       },
-      SET_TOKEN (token: string | undefined) {
+      SET_TOKEN (token: string) {
         this.token = token ? token : ''
-        setAuthCache(TOKEN_KEY, token)
-        cookieStorage.save(TOKEN_KEY, token, '1d')
+        sessionStorage.setItem(TOKEN_KEY, token)
+        Cookies.set(TOKEN_KEY, JSON.stringify(token))
       },
       SET_SESSION_TIMEOUT(flag: boolean) {
         this.sessionTimeout = flag
@@ -77,7 +76,7 @@ export const useUserStore = defineStore(
           const { goHome = true, ...loginParams } = params
           // console.log(params)
           const res = await loginApi(loginParams)
-          console.log(res)
+          // console.log(res)
           const { access_token } = res
           this.SET_TOKEN(access_token)
           return this.afterLogin(goHome)
@@ -91,12 +90,7 @@ export const useUserStore = defineStore(
         if (!this.token) return null
         const userInfo = await this.getUserInfoAction()
         console.log("afterLogin", userInfo)
-        const sessionTimeout = this.sessionTimeout
-        if (sessionTimeout) {
-          this.SET_SESSION_TIMEOUT(false)
-        } else {
-            goHome && (await router.replace(userInfo?.homePath || BasicPageEnum.BASE_HOME))
-        }
+        goHome && (await router.replace('/'))
         return userInfo
       },
 
@@ -104,13 +98,25 @@ export const useUserStore = defineStore(
         if (!this.token) return null
         const userInfo = await getUserInfo()
         console.log("userInfo", userInfo)
-        const { role } = userInfo
-        this.SET_ROLE(role)
+        const { role = [] } = userInfo
+        if (isArray(role)) {
+          const roleList = role.map((item) => item.value) as RoleEnum[]
+          this.SET_ROLE(roleList)
+        } else {
+          userInfo.role = []
+          this.SET_ROLE([])
+        }
+        const data = {
+          token: this.token,
+          userInfo,
+          role: role.map((item) => item.value) as RoleEnum[]
+        }
+        setToken(data)
         this.SET_USERINFO(userInfo)
         return userInfo
       },
       logout (goLogin = false) {
-        this.SET_TOKEN(undefined)
+        this.SET_TOKEN("")
         this.SET_SESSION_TIMEOUT(false)
         this.SET_USERINFO(null)
         goLogin && router.push(BasicPageEnum.BASE_LOGIN)

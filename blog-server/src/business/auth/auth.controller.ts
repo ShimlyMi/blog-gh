@@ -22,12 +22,13 @@ export class AuthController {
     return this.authService.signIn(signInDto);
   }
 
+  // @Public()
   @UseGuards(AuthGuard)
   @Get('profile')
   getProfile(@Request() req: any) {
     return ResultData.messageSuccess(
       {
-        id: req.user.sub,
+        id: req.user.id,
         username: req.user.username,
         nickname: req.user.nickname,
         avatar: req.user.avatar,

@@ -31,6 +31,7 @@ export class AuthService {
       nickname: user.data.nickname,
       role: user.data.role,
     };
+    console.log(payload)
     const access_token = await this.jwtService.signAsync(payload);
     // let r = await this.decryptToken(access_token)
     // console.log(r)
@@ -48,6 +49,6 @@ export class AuthService {
 
   async decryptToken(token: string) {
     const user = this.jwtService.verify(token, this.jwtSecret);
-    return user;
+    return ResultData.messageSuccess(user, '获取用户信息成功成功');
   }
 }

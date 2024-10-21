@@ -1,9 +1,5 @@
 import {RouteComponent, RouteRecordRaw} from "vue-router";
 import {cloneDeep} from "lodash-es";
-// import { isProxy, toRaw } from "vue";
-import {buildHierarchyTree} from "@/utils/tree";
-import {usePermissionStoreHook} from "@/stores/permission";
-import {menuType} from "@/layouts/types";
 import {isEmpty} from "@/utils/is";
 
 

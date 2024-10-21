@@ -1,15 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+// import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { ResultData } from '../../common/utils/result';
 import { ErrorCode } from '../../common/constants/constants';
-import { create, update } from '../../common/utils/transaction';
+import { update } from '../../common/utils/transaction';
 import { RoleService } from '../role/role.service';
-import { Role } from '../role/entities/role.entity';
 
 @Injectable()
 export class UserService {

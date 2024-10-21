@@ -1,38 +1,81 @@
-import {BasicKeys, Persistent} from "@/utils/cache/persistent";
-import {TOKEN_KEY} from "@/enums/cacheEnum";
+import {TOKEN_KEY, USER_INFO_KEY} from "@/enums/cacheEnum";
 import Cookies from "js-cookie";
+import {RoleEnum} from "@/enums/roleEnum";
+import {useUserStoreHook} from "@/stores/user";
+import {GetUserInfoModel} from "@/api/model/userModel";
+import {_encrypt} from "@/utils/encipher";
 
 
-export function getToken() {
-    return getAuthCache(TOKEN_KEY)
+
+export interface DataInfo<T = any> {
+  /** token */
+  token: string;
+  /** 用户名 */
+  userInfo: GetUserInfoModel;
+  /** 当前登陆用户的角色 */
+  role?: RoleEnum[];
 }
 
-export function getAuthCache<T>(key: BasicKeys, isLocal = false) {
-    const fn = isLocal ? Persistent.getLocal : Persistent.getSession
-    return fn(key) as T
+export function getToken(): DataInfo<number> {
+    return Cookies.get(TOKEN_KEY) ? JSON.parse(<string>Cookies.get(TOKEN_KEY)) : sessionStorage.getItem(USER_INFO_KEY)
 }
 
-export function setAuthCache(key: BasicKeys, value: any, isLocal = false) {
-    const fn = isLocal ? Persistent.setLocal : Persistent.setSession
-    // Cookies.set(key, value)
-    return fn(key, value, true)
+/** 删除`token`以及key值为`user-info`的session信息 */
+export function removeToken() {
+  Cookies.remove(TOKEN_KEY);
+  sessionStorage.clear();
 }
 
-export function clearAuthCache(immediate = true, isLocal = false) {
-    const fn = isLocal ? Persistent.clearLocal : Persistent.clearSession
-    return fn(immediate)
-}
-
-const cookieStorage = {
-  save: (name: string, value: any, exp: any) => {
-    Cookies.set(name, value, { expires: exp })
-  },
-  remove(name: string) {
-    Cookies.remove(name)
-  },
-  get(name: string){
-    return Cookies.get(name)
+export function setToken(data: DataInfo<string>) {
+  const { token } = data
+  function setSessionKey(userInfo: GetUserInfoModel,  role: RoleEnum[]) {
+    useUserStoreHook().SET_USERINFO(userInfo)
+    useUserStoreHook().SET_ROLE(role)
+    sessionCache.setCache(USER_INFO_KEY, _encrypt({ userInfo, role }))
+    // sessionStorage.setItem(USER_INFO_KEY, { userInfo, role})
+  }
+  Cookies.set(TOKEN_KEY, JSON.stringify({ token }))
+  if (data.userInfo && data.role) {
+    const { userInfo, role } = data
+    setSessionKey(userInfo, role)
+  } else {
+    const userInfo = useUserStoreHook().getUserInfo
+    const role = useUserStoreHook().getRoleList
+    setSessionKey(<GetUserInfoModel>userInfo,role)
   }
 }
 
-export default cookieStorage
+enum CacheType {
+  Local,
+  Session
+}
+
+class Cache {
+  storage: Storage
+  constructor(type: CacheType) {
+    this.storage = type === CacheType.Local ? localStorage : sessionStorage
+  }
+  setCache(key: string, value: any) {
+    if (value) {
+      this.storage.setItem(key, JSON.stringify(value))
+    }
+  }
+  getCache(key: string) {
+    const value = this.storage.getItem(key)
+    if (value) {
+      return JSON.parse(value)
+    }
+  }
+  removeCache(key: string) {
+    this.storage.removeItem(key)
+  }
+
+  clearCache() {
+    this.storage.clear()
+  }
+}
+
+const localCache = new Cache(CacheType.Local)
+const sessionCache = new Cache(CacheType.Session)
+export { localCache, sessionCache }
+

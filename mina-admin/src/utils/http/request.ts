@@ -12,16 +12,12 @@ interface ApiResponse<T> {
 const instance: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_URL,
   timeout: 3000,
-  headers: {
-    // 设置后端需要的传参类型
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-  },
 })
 
 instance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const access_token = getToken()
+    // console.log(access_token)
     if (access_token) {
       config.headers['Authorization'] = 'Bearer ' + access_token
     }

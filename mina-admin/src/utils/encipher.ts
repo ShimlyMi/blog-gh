@@ -1,55 +1,39 @@
-import { encrypt, decrypt } from 'crypto-js/aes'
-import { parse } from 'crypto-js/enc-utf8'
-import pkcs7 from 'crypto-js/pad-pkcs7'
-import ECB from 'crypto-js/mode-ecb'
-import md5 from 'crypto-js/md5'
-import UTF8 from 'crypto-js/enc-utf8'
-import Base64 from 'crypto-js/enc-base64'
+import { cacheCipher } from '@/config/encryption'
+import CryptoJS from "crypto-js";
 
-export interface EncryptionParams {
-    key: string
-    iv: string
+const KEY = cacheCipher.SECRET_KEY
+const IV = cacheCipher.SECRET_IV
+
+const _encrypt = (data: any, keyStr = KEY, ivStr = IV) => {
+  data = typeof data === 'object' ? JSON.stringify(data) : data
+
+  const key = CryptoJS.enc.Utf8.parse(keyStr)
+  const iv = CryptoJS.enc.Utf8.parse(ivStr)
+  const secret = CryptoJS.enc.Utf8.parse(data)
+  const encrypted = CryptoJS.AES.encrypt(secret, key, {
+    iv,
+    mode: CryptoJS.mode.CBC,
+    padding: CryptoJS.pad.Pkcs7
+  })
+  return encrypted.toString()
 }
 
-export class AesEncryption {
-    private key
-    private readonly iv
-
-    constructor(opt: Partial<EncryptionParams> = {}) {
-        const { key, iv } = opt
-        if (key) {
-            this.key = parse(key)
-        }
-        if (iv) {
-            this.iv = parse(iv)
-        }
-    }
-
-    get getOptions() {
-        return {
-            mode: ECB,
-            padding: pkcs7,
-            iv: this.iv,
-        }
-    }
-
-    encryptByAES(cipherText: string) {
-        return encrypt(cipherText, this.key, this.getOptions).toString()
-    }
-
-    decryptByAES(cipherText: string) {
-        return decrypt(cipherText, this.key, this.getOptions).toString(UTF8)
-    }
+const _decrypt = (info: any, keyStr = KEY, ivStr = IV) => {
+  const key = CryptoJS.enc.Utf8.parse(keyStr)
+  const iv = CryptoJS.enc.Utf8.parse(ivStr)
+  const decryptData = CryptoJS.AES.decrypt(info, key, {
+    iv,
+    mode: CryptoJS.mode.CBC,
+    padding: CryptoJS.pad.Pkcs7
+  })
+  const CryptoJsDecrypt = CryptoJS.enc.Utf8.stringify(decryptData).toString()
+  let resultData: any
+  try {
+    resultData = JSON.parse(CryptoJsDecrypt)
+  } catch (error) {
+    resultData = CryptoJsDecrypt
+  }
+  return resultData
 }
 
-export function encryptByBase64(cipherText: string) {
-    return UTF8.parse(cipherText).toString(Base64)
-}
-
-export function decodeByBase64(cipherText: string) {
-    return Base64.parse(cipherText).toString(UTF8)
-}
-
-export function encryptByMd5(password: string) {
-    return md5(password).toString()
-}
+export { _encrypt, _decrypt }

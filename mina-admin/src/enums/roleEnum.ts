@@ -1,5 +1,5 @@
 export enum RoleEnum {
-    SUPER = '管理员',
+    ADMIN = '管理员',
     COMMON = '普通用户',
     // 财务
     FINANCE = '财务',
