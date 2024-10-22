@@ -1,11 +1,12 @@
-<script>
+<script lang="ts">
 export default {
   props: ['orgData', 'orgImgList', 'showAdd'],
   data() {
     return {
-      imgSrc: '@/assets/avatar.jpg', // 默认显示的图片（例如加号图标）
+      // eslint-disable-next-line global-require
+      imgSrc: '@/assets/avatar.jpg',
       imgWide: '50px',
-      imgList: [], // 存储已上传的图片列表
+      imgList: [],
     };
   },
   created() {
@@ -15,6 +16,7 @@ export default {
     init() {
       if (this.orgImgList) {
         Array.from(this.orgImgList).forEach((item) => {
+          // 期望输入的数据结构
           const imgObj = {
             imgObj: '', // 图片对象
             imgSrc: '', // 图片可用链接
@@ -26,6 +28,7 @@ export default {
         });
       }
     },
+
     del(key) {
       this.imgList.splice(key, 1);
       const emitData = {
@@ -34,9 +37,11 @@ export default {
       };
       this.$emit('getImg', emitData);
     },
+
     chooseFile() {
       this.$refs.fileInput.click();
     },
+
     getFile(event) {
       const curfile = event.target.files[0];
       const filename = curfile.name;
@@ -46,20 +51,25 @@ export default {
         imgBaseCode: '', // 图片对象base64码
         imgName: filename, // 图片名称
       };
+
       if (filename.lastIndexOf('.') <= 0) {
         throw new Error('Please add a valid image!'); // 判断图片是否有效
       }
       const fileReader = new FileReader(); // 内置方法new FileReader()读取文件
       fileReader.readAsDataURL(curfile);
       fileReader.onload = (e) => {
+        // 读取到的图片base64 数据编码
         imgObj.imgSrc = e.target.result;
         imgObj.imgBaseCode = e.target.result;
       };
+
       this.imgList.push(imgObj);
+
       const emitData = {
         orgData: this.orgData,
         imgList: this.imgList,
       };
+
       this.$emit('getImg', emitData);
     },
   },
@@ -67,7 +77,7 @@ export default {
 </script>
 <template>
   <div>
-    <div class="d-flex flex-wrap">
+    <div class="d-flex flex-wrap ">
       <div v-for="(item, key) in imgList" :key="key" class="ma-2">
         <v-sheet color="white" elevation="1" width="200" :height="showAdd ? 240 : 200">
           <v-row justify="center" align="center" style="height:100%">
@@ -92,6 +102,5 @@ export default {
   </div>
 </template>
 
-<style scoped lang="less">
 
-</style>
+<style scoped lang="less"></style>

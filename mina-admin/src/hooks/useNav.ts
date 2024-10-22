@@ -2,7 +2,6 @@ import {useRoute, useRouter} from "vue-router";
 import {storeToRefs} from "pinia";
 import {computed} from "vue";
 
-import {usePermissionStoreHook} from "@/stores/permission";
 import {useUserStoreHook} from "@/stores/user";
 import {remainingPaths} from "@/router";
 
@@ -11,7 +10,6 @@ const errorInfo = '当前路由配置不正确，请检查配置'
 export function useNav() {
   const route = useRoute()
   const routers = useRouter().options.routes
-  const { wholeMenus } = storeToRefs(usePermissionStoreHook())
 
   /** 用户信息 */
   const userInfo = computed(() => {

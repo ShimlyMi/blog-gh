@@ -55,7 +55,15 @@ export class RoleService {
         select: ['id', 'real_name', 'value'],
         where: { id: id },
       });
-      return ResultData.messageSuccess(res, '查询角色信息成功');
+      return ResultData.messageSuccess(
+        [
+          {
+            real_name: res.real_name,
+            value: res.value,
+          },
+        ],
+        '查询角色信息成功',
+      );
     } catch (err) {
       console.error(err);
       return ResultData.messageFail(ErrorCode.USER, '查询角色信息失败');

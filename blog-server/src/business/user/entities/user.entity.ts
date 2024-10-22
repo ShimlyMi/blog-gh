@@ -1,4 +1,4 @@
-import {Column, Entity, JoinColumn, OneToMany, OneToOne} from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 import { BaseColumn } from '../../baseColumnAbstract/baseColumn';
 import { Role } from '../../role/entities/role.entity';
 
@@ -20,8 +20,8 @@ export class User extends BaseColumn {
   })
   password: string;
 
-  @OneToOne(() => Role)
-  @JoinColumn()
+  @OneToOne(() => Role, { eager: true })
+  @JoinColumn({ name: 'roleId' })
   role: Role;
   // @Column({
   //   type: 'tinyint',

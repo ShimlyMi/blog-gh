@@ -19,7 +19,4 @@ export class Role extends BaseColumn {
   })
   value: string;
 
-  @OneToMany(() => User, (user) => user.id)
-  @JoinColumn()
-  userId: User[];
 }

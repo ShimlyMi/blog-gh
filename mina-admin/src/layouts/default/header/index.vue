@@ -1,5 +1,4 @@
 <script setup lang="ts" name="Header">
-  import { onMounted } from 'vue'
   import { useTheme } from 'vuetify'
   import { useUserStore } from '@/stores/user'
   import {sessionCache} from "@/utils/auth";
@@ -13,12 +12,12 @@
     theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
   }
 
-  const getUserInfo = () => {
-    const str = sessionCache.getCache(USER_INFO_KEY)
-    const data = _decrypt(str)
-    console.log(data)
+  function logOut() {
+    return userStore.logout()
   }
-  onMounted(() => getUserInfo())
+  const str = sessionCache.getCache(USER_INFO_KEY)
+  const data = _decrypt(str)
+  console.log(data)
 </script>
 
 <template>
@@ -43,15 +42,15 @@
               <v-img alt="网站头像" src="@/assets/avatar.jpg" />
             </v-avatar>
             <v-avatar v-else>
-              <v-img alt="网站头像" :src="userStore.userInfo.avatar"></v-img>
+              <v-img alt="网站头像" :src="data.avatar"></v-img>
             </v-avatar>
           </v-btn>
         </template>
         <v-list>
           <v-list-item link prepend-icon="mdi-account-circle" title="用户中心" />
           <v-list-item link prepend-icon="mdi-cog" title="用户设置" />
-          <v-btn icon="mdi-logout" text="退出登录" @click="userStore.logout()" />
-<!--          <v-list-item link prepend-icon="mdi-logout" title="退出登录"  />-->
+<!--          <v-btn icon="mdi-logout" text="退出登录" @click="logOut" />-->
+          <v-list-item prepend-icon="mdi-logout" title="退出登录" @click="logOut" />
         </v-list>
       </v-menu>
     </template>

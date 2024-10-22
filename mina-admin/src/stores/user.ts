@@ -119,7 +119,7 @@ export const useUserStore = defineStore(
         this.SET_TOKEN("")
         this.SET_SESSION_TIMEOUT(false)
         this.SET_USERINFO(null)
-        goLogin && router.push(BasicPageEnum.BASE_LOGIN)
+        goLogin && router.replace({ path: '/login' })
       },
 
     },

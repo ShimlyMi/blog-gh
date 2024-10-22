@@ -3,12 +3,14 @@ import { CreateUserDto } from './dto/create-user.dto';
 // import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { ResultData } from '../../common/utils/result';
 import { ErrorCode } from '../../common/constants/constants';
-import { update } from '../../common/utils/transaction';
+import { remove, update } from '../../common/utils/transaction';
 import { RoleService } from '../role/role.service';
+import { Role } from '../role/entities/role.entity';
+import { async } from 'rxjs';
 
 @Injectable()
 export class UserService {
@@ -99,29 +101,24 @@ export class UserService {
     }
   }
 
-  async findOne(data: any) {
+  async findUserInfoByUsername(data: any) {
     try {
-      const { id, username } = data;
+      const { username } = data;
       const res = await this.userRepository.findOne({
         select: ['id', 'username', 'password', 'nickname', 'avatar', 'role'],
-        relations: ['role'],
-        where: [{ id: id }, { username: username }],
+        where: { username: username },
       });
+      const roles = await this.roleService.findOne(res.role.id);
       return ResultData.messageSuccess(
         {
           id: res.id,
           username: res.username,
-          password: res.password,
           nickname: res.nickname,
-          avatar: res.nickname,
-          role: [
-            {
-              real_name: res.role.real_name,
-              value: res.role.value,
-            },
-          ],
+          password: res.password,
+          avatar: res.avatar,
+          role: roles.data,
         },
-        '查询用成功',
+        '查询用户成功',
       );
     } catch (err) {
       console.error(err);

@@ -14,8 +14,10 @@ export class AuthService {
 
   async signIn(userInfo: { username: string; password: string }) {
     const { username, password } = userInfo;
-    const user = await this.userService.findOne(username);
-    // console.log('user', user);
+    console.log(username);
+    const userQuery = { username: username };
+    const user = await this.userService.findUserInfoByUsername(userQuery);
+    console.log('user', user);
     const passV = await this.userService.validatePassword(
       user.data.password,
       password,
@@ -31,7 +33,7 @@ export class AuthService {
       nickname: user.data.nickname,
       role: user.data.role,
     };
-    console.log(payload)
+    console.log(payload);
     const access_token = await this.jwtService.signAsync(payload);
     // let r = await this.decryptToken(access_token)
     // console.log(r)

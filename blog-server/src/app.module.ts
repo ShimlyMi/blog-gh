@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import * as process from 'process';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -35,10 +37,10 @@ import { RoleModule } from './business/role/role.module';
       autoLoadEntities: true,
       logging: true,
     }),
-    // ServeStaticModule.forRoot({
-    //   rootPath: join(__dirname, '..', 'public/upload'),
-    //   serveRoot: '/upload/',
-    // }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '/upload'),
+      serveRoot: '/upload',
+    }),
     WebsiteModule,
     CategoryModule,
     TagModule,
