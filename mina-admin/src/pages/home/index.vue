@@ -100,10 +100,10 @@ onMounted(
                   <v-col cols="2" class="left-icon">
                     <v-icon icon="mdi-note-text"></v-icon>
                   </v-col>
-                  <v-col>
-                      <span class="inline-block d-flex flex-column">
-                        <span>博客文章</span>
-                        <span>111</span>
+                  <v-col cols="5" class="data-box">
+                      <span class="data-content d-flex flex-column justify-center">
+                        <span style="font-size: 14px;">博客文章</span>
+                        <span style="font-size: 18px;">111</span>
                       </span>
                   </v-col>
                 </v-row>
@@ -115,10 +115,10 @@ onMounted(
                   <v-col cols="2" class="left-icon">
                     <v-icon icon="mdi-chat-processing"></v-icon>
                   </v-col>
-                  <v-col>
-                    <span class="inline-block d-flex flex-column">
-                      <span>说说随笔</span>
-                      <span>111</span>
+                  <v-col cols="5" class="data-box">
+                    <span class="data-content d-flex flex-column justify-center">
+                      <span style="font-size: 14px;">说说随笔</span>
+                      <span style="font-size: 18px;">111</span>
                     </span>
                   </v-col>
                 </v-row>
@@ -130,10 +130,10 @@ onMounted(
                   <v-col cols="2" class="left-icon">
                     <v-icon icon="mdi-image"></v-icon>
                   </v-col>
-                  <v-col>
-                    <span class="inline-block d-flex flex-column">
-                      <span>相册图库</span>
-                      <span>111</span>
+                  <v-col cols="5" class="data-box">
+                    <span class="data-content d-flex flex-column justify-center">
+                      <span style="font-size: 14px;">相册图库</span>
+                      <span style="font-size: 18px;">111</span>
                     </span>
                   </v-col>
                 </v-row>
@@ -145,10 +145,10 @@ onMounted(
                   <v-col cols="2" class="left-icon">
                     <v-icon icon="mdi-message-reply-text"></v-icon>
                   </v-col>
-                  <v-col class="data-box">
-                    <span class="inline-block d-flex flex-column">
+                  <v-col cols="5" class="data-box">
+                    <span class="data-content d-flex flex-column justify-center">
                       <span style="font-size: 14px;">新增留言</span>
-                      <span class="data-count">111</span>
+                      <span style="font-size: 18px;">111</span>
                     </span>
                   </v-col>
                 </v-row>
@@ -178,6 +178,10 @@ onMounted(
 .basic-data {
   margin: auto 20px;
 }
+.data-content {
+  //height: 45px;
+  margin-top: 8px;
+}
 .divider {
   margin: 10px auto;
 }
@@ -192,7 +196,8 @@ onMounted(
   height: 45px;
   vertical-align: center;
   .v-icon {
-    padding-right: 3px;
+    padding-right: 6px;
+    padding-bottom: 2px;
   }
   .mdi-note-text {
     color: #a7a7d4;
