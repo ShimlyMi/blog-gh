@@ -6,7 +6,9 @@ defineOptions({
 </script>
 
 <template>
-  <LoginForm />
+  <v-container>
+    <LoginForm />
+  </v-container>
 </template>
 
 <style scoped lang="less">

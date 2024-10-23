@@ -1,0 +1,74 @@
+import { Ref, ref, computed, unref, nextTick, watch } from "vue";
+import type { EChartsOption } from "echarts";
+import { tryOnUnmounted, useDebounceFn, useEventListener } from "@vueuse/core";
+import echarts from "@/utils/lib/echarts";
+import { Fn } from "#/store";
+import { useBreakpoint } from "@/hooks/event/useBreakpoint";
+import { useTimeoutFn } from "@/hooks/core/useTimeout";
+
+export function useECharts(
+  elRef: Ref<HTMLDivElement>
+) {
+  let chartInstance: echarts.ECharts | null = null
+  let resizeFn: Fn = resize
+  const cacheOptions = ref({}) as Ref<EChartsOption>
+  let removeResizeFn: Fn = () => {}
+  resizeFn = useDebounceFn(resize, 200)
+
+  const getOptions = computed(() => {
+    return {
+      backgroundColor: 'transparent',
+      ...cacheOptions.value,
+    } as EChartsOption
+  })
+
+  function initCharts() {
+    const el = unref(elRef)
+    if (!el || !unref(el)) {
+      return
+    }
+
+    chartInstance = echarts.init(el)
+    const { removeEvent } = useEventListener({
+      el: window,
+      name: 'resize',
+      listener: resizeFn,
+    })
+    removeResizeFn = removeEvent
+    const { widthRef, screenEnum } = useBreakpoint()
+    if (unref(widthRef) <= screenEnum.MD || el.offsetHeight === 0) {
+      useTimeoutFn(() => {
+        resizeFn()
+      }, 30)
+    }
+  }
+
+  function setOptions(options: EChartsOption) {
+    cacheOptions.value = options
+    if (unref(elRef)?.offsetHeight === 0) {
+      useTimeoutFn(() => {
+        setOptions(unref(getOptions))
+      }, 30)
+      return
+    }
+    nextTick(() => {
+      useTimeoutFn(() => {
+        if (!chartInstance) {
+          return false
+        }
+        chartInstance?.setOption(unref(getOptions))
+      }, 30)
+    })
+  }
+
+
+  function resize() {
+    chartInstance?.resize({
+      animation: {
+        duration: 300,
+        easing: 'quadraticIn',
+      },
+    })
+  }
+
+}

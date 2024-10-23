@@ -4,13 +4,9 @@
   import {sessionCache} from "@/utils/auth";
   import {USER_INFO_KEY} from "@/enums/cacheEnum";
   import {_decrypt} from "@/utils/encipher";
+  import {onMounted} from "vue";
 
   const userStore = useUserStore()
-  const theme = useTheme()
-
-  function toggleTheme () {
-    theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
-  }
 
   function logOut() {
     return userStore.logout()
@@ -18,6 +14,9 @@
   const str = sessionCache.getCache(USER_INFO_KEY)
   const data = _decrypt(str)
   console.log(data)
+  onMounted(
+    () => str
+  )
 </script>
 
 <template>
@@ -26,23 +25,15 @@
     class="mi-header"
     title="MINA ADMIN"
   >
-<!--    <template #prepend>-->
-<!--      <router-link to="/mina-admin/public">-->
-<!--        <img src="@/assets/logo.png">-->
-<!--      </router-link>-->
-<!--    </template>-->
     <template #append>
       <v-btn icon="mdi-magnify" />
-      <v-btn icon="mdi-white-balance-sunny" @click="toggleTheme" />
       <v-btn icon="mdi-bell-outline" />
       <v-menu location="bottom">
         <template #activator="{ props }">
           <v-btn v-bind="props" :active="false" icon>
-            <v-avatar v-if="!userStore.userInfo">
-              <v-img alt="网站头像" src="@/assets/avatar.jpg" />
-            </v-avatar>
-            <v-avatar v-else>
-              <v-img alt="网站头像" :src="data.avatar"></v-img>
+            <v-avatar>
+              <v-img  v-if="!str" alt="网站头像" src="@/assets/avatar.jpg" />
+              <v-img v-else alt="网站头像" :src="data.avatar"></v-img>
             </v-avatar>
           </v-btn>
         </template>
