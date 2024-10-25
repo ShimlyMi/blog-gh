@@ -6,20 +6,25 @@ defineOptions({
 </script>
 
 <template>
-  <h1>说说列表</h1>
-  <h1>说说列表</h1>
-  <h1>说说列表</h1>
-  <h1>说说列表</h1>
-  <h1>说说列表</h1>
-  <h1>说说列表</h1>
-  <h1>说说列表</h1>
-  <h1>说说列表</h1>
-  <h1>说说列表</h1>
-  <h1>说说列表</h1>
-  <h1>说说列表</h1>
-  <upload :show-add="true"/>
+  <v-row class="pageIndex" justify="center">
+    <v-col>
+      <v-card>
+        <h1>说说列表</h1>
+        <h1>说说列表</h1>
+        <h1>说说列表</h1>
+        <h1>说说列表</h1>
+        <h1>说说列表</h1>
+        <h1>说说列表</h1>
+        <h1>说说列表</h1>
+        <h1>说说列表</h1>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
-<style scoped lang="less">
-
+<style scoped lang="scss">
+.pageIndex {
+  //background-color: #fff;
+  margin: 10px;
+}
 </style>

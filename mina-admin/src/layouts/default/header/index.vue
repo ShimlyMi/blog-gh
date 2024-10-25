@@ -1,19 +1,31 @@
 <script setup lang="ts" name="Header">
-  import { useTheme } from 'vuetify'
+  import { onMounted } from "vue";
   import { useUserStore } from '@/stores/user'
-  import {sessionCache} from "@/utils/auth";
-  import {USER_INFO_KEY} from "@/enums/cacheEnum";
-  import {_decrypt} from "@/utils/encipher";
-  import {onMounted} from "vue";
+  import { sessionCache } from "@/utils/auth";
+  import { USER_INFO_KEY } from "@/enums/cacheEnum";
+  import { _decrypt } from "@/utils/encipher";
 
+  const props = defineProps({
+    isOpen: {
+      type: Boolean as PropType<boolean>,
+      default: false,
+    },
+  });
+
+  const emit = defineEmits<{
+    (e: 'update:isOpen', isOpen: boolean): void;
+  }>();
+
+  const toggleDrawer = () => {
+    emit('update:isOpen', !props.isOpen);
+  };
   const userStore = useUserStore()
-
   function logOut() {
     return userStore.logout()
   }
   const str = sessionCache.getCache(USER_INFO_KEY)
   const data = _decrypt(str)
-  console.log(data)
+  // console.log(data)
   onMounted(
     () => str
   )
@@ -23,8 +35,13 @@
   <v-app-bar
     app
     class="mi-header"
-    title="MINA ADMIN"
   >
+    <template #prepend>
+      <v-btn
+        variant="text"
+        @click="toggleDrawer"
+        prepend-icon="mdi-menu" />
+    </template>
     <template #append>
       <v-btn icon="mdi-magnify" />
       <v-btn icon="mdi-bell-outline" />

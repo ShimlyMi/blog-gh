@@ -1,0 +1,104 @@
+<template>
+  <v-container>
+    <v-row justify="center">
+      <v-col cols="12" md="6">
+        <div class="d-flex flex-wrap">
+          <div class="ma-2">
+            <v-sheet color="white" elevation="1" width="200" height="200" @click="chooseFile">
+              <v-row justify="center" align="center" style="height:100%">
+                <div align="center">
+                  <v-icon icon="mdi-plus" ></v-icon>
+<!--                  <v-img v-show="previewImage" :src="previewImage" aspect-ratio="1" class="mb-4" width="200" height="200"></v-img>-->
+                </div>
+              </v-row>
+            </v-sheet>
+          </div>
+          <div class="ma-2" v-if="previewImage">
+            <v-sheet color="white" elevation="1" width="200" height="200" @click="chooseFile">
+              <v-row justify="center" align="center" style="height:100%">
+                <div align="center">
+                  <v-img :src="previewImage" aspect-ratio="1" class="mb-4" width="200" height="200"></v-img>
+                </div>
+              </v-row>
+            </v-sheet>
+          </div>
+        </div>
+        <input type="file" ref="fileInput" accept="image/*" @change="onFileChange" style="display: none" />
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+
+const props = defineProps({
+  fileList: {
+    type: Array,
+    default: () => {}
+  },
+  preview: {
+    type: Boolean,
+    default: false
+  },
+  multiple: {
+    type: Boolean,
+    default: false
+  },
+  width: {
+    type: Number,
+    default: 200
+  },
+  height: {
+    type: Number,
+    default: 200
+  }
+})
+// 响应式数据
+const fileName = ref<string>('');
+const previewImage = ref<string | null>(null);
+const prependIcon = ref<'mdi-image-plus' | 'mdi-check'>('mdi-image-plus');
+
+// 引用DOM元素
+const fileInput = ref<HTMLInputElement | null>(null);
+
+// 方法
+const chooseFile = () => {
+  if (fileInput.value) {
+    fileInput.value.click();
+  }
+};
+
+const onFileChange = (event: Event) => {
+  const target = (event.target as HTMLInputElement);
+  const file = target.files[0];
+  if (file) {
+    fileName.value = file.name;
+    previewImage.value = URL.createObjectURL(file);
+    prependIcon.value = 'mdi-check';
+  }
+};
+
+// const submitFile = () => {
+//   console.log('Uploading file:', fileName.value);
+//   // 注意：这里的预览图像URL（previewImage.value）不会在服务器上可用，它只是一个本地URL。
+//   // 你需要发送实际的文件对象（例如使用FormData）到服务器。
+//   // 例如：
+//   // const formData = new FormData();
+//   // formData.append('file', (fileInput.value as HTMLInputElement).files[0]);
+//   // axios.post('/upload', formData);
+// };
+//
+// const reset = () => {
+//   fileName.value = '';
+//   previewImage.value = null;
+//   prependIcon.value = 'mdi-image-plus';
+//   if (fileInput.value) {
+//     fileInput.value.value = ''; // 清空文件输入
+//   }
+// };
+</script>
+
+<style scoped>
+/* 在此处添加你的自定义样式 */
+</style>

@@ -7,7 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    Breadcrumbs: typeof import('./src/components/breadcrumbs/index.vue')['default']
+    Breadcrumbs: typeof import('./src/components/Breadcrumbs/index.vue')['default']
     MessageBox: typeof import('./src/components/MessageBox/index.vue')['default']
     Notification: typeof import('./src/components/Notification/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
