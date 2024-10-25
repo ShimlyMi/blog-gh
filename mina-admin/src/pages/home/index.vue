@@ -80,7 +80,7 @@ const options = {
   ]
 }
 
-console.log(userInfo)
+// console.log(userInfo)
 onMounted(
   () => data
 )

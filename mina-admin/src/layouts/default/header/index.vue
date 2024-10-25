@@ -4,6 +4,7 @@
   import { sessionCache } from "@/utils/auth";
   import { USER_INFO_KEY } from "@/enums/cacheEnum";
   import { _decrypt } from "@/utils/encipher";
+  import Breadcrumb from "@/components/Breadcrumbs/index.vue";
 
   const props = defineProps({
     isOpen: {
@@ -41,6 +42,7 @@
         variant="text"
         @click="toggleDrawer"
         prepend-icon="mdi-menu" />
+      <Breadcrumb />
     </template>
     <template #append>
       <v-btn icon="mdi-magnify" />

@@ -32,6 +32,7 @@ export const constantRoutes = [
   {
     path: "/talk",
     component: Layout,
+    redirect: '/talk/list',
     meta: {
       title: '说说管理',
       icon: 'mdi-chat-processing',
@@ -71,6 +72,7 @@ export const constantRoutes = [
   {
     path: "/tag",
     component: Layout,
+    redirect: '/tag/list',
     meta: {
       title: '标签管理',
       icon: 'mdi-chat-processing',
@@ -92,6 +94,7 @@ export const constantRoutes = [
   {
     path: "/category",
     component: Layout,
+    redirect: '/category/list',
     meta: {
       title: '分类管理',
       icon: 'mdi-chat-processing',
