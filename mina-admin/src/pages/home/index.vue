@@ -182,9 +182,6 @@ onMounted(
   //height: 45px;
   margin-top: 8px;
 }
-.divider {
-  margin: 10px auto;
-}
 .left-icon {
   //margin-right: 5px;
   background-color: #f8f8f8;
