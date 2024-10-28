@@ -1,8 +1,31 @@
 <script setup lang="ts">
-import upload from '@/components/Upload/index.vue'
+import { ref } from 'vue'
+import AddDialog from "./components/add-dialog.vue";
+
 defineOptions({
   name: 'talkList'
 })
+
+
+const isDialogOpen = ref(false)
+const dialogTitle = ref('')
+function openDialog(type: string) {
+  isDialogOpen.value = true
+  switch (type) {
+      case 'add':
+          dialogTitle.value = '新增';
+          break;
+      case 'edit':
+          dialogTitle.value = '编辑';
+          break;
+      default:
+          break;
+  }
+}
+
+function closeDialog() {
+  isDialogOpen.value = false
+}
 </script>
 
 <template>
@@ -60,7 +83,9 @@ defineOptions({
           <h2>说说</h2>
         </template>
         <template #append>
-          <v-btn variant="text" icon="mdi-text-box-plus-outline"></v-btn>
+          <v-btn variant="text"
+                 icon="mdi-text-box-plus-outline"
+                 @click="openDialog('add')"></v-btn>
         </template>
         <v-divider />
         <v-container>
@@ -102,6 +127,8 @@ defineOptions({
       </v-card>
     </v-col>
   </v-row>
+
+  <AddDialog :is-dialog-open="isDialogOpen" @close-dialog="closeDialog" :dialog-title="dialogTitle" />
 </template>
 
 <style scoped lang="scss">

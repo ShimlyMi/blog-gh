@@ -26,7 +26,7 @@
   }
   const str = sessionCache.getCache(USER_INFO_KEY)
   const data = _decrypt(str)
-  // console.log(data)
+  console.log(data)
   onMounted(
     () => str
   )
@@ -42,7 +42,7 @@
         variant="text"
         @click="toggleDrawer"
         prepend-icon="mdi-menu" />
-      <Breadcrumb />
+<!--      <Breadcrumb />-->
     </template>
     <template #append>
       <v-btn icon="mdi-magnify" />

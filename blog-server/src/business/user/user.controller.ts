@@ -24,4 +24,10 @@ export class UserController {
   findOne(@Body() data: { username: string }) {
     return this.userService.findUserInfoByUsername(data);
   }
+
+  @Public()
+  @Get('/findOneById/:id')
+  findOneById(@Param('id') id: string) {
+    return this.userService.findUserInfoByUserId(+id);
+  }
 }

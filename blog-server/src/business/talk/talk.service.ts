@@ -5,15 +5,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Talk } from './entities/talk.entity';
 import { Repository } from 'typeorm';
 import { ResultData } from '../../common/utils/result';
-import { TalkPhotosService } from '../talk-photos/talk-photos.service';
 import { ErrorCode } from '../../common/constants/constants';
+import { UserService } from '../user/user.service';
+import { TalkPhoto } from '../talk-photos/entities/talk-photo.entity';
 
 @Injectable()
 export class TalkService {
   constructor(
-    private talkPhotoService: TalkPhotosService,
+    private userService: UserService,
     @InjectRepository(Talk)
     private talkRepository: Repository<Talk>,
+    @InjectRepository(TalkPhoto)
+    private talkPhotoRepository: Repository<TalkPhoto>,
   ) {}
   async addTalk(createTalkDto: CreateTalkDto) {
     console.log(JSON.stringify(createTalkDto));
@@ -22,13 +25,13 @@ export class TalkService {
       talk.content = createTalkDto.content;
       talk.status = createTalkDto.status;
       talk.isTop = createTalkDto.isTop;
+      talk.user = createTalkDto.userId
       const res = await this.talkRepository.save(talk);
-      const data = {
-        talkId: res.id,
-        url: createTalkDto.url,
-      };
+      const talkPhoto = new TalkPhoto();
+      talkPhoto.talk = talk.talkPic;
+      talkPhoto.url = createTalkDto.url;
       if (res.id) {
-        await this.talkPhotoService.create(data);
+        await this.talkPhotoRepository.save(talkPhoto)
       }
       return ResultData.messageSuccess(res, '新增说说成功');
     } catch (err) {

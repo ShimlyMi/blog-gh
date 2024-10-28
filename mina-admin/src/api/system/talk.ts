@@ -1,4 +1,5 @@
-import {AddTalkParam} from "@/api/model/talkModel";
+import {AddTalkParam, TalkResult} from "@/api/model/talkModel";
+import instance from "@/utils/http/request";
 
 enum Api {
   PUBLIC_TALK = '/api/talk/add',
@@ -7,6 +8,6 @@ enum Api {
   REMOVE_TALK = '/api/talk/remove'
 }
 
-export const publicTalkApi = (param: AddTalkParam) => {
-
+export const publicTalkApi = (params: AddTalkParam): Promise<TalkResult> => {
+  return instance.post<any, TalkResult>(Api.PUBLIC_TALK, params)
 }

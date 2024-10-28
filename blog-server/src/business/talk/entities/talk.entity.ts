@@ -1,5 +1,14 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { BaseColumn } from '../../baseColumnAbstract/baseColumn';
+import { User } from '../../user/entities/user.entity';
+import { TalkPhoto } from '../../talk-photos/entities/talk-photo.entity';
 
 @Entity()
 export class Talk extends BaseColumn {
@@ -8,6 +17,10 @@ export class Talk extends BaseColumn {
     comment: '说说内容',
   })
   content: string;
+
+  @OneToMany(() => TalkPhoto, (talkPhoto) => talkPhoto.id, { eager: true })
+  @JoinColumn({ name: 'talkPicId' })
+  talkPic: TalkPhoto[];
 
   @Column({
     type: 'tinyint',
@@ -29,4 +42,8 @@ export class Talk extends BaseColumn {
     default: 0,
   })
   like_times: number;
+
+  @OneToOne(() => User, { eager: true })
+  @JoinColumn({ name: 'userId' })
+  user: User;
 }

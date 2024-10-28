@@ -14,7 +14,7 @@ import { ArticleModule } from './business/article/article.module';
 import { UploadModule } from './business/upload/upload.module';
 import { UserModule } from './business/user/user.module';
 import { TalkModule } from './business/talk/talk.module';
-import { TalkPhotosModule } from './business/talk-photos/talk-photos.module';
+// import { TalkPhotosModule } from './business/talk-photos/talk-photos.module';
 import { AuthModule } from './business/auth/auth.module';
 import { RoleModule } from './business/role/role.module';
 
@@ -49,7 +49,7 @@ import { RoleModule } from './business/role/role.module';
     UserModule,
     UploadModule,
     TalkModule,
-    TalkPhotosModule,
+    // TalkPhotosModule,
     RoleModule,
   ],
   controllers: [AppController],

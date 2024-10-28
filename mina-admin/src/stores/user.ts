@@ -15,6 +15,7 @@ interface UserState {
   userInfo: Nullable<UserInfo>
   token?: string
   role: RoleEnum[]
+  userId: number
   sessionTimeout?: boolean
   lastUpdateTime: number
 }
@@ -23,15 +24,22 @@ export const useUserStore = defineStore(
   {
     state: (): UserState => ({
       userInfo: null,
+      userId: 0,
       token: undefined,
       role: [],
       sessionTimeout: false,
       lastUpdateTime: 0
     }),
     getters: {
-      getUserInfo (): UserInfo {
+      getUserInfo(): UserInfo {
         return this.userInfo || sessionCache.getCache(USER_INFO_KEY) || {}
       },
+      // getUserId() {
+      //   const str = sessionCache.getCache(TOKEN_KEY)
+      //   const data = _decrypt(str)
+      //   this.userId = data.id
+      //   return this.userId
+      // },
       getRoleList(): RoleEnum[] {
         return this.role.length > 0 ? this.role : sessionCache.getCache(ROLES_KEY)
       },

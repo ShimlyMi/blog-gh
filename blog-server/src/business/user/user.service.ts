@@ -7,10 +7,9 @@ import { Like, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { ResultData } from '../../common/utils/result';
 import { ErrorCode } from '../../common/constants/constants';
-import { remove, update } from '../../common/utils/transaction';
+import { update } from '../../common/utils/transaction';
 import { RoleService } from '../role/role.service';
-import { Role } from '../role/entities/role.entity';
-import { async } from 'rxjs';
+
 
 @Injectable()
 export class UserService {
@@ -123,6 +122,40 @@ export class UserService {
     } catch (err) {
       console.error(err);
       return ResultData.messageFail(ErrorCode.USER, '查询用户失败');
+    }
+  }
+
+  async findUserInfoByUserId(id: number) {
+    try {
+      const res = await this.userRepository
+        .createQueryBuilder('user')
+        .select('user.id')
+        .where(`user.id = :id`, {
+          id: id,
+        })
+        .getCount();
+      return res > 0;
+      // const userId = Number(id);
+      // const res = await this.userRepository.findOne({
+      //   select: ['id', 'username', 'password', 'nickname', 'avatar', 'role'],
+      //   where: { id: id },
+      // });
+      // const roles = await this.roleService.findOne(res.role.id);
+      // return ResultData.messageSuccess(
+      //   {
+      //     id: res.id,
+      //     username: res.username,
+      //     nickname: res.nickname,
+      //     password: res.password,
+      //     avatar: res.avatar,
+      //     role: roles.data,
+      //   },
+      //   '查询用户成功',
+      // );
+    } catch (err) {
+      console.error(err);
+      return false
+      // return ResultData.messageFail(ErrorCode.USER, '查询用户失败');
     }
   }
 

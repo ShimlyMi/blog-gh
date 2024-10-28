@@ -21,3 +21,21 @@
 .divider {
   margin: 10px auto;
 }
+
+.to_pointer {
+  transition: 0.3s ease-in-out;
+  &:hover {
+    color: var(--primary);
+    cursor: pointer;
+    &::before {
+      color: var(--primary);
+    }
+  }
+}
+
+.mouse_pointer {
+  transition: 0.3s ease-in-out;
+  &:hover {
+    cursor: pointer;
+  }
+}

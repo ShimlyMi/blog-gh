@@ -13,17 +13,17 @@ export class TalkPhotosService {
     @InjectRepository(TalkPhoto)
     private talkPhotoRepository: Repository<TalkPhoto>,
   ) {}
-  async create(createTalkPhotoDto: CreateTalkPhotoDto) {
-    try {
-      const data = new TalkPhoto();
-      data.talk = createTalkPhotoDto.talkId;
-      data.url = createTalkPhotoDto.url.join(',');
-      return await this.talkPhotoRepository.save(data);
-    } catch (err) {
-      console.error(err);
-      return ResultData.messageFail(ErrorCode.PHOTO, '', '新增说说图片失败');
-    }
-  }
+  // async create(createTalkPhotoDto: CreateTalkPhotoDto) {
+  //   try {
+  //     const data = new TalkPhoto();
+  //     data.talk = createTalkPhotoDto.talkId;
+  //     data.url = createTalkPhotoDto.url.join(',');
+  //     return await this.talkPhotoRepository.save(data);
+  //   } catch (err) {
+  //     console.error(err);
+  //     return ResultData.messageFail(ErrorCode.PHOTO, '', '新增说说图片失败');
+  //   }
+  // }
 
   findAll() {
     return `This action returns all talkPhotos`;
