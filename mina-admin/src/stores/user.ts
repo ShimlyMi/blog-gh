@@ -1,15 +1,14 @@
-import {defineStore} from 'pinia'
-import { sessionCache, setToken} from '@/utils/auth'
-import {LoginParams} from '@/api/model/userModel'
-import {getUserInfo, loginApi} from '@/api/system/user'
+import { defineStore } from 'pinia'
+import { sessionCache, setToken } from '@/utils/auth'
+import { LoginParams} from '@/api/model/userModel'
+import { getUserInfo, loginApi } from '@/api/system/user'
 import router from '@/router'
-import {BasicPageEnum} from '@/enums/pageEnum'
-import {UserInfo} from "#/store";
-import {ROLES_KEY, TOKEN_KEY, USER_INFO_KEY} from "@/enums/cacheEnum";
-import {isArray} from "@/utils/is";
-import {RoleEnum} from "@/enums/roleEnum";
+import { UserInfo } from "#/store";
+import { ROLES_KEY, TOKEN_KEY, USER_INFO_KEY} from "@/enums/cacheEnum";
+import { isArray } from "@/utils/is";
+import { RoleEnum } from "@/enums/roleEnum";
 import Cookies from "js-cookie";
-import {_decrypt, _encrypt} from "@/utils/encipher";
+import { _encrypt } from "@/utils/encipher";
 
 interface UserState {
   userInfo: Nullable<UserInfo>

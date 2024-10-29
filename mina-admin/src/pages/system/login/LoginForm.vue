@@ -4,6 +4,8 @@
   import system from '@/locale/system'
   import {LoginStateEnum, useLoginState, REGEXP_PWD} from '@/pages/system/login/useLogin'
   import { useUserStore } from "@/stores/user";
+  import {localCache} from "@/utils/auth";
+  import {USER_INFO_KEY} from "@/enums/cacheEnum";
 
   const userStore = useUserStore()
   const formRef = ref()
@@ -31,7 +33,13 @@
       const username = unref<string>(usernameRef)
       const password = unref<string>(passwordRef)
       let data = { username, password }
-      await userStore.login(data)
+      if (rememberMe.value) {
+        const res = await userStore.login(data)
+        localCache.setCache(USER_INFO_KEY, res)
+      } else {
+        await userStore.login(data)
+      }
+
     }
   }
 

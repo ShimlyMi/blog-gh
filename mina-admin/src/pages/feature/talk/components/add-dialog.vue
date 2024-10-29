@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import {ref, unref, watch} from 'vue';
 import upload from '@/components/Upload/index.vue'
+import system from "@/locale/system";
+import {conversion, imgUpload} from "@/api/system/static";
+import {messageError} from "@/utils/messgeBox";
 
 defineOptions({
   name: 'addDialog'
@@ -17,8 +20,18 @@ const props = defineProps({
     required: true
   }
 })
+const formRef = ref()
+const valid = ref<boolean>(true)
+const contentRef = ref<string>('')
+const imgList = ref<any[]>([])
+const isTop = ref<number>(1)
+const status = ref<number>(1)
+const userId = ref(0)
 
-const radios = ref(1)
+const contentRules = [
+  v => !!v || '说说内容不得为空！'
+]
+
 // 定义发出的 events
 const emit = defineEmits(['close-dialog']);
 
@@ -42,6 +55,15 @@ const closeDialog = () => {
   localDialogOpen.value = false;
 };
 
+const save = async () => {
+  const form = unref(formRef)
+  if (!form) return
+  await form.validate()
+  if (valid.value) {
+
+  }
+}
+
 // 执行一些操作然后关闭对话框的方法
 // const closeDialogAndDoSomething = () => {
 //   console.log('Doing something before closing...');
@@ -51,7 +73,7 @@ const closeDialog = () => {
 
 <template>
   <div class="pa-4 text-center">
-    <v-dialog v-model="localDialogOpen" max-width="700px" persistent>
+    <v-dialog v-model="localDialogOpen" max-width="1200px" persistent>
       <v-card>
         <v-list-item>
           <template #title>
@@ -61,11 +83,10 @@ const closeDialog = () => {
             <v-btn variant="text" @click="closeDialog" icon="mdi-close"/>
           </template>
         </v-list-item>
-
         <v-card-text>
           <v-row>
             <v-col cols="12" md="12" sm="12">
-              <v-form>
+              <v-form ref="formRef" v-model="valid">
                 <v-row>
                   <v-col cols="12" md="12" sm="12">
                     <div class="d-flex align-center">
@@ -79,6 +100,7 @@ const closeDialog = () => {
                           variant="solo"
                           auto-grow
                           hide-details
+                          :rules="contentRules"
                       />
                     </div>
                   </v-col>
@@ -95,7 +117,7 @@ const closeDialog = () => {
                    <span class="mouse_pointer">
                      <v-icon icon="mdi-eye"></v-icon>&nbsp;是否公开：
                    </span>
-                      <v-radio-group v-model="radios" inline hide-details>
+                      <v-radio-group v-model="status" inline hide-details>
                         <v-radio color="primary" label="所有人可见" :value="1"></v-radio>
                         <v-radio color="primary" label="尽自己可见" :value="2"></v-radio>
                       </v-radio-group>
@@ -106,7 +128,7 @@ const closeDialog = () => {
                    <span class="mouse_pointer">
                      <v-icon icon="mdi-arrow-collapse-up"></v-icon>&nbsp;是否置顶：
                    </span>
-                      <v-radio-group v-model="radios" inline hide-details>
+                      <v-radio-group v-model="isTop" inline hide-details>
                         <v-radio color="primary" label="不置顶" :value="1"></v-radio>
                         <v-radio color="primary" label="置顶" :value="2"></v-radio>
                       </v-radio-group>

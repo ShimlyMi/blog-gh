@@ -51,7 +51,7 @@ const closeDialog = () => {
 
 <template>
   <div class="pa-4 text-center">
-    <v-dialog v-model="localDialogOpen" max-width="700px" persistent>
+    <v-dialog v-model="localDialogOpen" max-width="1200px" persistent>
       <v-card>
         <v-card-title>
           <span class="headline">{{ dialogTitle }}</span>
