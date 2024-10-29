@@ -15,6 +15,6 @@ export type userInfoType = {
 
 export type TalkFormType = {
   content: string
-  is_top: number | string
-  status: number | string
+  isTop: number
+  status: number
 }

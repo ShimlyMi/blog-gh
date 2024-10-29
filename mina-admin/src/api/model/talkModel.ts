@@ -3,12 +3,12 @@ export interface AddTalkParam {
   userId: number;
   status: number;
   isTop: number;
-  url?: any[];
+  url: Nullable<any[]>;
 }
 
 export type TalkResult = {
   content: string
-  url?: string[]
+  url: string[]
   status: number
   isTop: number
   like_times: number

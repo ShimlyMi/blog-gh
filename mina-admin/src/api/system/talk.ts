@@ -8,6 +8,6 @@ enum Api {
   REMOVE_TALK = '/api/talk/remove'
 }
 
-export const publicTalkApi = (params: AddTalkParam): Promise<TalkResult> => {
+export const publishTalkApi = (params: AddTalkParam): Promise<TalkResult> => {
   return instance.post<any, TalkResult>(Api.PUBLIC_TALK, params)
 }
