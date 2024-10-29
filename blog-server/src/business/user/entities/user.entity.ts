@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 import { BaseColumn } from '../../baseColumnAbstract/baseColumn';
 import { Role } from '../../role/entities/role.entity';
+import { Talk } from '../../talk/entities/talk.entity';
 
 @Entity()
 export class User extends BaseColumn {
@@ -41,4 +42,8 @@ export class User extends BaseColumn {
     default: 'http://127.0.0.1:8888/665d7417ccaa2b7287f6da700.jpg',
   })
   avatar: string;
+
+  // @OneToMany(() => Talk, (talk) => talk.user, { eager: true })
+  // @JoinColumn({ name: 'talkId' })
+  // talk: Talk[];
 }

@@ -100,16 +100,17 @@ const removeImage = (index: number) => {
 </script>
 
 <template>
-  <div>
-    <input type="file" multiple @change="handleFileUpload" ref="fileInputRef" style="display: none;" />
-    <v-btn prepend-icon="mdi-cloud-upload-outline" @click="triggerFileUpload" :disabled="currentLimitReached">点击选择图片</v-btn>
+  <div class="d-flex align-center">
     <div v-if="localImgList.length > 0" class="preview-container">
       <div v-for="(item, index) in localImgList" :key="item.uid" class="preview-item">
         <img :src="item.previewUrl" alt="" class="preview-image" />
         <span class="file-name">{{ item.name }}</span>
-        <button @click="removeImage(index)" class="remove-button">Remove</button>
+        <v-btn variant="text" @click="removeImage(index)" class="remove-button" icon="mdi-close" />
       </div>
     </div>
+    <input type="file" multiple @change="handleFileUpload" ref="fileInputRef" style="display: none;" />
+    <v-btn style="margin-left: 5px" prepend-icon="mdi-cloud-upload-outline" @click="triggerFileUpload" :disabled="currentLimitReached">点击选择图片</v-btn>
+
     <p v-if="currentLimitReached" class="limit-message">You have reached the file upload limit.</p>
   </div>
 </template>
@@ -124,8 +125,8 @@ const removeImage = (index: number) => {
 
 .preview-item {
   position: relative;
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
 }
 
 .preview-image {
@@ -146,12 +147,12 @@ const removeImage = (index: number) => {
 
 .remove-button {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  background-color: red;
-  color: white;
+  top: 0px;
+  right: 0px;
+  //background-color: red;
+  //color: white;
   border: none;
-  padding: 2px 5px;
+  //padding: 2px 5px;
   border-radius: 3px;
   cursor: pointer;
 }

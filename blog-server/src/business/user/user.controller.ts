@@ -28,6 +28,6 @@ export class UserController {
   @Public()
   @Get('/findOneById/:id')
   findOneById(@Param('id') id: string) {
-    return this.userService.findUserInfoByUserId(+id);
+    return this.userService.findOneByUserId(+id);
   }
 }

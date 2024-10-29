@@ -15,5 +15,5 @@ export class CreateTalkDto {
   isTop: number;
 
   @IsArray()
-  url?: string[];
+  url?: any[];
 }

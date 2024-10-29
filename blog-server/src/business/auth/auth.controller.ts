@@ -17,7 +17,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Public()
-  @Post('login')
+  @Post('/login')
   signIn(@Body() signInDto: SignInDto) {
     return this.authService.signIn(signInDto);
   }

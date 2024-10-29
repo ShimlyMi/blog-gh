@@ -1,13 +1,8 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+// import { JoinTable } from 'typeorm/browser';
 import { BaseColumn } from '../../baseColumnAbstract/baseColumn';
 import { User } from '../../user/entities/user.entity';
+// import { TalkPhoto } from './talk-photo.entity';
 import { TalkPhoto } from '../../talk-photos/entities/talk-photo.entity';
 
 @Entity()
@@ -18,8 +13,18 @@ export class Talk extends BaseColumn {
   })
   content: string;
 
-  @OneToMany(() => TalkPhoto, (talkPhoto) => talkPhoto.id, { eager: true })
-  @JoinColumn({ name: 'talkPicId' })
+  // @Column({
+  //   type: 'varchar',
+  //   comment: '说说图片',
+  // })
+  // talkPic: string[];
+
+  @ManyToOne(() => User, (user) => user.id)
+  @JoinColumn()
+  user: User;
+
+  @OneToMany(() => TalkPhoto, (talkPhoto) => talkPhoto.url, { eager: true })
+  @JoinColumn()
   talkPic: TalkPhoto[];
 
   @Column({
@@ -42,8 +47,4 @@ export class Talk extends BaseColumn {
     default: 0,
   })
   like_times: number;
-
-  @OneToOne(() => User, { eager: true })
-  @JoinColumn({ name: 'userId' })
-  user: User;
 }
