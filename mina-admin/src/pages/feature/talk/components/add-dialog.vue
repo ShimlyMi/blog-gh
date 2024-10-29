@@ -60,7 +60,13 @@ const save = async () => {
   if (!form) return
   await form.validate()
   if (valid.value) {
+    if (contentRef.value && imgList.value.length > 0) {
+      // 先压缩图片
 
+      // 再上传图片
+
+      // 最后保存 `form` 数据
+    }
   }
 }
 

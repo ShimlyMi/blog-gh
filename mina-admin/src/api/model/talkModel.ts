@@ -3,7 +3,7 @@ export interface AddTalkParam {
   userId: number;
   status: number;
   isTop: number;
-  url?: string[];
+  url?: any[];
 }
 
 export type TalkResult = {

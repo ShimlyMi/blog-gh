@@ -12,3 +12,9 @@ export type userInfoType = {
   avatar: string
   id?: number
 }
+
+export type TalkFormType = {
+  content: string
+  is_top: number | string
+  status: number | string
+}
