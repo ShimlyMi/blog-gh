@@ -33,27 +33,27 @@ const generateUid = () => {
 
 // 初始化localImgList，将props中的imgList转换为带有previewUrl和uid的对象数组
 watch(
-    () => props.imgList,
-    (newList) => {
-      localImgList.value = newList.map(item => {
-        // 假设item是一个包含file和name的对象，你需要根据实际情况调整
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          if (localImgList.value.length < props.limit) { // 确保不会超出限制
-            const previewUrl = e.target.result as string;
-            localImgList.value.push({
-              uid: generateUid(),
-              file: item.file, // 假设item有一个file属性
-              previewUrl,
-              name: item.name, // 假设item有一个name属性
-            });
-          }
-        };
-        reader.readAsDataURL(item.file); // 假设item有一个file属性可以被读取
-        // 注意：这里的异步操作可能会导致一些问题，因为reader.onload是异步执行的。
-        // 一个更好的做法是在父组件中预先处理这些文件，只传递已经转换好的带有previewUrl的对象数组给子组件。
-      }).filter(item => !!item); // 过滤掉未定义的项（虽然在这个场景下可能不会有）
-    }, { immediate: true });
+  () => props.imgList,
+  (newList) => {
+    localImgList.value = newList.map(item => {
+      // 假设item是一个包含file和name的对象，你需要根据实际情况调整
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (localImgList.value.length < props.limit) { // 确保不会超出限制
+          const previewUrl = e.target.result as string;
+          localImgList.value.push({
+            uid: generateUid(),
+            file: item.file, // 假设item有一个file属性
+            previewUrl,
+            name: item.name, // 假设item有一个name属性
+          });
+        }
+      };
+      reader.readAsDataURL(item.file); // 假设item有一个file属性可以被读取
+      // 注意：这里的异步操作可能会导致一些问题，因为reader.onload是异步执行的。
+      // 一个更好的做法是在父组件中预先处理这些文件，只传递已经转换好的带有previewUrl的对象数组给子组件。
+    }).filter(item => !!item); // 过滤掉未定义的项（虽然在这个场景下可能不会有）
+  }, { immediate: true });
 
 const currentLimitReached = computed(() => {
   return localImgList.value.length >= props.limit && props.limit > 0;
@@ -101,14 +101,16 @@ const removeImage = (index: number) => {
 
 <template>
   <div>
-    <input type="file" multiple @change="handleFileUpload" ref="fileInputRef" style="display: none;" />
-    <v-btn style="margin-bottom: 5px" prepend-icon="mdi-cloud-upload-outline" @click="triggerFileUpload" v-show="!currentLimitReached">点击选择图片</v-btn>
-    <div v-if="localImgList.length > 0" class="preview-container">
-      <div v-for="(item, index) in localImgList" :key="item.uid" class="preview-item">
-        <img :src="item.previewUrl" alt="" class="preview-image" />
-        <!--        <span class="file-name">{{ item.name }}</span>-->
-        <v-btn size="x-small" variant="text" @click="removeImage(index)" class="remove-button" icon="mdi-close" />
+    <div class="d-flex align-center">
+      <div v-if="localImgList.length > 0" class="preview-container">
+        <div v-for="(item, index) in localImgList" :key="item.uid" class="preview-item">
+          <img :src="item.previewUrl" alt="" class="preview-image" />
+          <!--        <span class="file-name">{{ item.name }}</span>-->
+          <v-btn size="x-small" variant="text" @click="removeImage(index)" class="remove-button" icon="mdi-close" />
+        </div>
       </div>
+      <input type="file" multiple @change="handleFileUpload" ref="fileInputRef" style="display: none;" />
+      <v-btn style="margin-left: 5px" prepend-icon="mdi-cloud-upload-outline" @click="triggerFileUpload" v-show="!currentLimitReached">点击选择图片</v-btn>
     </div>
     <p v-if="currentLimitReached" class="limit-message">You have reached the file upload limit.</p>
   </div>
@@ -148,10 +150,10 @@ const removeImage = (index: number) => {
   position: absolute;
   top: 0px;
   right: 0px;
-  //background-color: red;
-  //color: white;
+//background-color: red;
+//color: white;
   border: none;
-  //padding: 2px 5px;
+//padding: 2px 5px;
   border-radius: 3px;
   cursor: pointer;
 }

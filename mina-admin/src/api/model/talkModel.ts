@@ -1,6 +1,6 @@
 export interface AddTalkParam {
   content: string;
-  userId: number;
+  username: string;
   status: number;
   isTop: number;
   url: Nullable<any[]>;

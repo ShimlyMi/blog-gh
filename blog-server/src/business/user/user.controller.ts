@@ -20,9 +20,15 @@ export class UserController {
   // }
 
   @Public()
-  @Get('/findOneByUsername')
+  @Get('/findInfoByUsername')
   findOne(@Body() data: { username: string }) {
     return this.userService.findUserInfoByUsername(data);
+  }
+
+  @Public()
+  @Get('/findOneByUsername/:username')
+  findOneByUsername(@Param('username') username: string) {
+    return this.userService.findOneByUsername(username);
   }
 
   @Public()

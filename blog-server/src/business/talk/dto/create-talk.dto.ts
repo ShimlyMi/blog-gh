@@ -5,8 +5,11 @@ export class CreateTalkDto {
   @IsString()
   content: string;
 
-  @IsNumber()
-  userId: number;
+  // @IsNumber()
+  // userId: number;
+
+  @IsString()
+  username: string;
 
   @IsNumber()
   status: number;

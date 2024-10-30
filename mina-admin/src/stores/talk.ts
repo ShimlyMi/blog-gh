@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 import { TalkFormType } from "@/stores/types";
 import { AddTalkParam } from "@/api/model/talkModel";
-import {publishTalkApi} from "@/api/system/talk";
+import { publishTalkApi } from "@/api/system/talk";
 
 interface TalkState {
     talkForm: Nullable<TalkFormType>
     imgUrlList: Nullable<any[]>,
-    userId: number
+    username: string
 }
 export const useTalkStore = defineStore(
     'talk',
@@ -14,7 +14,7 @@ export const useTalkStore = defineStore(
         state: (): TalkState => ({
             talkForm: null,
             imgUrlList: [],
-            userId: 0
+            username: ""
         }),
         actions: {
             async publishTalk(params: AddTalkParam) {
@@ -23,11 +23,15 @@ export const useTalkStore = defineStore(
                     isTop: params.isTop,
                     status: params.status
                 }
-                this.imgUrlList = params.url
-                this.userId = params.userId
+                if(params.url) {
+                  this.imgUrlList = params.url
+                } else {
+                  this.imgUrlList = []
+                }
+                this.username = params.username
                 const data: AddTalkParam = {
                     content: this.talkForm.content,
-                    userId: this.userId,
+                    username: this.username,
                     status: this.talkForm.status,
                     isTop: this.talkForm.isTop,
                     url: this.imgUrlList,
@@ -39,3 +43,7 @@ export const useTalkStore = defineStore(
         }
     }
 )
+
+export function useTalkStoreHook() {
+  return useTalkStore()
+}

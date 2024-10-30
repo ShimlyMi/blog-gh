@@ -102,24 +102,82 @@ export class UserService {
   async findUserInfoByUsername(data: any) {
     try {
       const { username } = data;
-      const res = await this.userRepository.findOne({
-        select: ['id', 'username', 'password', 'nickname', 'avatar', 'role'],
-        where: { username: username },
-      });
-      const roles = await this.roleService.findOne(res.role.id);
+
+      const res = await this.userRepository
+        .createQueryBuilder('user')
+        .select([
+          'user.id',
+          'user.username',
+          'user.password',
+          'user.nickname',
+          'user.avatar',
+          'user.role',
+          'role.value',
+          'role.real_name',
+        ])
+        .leftJoin('user.role', 'role')
+        .where('user.username LIKE :username', { username: `%${username}%` })
+        .getOne();
+      console.log(res);
+      // const roles = await this.roleService.findOne(res.role.id);
       return ResultData.messageSuccess(
         {
           id: res.id,
           username: res.username,
-          nickname: res.nickname,
           password: res.password,
+          nickname: res.nickname,
           avatar: res.avatar,
-          role: roles.data,
+          role: [
+            {
+              value: res.role.value,
+              real_name: res.role.real_name,
+            },
+          ],
         },
         '查询用户成功',
       );
     } catch (err) {
       console.error(err);
+      return ResultData.messageFail(ErrorCode.USER, '查询用户失败');
+    }
+  }
+
+  async findOneByUsername(username: string) {
+    try {
+      const res = await this.userRepository
+        .createQueryBuilder('user')
+        .select([
+          'user.id',
+          'user.username',
+          'user.nickname',
+          'user.avatar',
+          'user.role',
+          'role.value',
+          'role.real_name',
+        ])
+        .leftJoin('user.role', 'role')
+        .where('user.username LIKE :username', { username: `%${username}%` })
+        .getOne();
+      console.log(res);
+      // const roles = await this.roleService.findOne(res.role.id);
+      return ResultData.messageSuccess(
+        {
+          id: res.id,
+          username: res.username,
+          nickname: res.nickname,
+          avatar: res.avatar,
+          role: [
+            {
+              value: res.role.value,
+              real_name: res.role.real_name,
+            },
+          ],
+        },
+        '获取用户列表成功',
+      );
+    } catch (err) {
+      console.error(err);
+      // return false
       return ResultData.messageFail(ErrorCode.USER, '查询用户失败');
     }
   }

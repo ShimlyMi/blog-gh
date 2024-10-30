@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import {ref, unref, watch} from 'vue';
+import { ref, unref, watch } from 'vue';
+
 import upload from '@/components/Upload/index.vue'
-import system from "@/locale/system";
 import {conversion, imgUpload} from "@/api/system/static";
-import {messageError} from "@/utils/messgeBox";
+import { useTalkStoreHook } from "@/stores/talk";
+import { sessionCache } from "@/utils/auth";
+import { USER_INFO_KEY} from "@/enums/cacheEnum";
+import {_decrypt} from "@/utils/encipher";
+import imageCompression from "browser-image-compression";
 
 defineOptions({
   name: 'addDialog'
@@ -20,13 +24,19 @@ const props = defineProps({
     required: true
   }
 })
+
 const formRef = ref()
 const valid = ref<boolean>(true)
 const contentRef = ref<string>('')
 const imgList = ref<any[]>([])
+const imageLimit = ref(9)
 const isTop = ref<number>(1)
 const status = ref<number>(1)
-const userId = ref(0)
+const username = ref<string>('')
+const str = sessionCache.getCache(USER_INFO_KEY)
+const userInfo = _decrypt(str)
+username.value = userInfo.username
+console.log(username.value)
 
 const contentRules = [
   v => !!v || '说说内容不得为空！'
@@ -54,6 +64,28 @@ watch(localDialogOpen, (newVal) => {
 const closeDialog = () => {
   localDialogOpen.value = false;
 };
+const handleImageUpdated = (updatedImageInfo: any) => {
+  // 处理从ImageUploader组件接收到的图片信息
+  if (imgList.value.length <= imageLimit.value) {
+    imgList.value.push(updatedImageInfo);
+    // console.log(updatedImageInfo)
+  } else {
+    alert('Image limit reached!');
+  }
+};
+
+console.log(imgList.value)
+// const compressImages = async (imgList: any[]) => {
+//   await Promise.all(imgList.value.map(async (file: File) => {
+//     try {
+//       const compressedFile = await imageCompression(file, { maxSizeMB: 0.8 })
+//       return compressedFile;
+//     } catch (error) {
+//       console.error('图片压缩失败:', error);
+//       return null;
+//     }
+//   }))
+// }
 
 const save = async () => {
   const form = unref(formRef)
@@ -61,12 +93,60 @@ const save = async () => {
   await form.validate()
   if (valid.value) {
     if (contentRef.value && imgList.value.length > 0) {
+
       // 先压缩图片
-
+      let needUploadList = imgList.value
+      const resetList: any = [];
+      const conversionPromiseList = needUploadList.map(async v => {
+        return await conversion(v.raw)
+      })
+      const conversionUploadList: any = [];
+      let conRes = await Promise.all(conversionPromiseList).then(res => {
+        res.map(raw => {
+          conversionUploadList.push({ raw })
+        })
+      })
+      console.log(conRes)
       // 再上传图片
-
+      const promiseList = conversionPromiseList.map(async v => {
+        return await imgUpload(v)
+      })
+      await Promise.all(promiseList).then(res => {
+        res.map(img => {
+          resetList.push(img)
+        })
+      })
       // 最后保存 `form` 数据
+      imgList.value = resetList
+      console.log("imgList", imgList.value)
+
+      const formData = {
+        content: contentRef.value,
+        username: username.value,
+        status: status.value,
+        isTop: isTop.value,
+        url: imgList.value,
+      }
+      const res = await useTalkStoreHook().publishTalk(formData)
+      console.log(res)
+      // localDialogOpen.value = false;
+    } else if (contentRef.value && imgList.value.length === 0) {
+      const formData = {
+        content: contentRef.value,
+        username: username.value,
+        status: status.value,
+        isTop: isTop.value,
+        url: [],
+      }
+      const submitRes = await useTalkStoreHook().publishTalk(formData)
+      console.log(submitRes)
+      // localDialogOpen.value = false;
     }
+    // try {
+    //
+    // } catch (error) {
+    //   alert('发布说说失败')
+    // }
   }
 }
 
@@ -100,6 +180,7 @@ const save = async () => {
                       <v-icon icon="mdi-content-save-edit"></v-icon>&nbsp;说说内容：
                     </span>
                       <v-textarea
+                          v-model="contentRef"
                           placeholder="请输入说说内容"
                           required
                           clearable
@@ -115,7 +196,7 @@ const save = async () => {
                     <span class="mouse_pointer">
                       <v-icon icon="mdi-camera"></v-icon>&nbsp;图片上传：
                     </span>
-                      <upload :limit="9"/>
+                      <upload v-model="imgList" :limit="9" :img-list="imgList" @update:file-list="handleImageUpdated"/>
                     </div>
                   </v-col>
                   <v-col cols="12" md="12" sm="12">
@@ -135,8 +216,8 @@ const save = async () => {
                      <v-icon icon="mdi-arrow-collapse-up"></v-icon>&nbsp;是否置顶：
                    </span>
                       <v-radio-group v-model="isTop" inline hide-details>
-                        <v-radio color="primary" label="不置顶" :value="1"></v-radio>
-                        <v-radio color="primary" label="置顶" :value="2"></v-radio>
+                        <v-radio color="primary" label="置顶" :value="1"></v-radio>
+                        <v-radio color="primary" label="不置顶" :value="2"></v-radio>
                       </v-radio-group>
                     </div>
                   </v-col>
@@ -151,7 +232,7 @@ const save = async () => {
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text="Reset">Reset</v-btn>
-          <v-btn color="primary" text="Save" variant="tonal">Save</v-btn>
+          <v-btn color="primary" text="Save" variant="tonal" @click="save">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

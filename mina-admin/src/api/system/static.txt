@@ -1,0 +1,74 @@
+import { getToken } from "@/utils/auth";
+import imageCompression from "browser-image-compression";
+import instance from "@/utils/http/request"
+import { messageError } from "@/utils/messgeBox";
+import { SiteResult } from "@/api/model/staticModel";
+
+enum StaticApi {
+  UPLOAD = '/api/upload/files'
+}
+
+/** 图片上传接口 */
+export const imgUpload = async (data: any): Promise<SiteResult> => {
+  // 文件压缩 太大了上传不了，我的服务器比较垃圾
+  let fileToUpload: File | Blob
+  if (data.raw.size > 800 * 1024) {
+    try {
+      const compressedFile = await conversion(data.raw);
+      if (!(compressedFile instanceof Blob)) {
+        console.error('压缩失败，返回的不是Blob对象')
+      }
+      fileToUpload = compressedFile as File
+    } catch (error) {
+      messageError('错误提示', '图片压缩失败');
+      throw error; // 抛出错误以便上层调用者可以处理
+    }
+  } else {
+    fileToUpload = data.raw
+  }
+
+  const formData = new FormData()
+  formData.append('files', fileToUpload)
+  const authToken = getToken()
+  try {
+    const response = await instance({
+      method: "post",
+      url: StaticApi.UPLOAD,
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${authToken.token}`, // 确保这是您期望的授权格式
+      },
+    })
+    if (!response.status) {
+      throw new Error(`上传失败，状态码：${response.status}`);
+    }
+    return response.data
+  } catch (error) {
+    messageError('错误提示', '图片上传失败');
+    throw error; // 抛出错误以便上层调用者可以处理
+  }
+  // return new Promise<SiteResult>(resolve => {
+  //   instance({
+  //     method: "post",
+  //     url: StaticApi.UPLOAD,
+  //     data: formData,
+  //     headers: {
+  //       "Content-Type": "multipart/form-data",
+  //       Authorization: token.token
+  //     }
+  //   }).then(response => {
+  //     resolve(response.data);
+  //   });
+  // });
+};
+
+export const conversion = (file: File) => {
+  return new Promise<Blob>((resolve, reject) => {
+    imageCompression(file, { maxSizeMB: 0.8 }).then(res => {
+      resolve(res)
+    }).catch(error => {
+      reject(error)
+    })
+  })
+}

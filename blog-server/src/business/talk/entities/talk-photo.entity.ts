@@ -11,7 +11,7 @@ export class TalkPhoto extends BaseColumn {
   })
   url: any[];
 
-  @ManyToOne(() => Talk, (talk) => talk.id, { eager: true })
+  @ManyToOne(() => Talk, (talk) => talk.talkPic, { eager: true })
   @JoinColumn()
   talk: Talk;
 }

@@ -23,7 +23,7 @@ export class Talk extends BaseColumn {
   @JoinColumn()
   user: User;
 
-  @OneToMany(() => TalkPhoto, (talkPhoto) => talkPhoto.url, { eager: true })
+  @OneToMany(() => TalkPhoto, (talkPhoto) => talkPhoto.url)
   @JoinColumn()
   talkPic: TalkPhoto[];
 

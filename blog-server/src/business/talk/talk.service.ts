@@ -29,7 +29,10 @@ export class TalkService {
       talk.status = createTalkDto.status;
       talk.isTop = createTalkDto.isTop;
 
-      const user = await this.userService.findOneByUserId(createTalkDto.userId);
+      // const user = await this.userService.findOneByUserId(createTalkDto.userId);
+      const user = await this.userService.findOneByUsername(
+        createTalkDto.username,
+      );
       console.log(user);
       talk.user = user.data.id;
 
@@ -39,6 +42,9 @@ export class TalkService {
       const res = await this.talkRepository.save(talk);
       if (createTalkDto.url.length > 0) {
         const talkPhotosId = await this.findOne(res.id);
+        // if (talkPhotos.id) {
+        //   return false;
+        // }
         talkPhotos.url = createTalkDto.url;
         console.log('talkPhotos.url', talkPhotos.url);
         talkPhotos.talk = talkPhotosId.data.id;

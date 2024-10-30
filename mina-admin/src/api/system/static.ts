@@ -44,10 +44,11 @@ export const imgUpload = async (data: any) => {
   });
 };
 
-export const conversion = (file: any) => {
-  return new Promise<Blob>(resolve => {
+export const conversion = (file: File) => {
+  return new Promise(resolve => {
     imageCompression(file, { maxSizeMB: 0.8 }).then(res => {
       resolve(res)
     })
   })
 }
+

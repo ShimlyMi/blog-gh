@@ -3,7 +3,8 @@ import {GetUserInfoModel, LoginParams, UserResult} from '@/api/model/userModel'
 
 enum Api {
   Login = '/api/auth/login',
-  GetUserInfo = '/api/auth/profile'
+  GetUserInfo = '/api/auth/profile',
+  FindOneByUsername = '/api/user/findOneByUsername'
 }
 
 export const loginApi = (params: LoginParams): Promise<UserResult> => {
@@ -21,3 +22,4 @@ export const loginApi = (params: LoginParams): Promise<UserResult> => {
 export const getUserInfo = (): Promise<GetUserInfoModel> => {
   return instance.get<any, GetUserInfoModel>(Api.GetUserInfo, {})
 }
+

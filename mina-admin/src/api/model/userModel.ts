@@ -4,7 +4,15 @@ export interface LoginParams {
 }
 
 export interface GetUserInfoParams {
-  access_token: string
+  username: string
+}
+
+export interface GetUserInfoResult {
+  id: string,
+  username: string,
+  nickname: string,
+  avatar: string,
+  role: RoleInfo[]
 }
 
 export interface UserResult {

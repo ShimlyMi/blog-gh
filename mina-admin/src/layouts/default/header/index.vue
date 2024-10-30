@@ -26,7 +26,7 @@
   }
   const str = sessionCache.getCache(USER_INFO_KEY)
   const data = _decrypt(str)
-  console.log(data)
+  // console.log(data)
   onMounted(
     () => str
   )
