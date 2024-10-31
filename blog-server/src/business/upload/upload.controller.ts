@@ -4,6 +4,7 @@ import {
   HttpStatus,
   ParseFilePipeBuilder,
   Post,
+  Res,
   UploadedFile,
   UploadedFiles,
   UseInterceptors,
@@ -13,11 +14,12 @@ import { Express } from 'express';
 // import { UploadService } from './upload.service';
 import { storage } from '../../common/filter/uploadFiles.filter';
 import { ResultData } from '../../common/utils/result';
-import {Public} from "../auth/constants";
+import { Public } from '../auth/constants';
+import { UploadService } from './upload.service';
 
 @Controller('upload')
 export class UploadController {
-  // constructor(private uploadService: UploadService) {}
+  constructor(private uploadService: UploadService) {}
   @Post('/one')
   @UseInterceptors(FileInterceptor('file'))
   oneUploadFile(@UploadedFile() file: Express.Multer.File) {
@@ -37,11 +39,12 @@ export class UploadController {
           errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
         }),
     )
-    files: Express.Multer.File,
+    files: Express.Multer.File[],
   ) {
-    return ResultData.messageSuccess(
-      { filePath: files },
-      'File uploaded successfully',
-    );
+    const fileResponses = files.map((file) => ({
+      filePath: file.path,
+      filename: file.filename,
+    }));
+    return ResultData.messageSuccess(fileResponses, '图片上传成功');
   }
 }
