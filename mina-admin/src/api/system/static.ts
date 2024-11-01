@@ -1,5 +1,4 @@
 import { getToken } from "@/utils/auth";
-import imageCompression from "browser-image-compression";
 import instance from "@/utils/http/request"
 import { messageError } from "@/utils/messgeBox";
 import { SiteResult } from "@/api/model/staticModel";
@@ -34,7 +33,7 @@ export const imgUpload = async (data: any) => {
     instance({
       method: "post",
       url: StaticApi.UPLOAD,
-      data: data,
+      data: formData,
       headers: {
         "Content-Type": "multipart/form-data",
         Authorization: token.token

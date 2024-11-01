@@ -109,14 +109,14 @@ const handleSubmit = async () => {
                   resetList.push(img?.filename)
                 })
               });
-              imgList.value = resetList
+            selectedFiles.value = resetList
               // 在这里处理上传成功后的逻辑，例如更新表单状态或显示成功消息
               const submitFormData = {
                   content: contentRef.value,
                   username: username.value,
                   status: status.value,
                   isTop: isTop.value,
-                  url: imgList.value
+                  url: selectedFiles.value
               }
               const res = await useTalkStoreHook().publishTalk(submitFormData)
               console.log(res)
