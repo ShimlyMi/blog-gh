@@ -43,7 +43,4 @@ export class User extends BaseColumn {
   })
   avatar: string;
 
-  // @OneToMany(() => Talk, (talk) => talk.user, { eager: true })
-  // @JoinColumn({ name: 'talkId' })
-  // talk: Talk[];
 }

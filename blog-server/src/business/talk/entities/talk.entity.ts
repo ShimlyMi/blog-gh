@@ -1,9 +1,14 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-// import { JoinTable } from 'typeorm/browser';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { BaseColumn } from '../../baseColumnAbstract/baseColumn';
 import { User } from '../../user/entities/user.entity';
-// import { TalkPhoto } from './talk-photo.entity';
-import { TalkPhoto } from '../../talk-photos/entities/talk-photo.entity';
+import { TalkPhoto } from './talk-photo.entity';
 
 @Entity()
 export class Talk extends BaseColumn {
@@ -13,19 +18,23 @@ export class Talk extends BaseColumn {
   })
   content: string;
 
-  // @Column({
-  //   type: 'varchar',
-  //   comment: '说说图片',
-  // })
-  // talkPic: string[];
-
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn()
   user: User;
 
-  @OneToMany(() => TalkPhoto, (talkPhoto) => talkPhoto.url)
-  @JoinColumn()
-  talkPic: TalkPhoto[];
+  // @OneToMany(() => TalkPhoto, (photos) => photos.id)
+  // photos: TalkPhoto[]
+
+  // @OneToOne(() => TalkPhoto, (photos) => photos.id)
+  // @JoinColumn()
+  // photos: TalkPhoto;
+
+  @Column({
+    type: 'json',
+    comment: '图片地址',
+    nullable: true,
+  })
+  url: any[];
 
   @Column({
     type: 'tinyint',

@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { Talk } from './talk.entity';
 import { BaseColumn } from '../../baseColumnAbstract/baseColumn';
 
@@ -11,7 +11,11 @@ export class TalkPhoto extends BaseColumn {
   })
   url: any[];
 
-  @ManyToOne(() => Talk, (talk) => talk.talkPic, { eager: true })
-  @JoinColumn()
-  talk: Talk;
+  // @ManyToOne(() => Talk, (talk) => talk.id)
+  // @JoinColumn()
+  // talk: Talk;
+
+  // @OneToOne(() => Talk, (talk) => talk.id)
+  // @JoinColumn()
+  // talk: Talk;
 }

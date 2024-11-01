@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { ref, unref, watch } from 'vue';
-
-import upload from '@/components/Upload/index.vue'
+import imagePreviewer from '@/components/Upload/index.vue'
 import {conversion, imgUpload} from "@/api/system/static";
 import { useTalkStoreHook } from "@/stores/talk";
 import { sessionCache } from "@/utils/auth";
 import { USER_INFO_KEY} from "@/enums/cacheEnum";
 import {_decrypt} from "@/utils/encipher";
-import imageCompression from "browser-image-compression";
+
 
 defineOptions({
   name: 'addDialog'
@@ -29,7 +28,8 @@ const formRef = ref()
 const valid = ref<boolean>(true)
 const contentRef = ref<string>('')
 const imgList = ref<any[]>([])
-const imageLimit = ref(9)
+const maxUploadImages = ref<number>(9); // 设置最大上传图片数量
+const selectedFiles = ref<File[]>([]);
 const isTop = ref<number>(1)
 const status = ref<number>(1)
 const username = ref<string>('')
@@ -64,97 +64,72 @@ watch(localDialogOpen, (newVal) => {
 const closeDialog = () => {
   localDialogOpen.value = false;
 };
-const handleImageUpdated = (updatedImageInfo: any) => {
-  // 处理从ImageUploader组件接收到的图片信息
-  if (imgList.value.length <= imageLimit.value) {
-    imgList.value.push(updatedImageInfo);
-    // console.log(updatedImageInfo)
-  } else {
-    alert('Image limit reached!');
-  }
+
+
+
+const onFilesSelected = (files: File[]) => {
+  selectedFiles.value = [...selectedFiles.value, ...files];
 };
 
-console.log(imgList.value)
-// const compressImages = async (imgList: any[]) => {
-//   await Promise.all(imgList.value.map(async (file: File) => {
-//     try {
-//       const compressedFile = await imageCompression(file, { maxSizeMB: 0.8 })
-//       return compressedFile;
-//     } catch (error) {
-//       console.error('图片压缩失败:', error);
-//       return null;
-//     }
-//   }))
-// }
-
-const save = async () => {
-  const form = unref(formRef)
-  if (!form) return
-  await form.validate()
+const handleSubmit = async () => {
   if (valid.value) {
-    if (contentRef.value && imgList.value.length > 0) {
+      if (contentRef.value && selectedFiles.value.length === 0) {
+          const formData = {
+              content: contentRef.value,
+              username: username.value,
+              status: status.value,
+              isTop: isTop.value,
+              url: []
+          }
+          const res = await useTalkStoreHook().publishTalk(formData)
+          console.log(res)
+          return;
+      } else if (contentRef.value && selectedFiles.value.length > 0){
+          try {
+              const compressedFilesPromises = selectedFiles.value.map(async (file) => {
+                      return await conversion(file)
+                  }
+              );
+            const resetList: any[] = []
+            const compressedFiles: any[] = []
+              await Promise.all(compressedFilesPromises).then(res => {
+                res.map(raw => {
+                  compressedFiles.push({ raw })
+                })
+              });
+              console.log("compressedFiles", compressedFiles)
 
-      // 先压缩图片
-      let needUploadList = imgList.value
-      const resetList: any = [];
-      const conversionPromiseList = needUploadList.map(async v => {
-        return await conversion(v.raw)
-      })
-      const conversionUploadList: any = [];
-      let conRes = await Promise.all(conversionPromiseList).then(res => {
-        res.map(raw => {
-          conversionUploadList.push({ raw })
-        })
-      })
-      console.log(conRes)
-      // 再上传图片
-      const promiseList = conversionPromiseList.map(async v => {
-        return await imgUpload(v)
-      })
-      await Promise.all(promiseList).then(res => {
-        res.map(img => {
-          resetList.push(img)
-        })
-      })
-      // 最后保存 `form` 数据
-      imgList.value = resetList
-      console.log("imgList", imgList.value)
-
-      const formData = {
-        content: contentRef.value,
-        username: username.value,
-        status: status.value,
-        isTop: isTop.value,
-        url: imgList.value,
+              // const result = await imgUpload(compressedFiles)
+              const promiseList = compressedFiles.map(async v => {
+                return await imgUpload(v);
+              });
+              console.log('图片上传成功:', promiseList);
+              await Promise.all(promiseList).then(res => {
+                res.map(img => {
+                  resetList.push(img?.filename)
+                })
+              });
+              imgList.value = resetList
+              // 在这里处理上传成功后的逻辑，例如更新表单状态或显示成功消息
+              const submitFormData = {
+                  content: contentRef.value,
+                  username: username.value,
+                  status: status.value,
+                  isTop: isTop.value,
+                  url: imgList.value
+              }
+              const res = await useTalkStoreHook().publishTalk(submitFormData)
+              console.log(res)
+              // 假设上传成功后表单可以继续提交或进行其他操作
+              // 例如，这里我们简单地模拟表单提交成功
+              alert('表单已提交，图片已上传');
+          } catch (error) {
+              console.error('上传失败:', error);
+              alert('图片上传失败，请重试');
+          }
       }
-      const res = await useTalkStoreHook().publishTalk(formData)
-      console.log(res)
-      // localDialogOpen.value = false;
-    } else if (contentRef.value && imgList.value.length === 0) {
-      const formData = {
-        content: contentRef.value,
-        username: username.value,
-        status: status.value,
-        isTop: isTop.value,
-        url: [],
-      }
-      const submitRes = await useTalkStoreHook().publishTalk(formData)
-      console.log(submitRes)
-      // localDialogOpen.value = false;
-    }
-    // try {
-    //
-    // } catch (error) {
-    //   alert('发布说说失败')
-    // }
   }
-}
-
-// 执行一些操作然后关闭对话框的方法
-// const closeDialogAndDoSomething = () => {
-//   console.log('Doing something before closing...');
-//   closeDialog();
-// };
+};
 </script>
 
 <template>
@@ -196,7 +171,10 @@ const save = async () => {
                     <span class="mouse_pointer">
                       <v-icon icon="mdi-camera"></v-icon>&nbsp;图片上传：
                     </span>
-                      <upload v-model="imgList" :limit="9" :img-list="imgList" @update:file-list="handleImageUpdated"/>
+                      <image-previewer
+                          v-model:file-list="imgList"
+                          :max-images="maxUploadImages"
+                          @update:file-list="selectedFiles"/>
                     </div>
                   </v-col>
                   <v-col cols="12" md="12" sm="12">
@@ -232,7 +210,7 @@ const save = async () => {
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text="Reset">Reset</v-btn>
-          <v-btn color="primary" text="Save" variant="tonal" @click="save">Save</v-btn>
+          <v-btn color="primary" text="Save" variant="tonal" @click="handleSubmit">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
