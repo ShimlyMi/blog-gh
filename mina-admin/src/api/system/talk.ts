@@ -1,4 +1,4 @@
-import {AddTalkParam, TalkResult} from "@/api/model/talkModel";
+import {AddTalkParam, TalkList, TalkResult} from "@/api/model/talkModel";
 import instance from "@/utils/http/request";
 
 enum Api {
@@ -10,4 +10,8 @@ enum Api {
 
 export const publishTalkApi = (params: AddTalkParam): Promise<TalkResult> => {
   return instance.post<any, TalkResult>(Api.PUBLIC_TALK, params)
+}
+
+export const getAllTalkList = (): Promise<TalkList[]> => {
+  return instance.get<any, TalkList[]>(Api.GET_ALL_TALK_LIST, {})
 }

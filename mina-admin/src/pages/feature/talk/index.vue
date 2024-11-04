@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import TalkList from "./components/talk-list.vue";
 import AddDialog from "./components/add-dialog.vue";
+import { useTalkStore } from "@/stores/talk";
 
 defineOptions({
   name: 'talkList'
 })
 
-
+const talkStore = useTalkStore()
 const isDialogOpen = ref(false)
 const dialogTitle = ref('')
+const talkLists = ref([])
 function openDialog(type: string) {
   isDialogOpen.value = true
   switch (type) {
@@ -26,6 +29,13 @@ function openDialog(type: string) {
 function closeDialog() {
   isDialogOpen.value = false
 }
+const getTalkLists = async () => {
+  let res = await talkStore.getTalkList()
+  console.log(res)
+  // talkLists.value.pu
+}
+
+onMounted(() => getTalkLists())
 </script>
 
 <template>
@@ -90,12 +100,8 @@ function closeDialog() {
         <v-divider />
         <v-container>
           <v-row>
-            <v-col cols="12">
-              <v-card hover>
-                <v-card-item>
-                  222
-                </v-card-item>
-              </v-card>
+            <v-col cols="12" v-for="item in getTalkLists" :key="item">
+              <TalkList />
             </v-col>
             <v-col cols="12">
               <v-card>
@@ -120,9 +126,6 @@ function closeDialog() {
               </v-card>
             </v-col>
           </v-row>
-          <div class="observer">
-            暂无更多
-          </div>
         </v-container>
       </v-card>
     </v-col>

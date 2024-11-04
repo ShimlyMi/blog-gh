@@ -24,6 +24,7 @@ const props = defineProps({
   }
 })
 
+const imageUpload = ref<InstanceType<typeof imagePreviewer> | null>(null);
 const formRef = ref()
 const valid = ref<boolean>(true)
 const contentRef = ref<string>('')
@@ -65,61 +66,39 @@ const closeDialog = () => {
   localDialogOpen.value = false;
 };
 
-
-
 const onFilesSelected = (files: File[]) => {
   selectedFiles.value = [...selectedFiles.value, ...files];
 };
 
 const handleSubmit = async () => {
   if (valid.value) {
-      if (contentRef.value && selectedFiles.value.length === 0) {
-          const formData = {
-              content: contentRef.value,
-              username: username.value,
-              status: status.value,
-              isTop: isTop.value,
-              url: []
-          }
-          const res = await useTalkStoreHook().publishTalk(formData)
-          console.log(res)
-          return;
-      } else if (contentRef.value && selectedFiles.value.length > 0){
+      if (contentRef.value && selectedFiles.value.length > 0){
           try {
               const compressedFilesPromises = selectedFiles.value.map(async (file) => {
                       return await conversion(file)
                   }
               );
-            const resetList: any[] = []
-            const compressedFiles: any[] = []
+              const resetList: any[] = []
+              const compressedFiles: any[] = []
               await Promise.all(compressedFilesPromises).then(res => {
-                res.map(raw => {
-                  compressedFiles.push({ raw })
-                })
+                  res.map(raw => {
+                      compressedFiles.push({ raw })
+                  })
               });
               console.log("compressedFiles", compressedFiles)
-
-              // const result = await imgUpload(compressedFiles)
-              const promiseList = compressedFiles.map(async v => {
-                return await imgUpload(v);
-              });
-              console.log('图片上传成功:', promiseList);
-              await Promise.all(promiseList).then(res => {
-                res.map(img => {
-                  resetList.push(img?.filename)
-                })
-              });
-            selectedFiles.value = resetList
-              // 在这里处理上传成功后的逻辑，例如更新表单状态或显示成功消息
-              const submitFormData = {
-                  content: contentRef.value,
-                  username: username.value,
-                  status: status.value,
-                  isTop: isTop.value,
-                  url: selectedFiles.value
-              }
-              const res = await useTalkStoreHook().publishTalk(submitFormData)
-              console.log(res)
+              let result = await imgUpload(compressedFilesPromises)
+              console.log(result)
+              // selectedFiles.value = resetList
+              //   // 在这里处理上传成功后的逻辑，例如更新表单状态或显示成功消息
+              //   const submitFormData = {
+              //       content: contentRef.value,
+              //       username: username.value,
+              //       status: status.value,
+              //       isTop: isTop.value,
+              //       url: selectedFiles.value
+              //   }
+              //   const res = await useTalkStoreHook().publishTalk(submitFormData)
+              //   console.log(res)
               // 假设上传成功后表单可以继续提交或进行其他操作
               // 例如，这里我们简单地模拟表单提交成功
               alert('表单已提交，图片已上传');
@@ -128,8 +107,63 @@ const handleSubmit = async () => {
               alert('图片上传失败，请重试');
           }
       }
+      // if (contentRef.value && selectedFiles.value.length === 0) {
+      //     const formData = {
+      //         content: contentRef.value,
+      //         username: username.value,
+      //         status: status.value,
+      //         isTop: isTop.value,
+      //         url: []
+      //     }
+      //     const res = await useTalkStoreHook().publishTalk(formData)
+      //     console.log(res)
+      //     return;
+      // } else if (contentRef.value && selectedFiles.value.length > 0){
+      //     try {
+      //         const compressedFilesPromises = selectedFiles.value.map(async (file) => {
+      //                 return await conversion(file)
+      //             }
+      //         );
+      //       const resetList: any[] = []
+      //       const compressedFiles: any[] = []
+      //         await Promise.all(compressedFilesPromises).then(res => {
+      //           res.map(raw => {
+      //             compressedFiles.push({ raw })
+      //           })
+      //         });
+      //         console.log("compressedFiles", compressedFiles)
+      //         let result = await imgUpload(compressedFilesPromises)
+      //         console.log(result)
+      //         // selectedFiles.value = resetList
+      //         //   // 在这里处理上传成功后的逻辑，例如更新表单状态或显示成功消息
+      //         //   const submitFormData = {
+      //         //       content: contentRef.value,
+      //         //       username: username.value,
+      //         //       status: status.value,
+      //         //       isTop: isTop.value,
+      //         //       url: selectedFiles.value
+      //         //   }
+      //         //   const res = await useTalkStoreHook().publishTalk(submitFormData)
+      //         //   console.log(res)
+      //         // 假设上传成功后表单可以继续提交或进行其他操作
+      //         // 例如，这里我们简单地模拟表单提交成功
+      //         alert('表单已提交，图片已上传');
+      //     } catch (error) {
+      //         console.error('上传失败:', error);
+      //         alert('图片上传失败，请重试');
+      //     }
+      // }
   }
 };
+
+const handleReset = () => {
+  contentRef.value = ''
+  status.value = 1
+  isTop.value = 1
+  if (imageUpload.value) {
+    imageUpload.value.resetImages()
+  }
+}
 </script>
 
 <template>
@@ -209,7 +243,7 @@ const handleSubmit = async () => {
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text="Reset">Reset</v-btn>
+          <v-btn text="Reset" @click="handleReset">Reset</v-btn>
           <v-btn color="primary" text="Save" variant="tonal" @click="handleSubmit">Save</v-btn>
         </v-card-actions>
       </v-card>

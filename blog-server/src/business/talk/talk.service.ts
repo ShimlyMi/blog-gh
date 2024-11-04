@@ -28,21 +28,11 @@ export class TalkService {
       const user = await this.userService.findOneByUsername(
         createTalkDto.username,
       );
-      console.log(user);
+      // console.log(user);
       talk.user = user.data.id;
 
-      // const talkPhotos = new TalkPhoto();
       let res: any;
-      // const res = await this.talkRepository.save(talk);
       if (createTalkDto.url.length > 0) {
-        /*const talkPhotosId = await this.findOne(res.id);
-        talkPhotos.url = createTalkDto.url;
-        console.log('talkPhotos.url', talkPhotos.url);
-        talkPhotos.talk = talkPhotosId.data.id;
-        await this.talkPhotoRepository.save(talkPhotos);
-        const photos = await this.findOnwTPicByTalkId(talkPhotos.id);
-        talk.photos = photos.data.id;
-        await this.talkRepository.save(talk);*/
         talk.url = createTalkDto.url;
         res = await this.talkRepository.save(talk);
       } else {

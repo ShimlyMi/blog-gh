@@ -17,4 +17,5 @@ export type TalkFormType = {
   content: string
   isTop: number
   status: number
+  url: Nullable<any[]>;
 }
