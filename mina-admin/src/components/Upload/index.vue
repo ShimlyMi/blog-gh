@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, unref } from 'vue';
-import {conversion, imgUpload} from "@/api/system/static";
+import {compressImages, conversion, imgUpload} from "@/api/system/static";
 
 const props = defineProps({
   maxImages: {
@@ -48,17 +48,16 @@ defineExpose({
 
 const imagesUpload = async () => {
     const compressedFilesPromises = selectedFiles.value.map(async (file) => {
-            return await conversion(file)
+            return await compressImages(file)
         }
     );
     const compressedFiles: any[] = []
-    await Promise.all(compressedFilesPromises).then(res => {
-        res.map(raw => {
-            compressedFiles.push({ raw })
-        })
+    await Promise.all(compressedFilesPromises).then((res: File[]) => {
+      console.log(typeof res[0]);
     });
     console.log("compressedFiles", compressedFiles)
-    let res = await imgUpload(compressedFiles)
+  // selectedFiles.value.push(c)
+    let res = await imgUpload(selectedFiles.value)
     console.log(res)
 }
 </script>
